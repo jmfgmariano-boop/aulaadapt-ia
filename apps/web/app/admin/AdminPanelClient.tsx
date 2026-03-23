@@ -134,6 +134,14 @@ type AdminPanelClientProps = {
   sensitiveCategoryExamples: readonly string[];
 };
 
+type AdminSectionKey =
+  | "summary"
+  | "school"
+  | "profiles"
+  | "reports"
+  | "privacy"
+  | "integrations";
+
 export function AdminPanelClient({
   teacherDirectory,
   studentRegistry,
@@ -161,6 +169,7 @@ export function AdminPanelClient({
   const [searchStudent, setSearchStudent] = useState("");
   const [selectedFileName, setSelectedFileName] = useState("");
   const [selectedImportSource, setSelectedImportSource] = useState(importSources[0] ?? "");
+  const [activeSection, setActiveSection] = useState<AdminSectionKey>("summary");
   const [selectedProfileId, setSelectedProfileId] = useState(profileRegistry[0]?.studentId ?? "");
   const [selectedStudentId, setSelectedStudentId] = useState(
     profileRegistry[0]?.studentId ?? studentRegistry[0]?.id ?? ""
@@ -216,6 +225,10 @@ export function AdminPanelClient({
   const selectedStudentProfile =
     profiles.find((item) => item.studentId === selectedStudentId) ?? null;
   const profileDisabled = disabledProfiles.includes(selectedProfile.studentId);
+
+  function openSection(section: AdminSectionKey) {
+    setActiveSection(section);
+  }
 
   function updateField(field: keyof typeof form, value: string) {
     setForm((current) => ({
@@ -356,9 +369,7 @@ export function AdminPanelClient({
       })
     );
 
-    document
-      .getElementById("base-escolar")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setActiveSection("school");
     setStatusMessage(
       `Importación lista para aplicarse: ${importSummary.newStudents} altas, ${importSummary.updatedStudents} actualizaciones y ${importSummary.inactiveStudents} alumnos marcados como inactivos.`
     );
@@ -449,21 +460,48 @@ export function AdminPanelClient({
       subtitle="Gestiona base escolar, perfiles pedagógicos, permisos, reportes e integraciones con una vista institucional clara."
     >
       <div className="workspace-strip">
-        <a className="workspace-chip" href="#base-escolar">
+        <button
+          className={`workspace-chip ${activeSection === "summary" ? "active" : ""}`}
+          type="button"
+          onClick={() => openSection("summary")}
+        >
+          Resumen
+        </button>
+        <button
+          className={`workspace-chip ${activeSection === "school" ? "active" : ""}`}
+          type="button"
+          onClick={() => openSection("school")}
+        >
           Base escolar
-        </a>
-        <a className="workspace-chip" href="#perfiles">
+        </button>
+        <button
+          className={`workspace-chip ${activeSection === "profiles" ? "active" : ""}`}
+          type="button"
+          onClick={() => openSection("profiles")}
+        >
           Perfiles
-        </a>
-        <Link className="workspace-chip" href="/admin/reportes">
+        </button>
+        <button
+          className={`workspace-chip ${activeSection === "reports" ? "active" : ""}`}
+          type="button"
+          onClick={() => openSection("reports")}
+        >
           Reportes
-        </Link>
-        <a className="workspace-chip" href="#privacidad">
+        </button>
+        <button
+          className={`workspace-chip ${activeSection === "privacy" ? "active" : ""}`}
+          type="button"
+          onClick={() => openSection("privacy")}
+        >
           Privacidad
-        </a>
-        <Link className="workspace-chip" href="/integraciones">
+        </button>
+        <button
+          className={`workspace-chip ${activeSection === "integrations" ? "active" : ""}`}
+          type="button"
+          onClick={() => openSection("integrations")}
+        >
           Integraciones
-        </Link>
+        </button>
       </div>
 
       <div className="metric-grid">
@@ -488,660 +526,787 @@ export function AdminPanelClient({
           helper="Disponibles para operación institucional y consulta escolar"
         />
       </div>
+      {activeSection === "summary" ? (
+        <div className="dashboard-main-grid">
+          <SectionCard title="Resumen institucional" description="Lo prioritario para operar hoy">
+            <div className="section-stack">
+              <section className="section-block">
+                <div className="section-block-header">
+                  <strong>Indicadores clave</strong>
+                  <span className="status-pill">
+                    <AppIcon name="report" size={14} />
+                    Vista ejecutiva
+                  </span>
+                </div>
+                <div className="report-grid">
+                  {reportCards.slice(0, 3).map((card) => (
+                    <article key={card.title} className="report-card compact">
+                      <span>{card.title}</span>
+                      <strong>{card.value}</strong>
+                      <p>{card.copy}</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
 
-      <div className="dashboard-grid">
-        <SectionCard
-          title="Importar base escolar"
-          description="Carga masiva, mapeo, validación y actualización de registros"
-          accent="sky"
-        >
-          <div className="inline-tags">
-            {importSources.map((source) => (
-              <Tag key={source}>{source}</Tag>
-            ))}
-          </div>
-          <div className="form-grid">
-            <label>
-              Fuente de importación
-              <select
-                value={selectedImportSource}
-                onChange={(event) => setSelectedImportSource(event.target.value)}
-              >
-                {importSources.map((source) => (
-                  <option key={source}>{source}</option>
+              <section className="section-block">
+                <div className="section-block-header">
+                  <strong>Estado de la base</strong>
+                </div>
+                <div className="stack-list compact-stack">
+                  <article className="list-card compact">
+                    <strong>Importación más reciente</strong>
+                    <p>
+                      {importSummary.validRows} filas válidas · {importSummary.errorRows} con observaciones
+                    </p>
+                  </article>
+                  <article className="list-card compact">
+                    <strong>Perfiles activos</strong>
+                    <p>{profiles.length - disabledProfiles.length} perfiles pedagógicos en operación.</p>
+                  </article>
+                  <article className="list-card compact">
+                    <strong>Último movimiento sensible</strong>
+                    <p>{auditLog[0]?.detail}</p>
+                  </article>
+                </div>
+              </section>
+            </div>
+          </SectionCard>
+
+          <div className="dashboard-aside-stack">
+            <SectionCard title="Acciones rápidas" description="Abre cada módulo sin recorrer toda la página" accent="sky">
+              <div className="stack-list compact-stack">
+                <button className="utility-card" type="button" onClick={() => openSection("school")}>
+                  <span className="icon-badge">
+                    <AppIcon name="database" />
+                  </span>
+                  <div>
+                    <strong>Base escolar</strong>
+                    <p>Importación, alumnos y grupos.</p>
+                  </div>
+                </button>
+                <button className="utility-card" type="button" onClick={() => openSection("profiles")}>
+                  <span className="icon-badge">
+                    <AppIcon name="users" />
+                  </span>
+                  <div>
+                    <strong>Perfiles pedagógicos</strong>
+                    <p>Apoyos, visibilidad e historial.</p>
+                  </div>
+                </button>
+                <button className="utility-card" type="button" onClick={() => openSection("privacy")}>
+                  <span className="icon-badge">
+                    <AppIcon name="lock" />
+                  </span>
+                  <div>
+                    <strong>Privacidad y bitácora</strong>
+                    <p>Permisos y trazabilidad.</p>
+                  </div>
+                </button>
+              </div>
+            </SectionCard>
+
+            <SectionCard title="Docentes recientes" description="Altas y directorio operativo" accent="mint">
+              <div className="stack-list compact-stack">
+                {teachers.slice(0, 4).map((teacher) => (
+                  <article key={teacher.id} className="list-card compact">
+                    <strong>{teacher.displayName}</strong>
+                    <p>{teacher.area}</p>
+                  </article>
                 ))}
-              </select>
-            </label>
-            <label>
-              Archivo seleccionado
-              <input
-                type="text"
-                value={selectedFileName || "Sin archivo seleccionado"}
-                readOnly
-              />
-            </label>
+              </div>
+            </SectionCard>
           </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".csv,.xlsx,.xls"
-            hidden
-            onChange={(event) =>
-              handleFileChange(event.target.files?.[0] || null)
-            }
-          />
-          <div className="cta-row">
-            <button className="primary-button" type="button" onClick={handleFilePick}>
-              <AppIcon name="database" size={16} />
-              Cargar archivo
-            </button>
-            <button className="ghost-button" type="button" onClick={handleDownloadTemplate}>
-              Descargar plantilla modelo
-            </button>
-            <button className="ghost-button" type="button" onClick={handleValidateImport}>
-              Validar datos
-            </button>
-            <button className="ghost-button" type="button" onClick={handleImportBase}>
-              Actualizar base existente
-            </button>
-          </div>
-          <p className="action-feedback">{importStatus}</p>
+        </div>
+      ) : null}
 
+      {activeSection === "school" ? (
+        <>
           <div className="dashboard-grid">
-            <article className="list-card compact">
-              <strong>Mapeo de columnas</strong>
-              <div className="stack-list compact-stack">
-                {importTemplateHeaders.slice(0, 6).map((header) => (
-                  <label key={header}>
-                    {header}
-                    <select
-                      value={columnMapping[header]}
-                      onChange={(event) =>
-                        setColumnMapping((current) => ({
-                          ...current,
-                          [header]: event.target.value
-                        }))
-                      }
-                    >
-                      {importTemplateHeaders.map((item) => (
-                        <option key={item}>{item}</option>
-                      ))}
-                    </select>
-                  </label>
+            <SectionCard
+              title="Importar base escolar"
+              description="Carga, mapeo y validación"
+              accent="sky"
+            >
+              <div className="inline-tags">
+                {importSources.map((source) => (
+                  <Tag key={source}>{source}</Tag>
                 ))}
               </div>
-            </article>
-            <article className="list-card compact">
-              <strong>Resumen de validación</strong>
-              <div className="stack-list compact-stack">
-                <p>{importSummary.validRows} filas válidas</p>
-                <p>{importSummary.errorRows} filas con observaciones</p>
-                <p>{importSummary.newStudents} altas nuevas</p>
-                <p>{importSummary.updatedStudents} actualizaciones</p>
-                <p>{importSummary.inactiveStudents} alumnos inactivos</p>
+              <div className="form-grid">
+                <label>
+                  Fuente de importación
+                  <select
+                    value={selectedImportSource}
+                    onChange={(event) => setSelectedImportSource(event.target.value)}
+                  >
+                    {importSources.map((source) => (
+                      <option key={source}>{source}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Archivo seleccionado
+                  <input
+                    type="text"
+                    value={selectedFileName || "Sin archivo seleccionado"}
+                    readOnly
+                  />
+                </label>
               </div>
-            </article>
-          </div>
-
-          <div className="stack-list">
-              <strong>Vista previa de registros</strong>
-            {importPreviewRows.map((row) => (
-              <article key={row.matricula} className="list-card compact">
-                <div>
-                  <strong>
-                    {row.nombre} · {row.matricula}
-                  </strong>
-                  <p>
-                    Grupo {row.grupo} · Estatus {row.estatus} · Perfil {row.perfil}
-                  </p>
-                  <p>
-                    Uso interno: {row.condicionInterna} · Prioridad {row.prioridad}
-                  </p>
-                </div>
-                <div className="inline-tags">
-                  <Tag>{row.validacion}</Tag>
-                  <Tag>{row.permisos}</Tag>
-                </div>
-              </article>
-            ))}
-          </div>
-        </SectionCard>
-
-        <SectionCard
-          title="Alta rápida de docentes"
-          description="Registro inmediato para operación escolar"
-        >
-          <form className="form-grid" onSubmit={(event) => event.preventDefault()}>
-            <label>
-              Nombre completo
               <input
-                type="text"
-                placeholder="Captura nombre completo"
-                value={form.nombreCompleto}
-                onChange={(event) => updateField("nombreCompleto", event.target.value)}
-              />
-            </label>
-            <label>
-              Correo institucional
-              <input
-                type="email"
-                placeholder="Captura correo institucional"
-                value={form.correoInstitucional}
+                ref={fileInputRef}
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                hidden
                 onChange={(event) =>
-                  updateField("correoInstitucional", event.target.value)
+                  handleFileChange(event.target.files?.[0] || null)
                 }
               />
-            </label>
-            <label>
-              Materia principal
-              <input
-                type="text"
-                placeholder="Captura materia principal"
-                value={form.materiaPrincipal}
-                onChange={(event) => updateField("materiaPrincipal", event.target.value)}
-              />
-            </label>
-            <label>
-              Grupos asignados
-              <input
-                type="text"
-                placeholder="Captura grupos asignados"
-                value={form.gruposAsignados}
-                onChange={(event) => updateField("gruposAsignados", event.target.value)}
-              />
-            </label>
-            <label className="full-span">
-              Observaciones
-              <textarea
-                value={form.observaciones}
-                onChange={(event) => updateField("observaciones", event.target.value)}
-              />
-            </label>
-          </form>
-          <div className="cta-row">
-            <button className="primary-button" type="button" onClick={handleSaveTeacher}>
-              Guardar registro docente
-            </button>
-          </div>
-          <p className="action-feedback">{statusMessage}</p>
-          <div className="stack-list" id="docentes">
-            {teachers.slice(0, 4).map((teacher) => (
-              <article key={teacher.id} className="list-card compact">
-                <strong>{teacher.displayName}</strong>
-                <p>
-                  {teacher.area} · {teacher.institution}
-                </p>
-              </article>
-            ))}
-          </div>
-        </SectionCard>
-      </div>
+              <div className="cta-row">
+                <button className="primary-button" type="button" onClick={handleFilePick}>
+                  <AppIcon name="database" size={16} />
+                  Cargar archivo
+                </button>
+                <button className="ghost-button" type="button" onClick={handleDownloadTemplate}>
+                  Descargar plantilla
+                </button>
+                <button className="ghost-button" type="button" onClick={handleValidateImport}>
+                  Validar
+                </button>
+                <button className="ghost-button" type="button" onClick={handleImportBase}>
+                  Actualizar base
+                </button>
+              </div>
+              <p className="action-feedback">{importStatus}</p>
 
-      <div className="dashboard-grid" id="base-escolar">
-        <SectionCard
-          title="Base de datos de alumnos"
-          description="Consulta, filtra y organiza la base general de la escuela"
-          accent="mint"
-        >
-          <div className="form-grid">
-            <label>
-              Buscar por nombre o matrícula
-              <input
-                type="text"
-                value={searchStudent}
-                onChange={(event) => setSearchStudent(event.target.value)}
-                placeholder="Ejemplo: E001 o Andrea López Ramírez"
-              />
-            </label>
-            <label>
-              Filtrar por grupo
-              <select
-                value={selectedGroup}
-                onChange={(event) => setSelectedGroup(event.target.value)}
-              >
-                {groupOptions.map((group) => (
-                  <option key={group} value={group}>
-                    {group === "all" ? "Todos los grupos" : group}
-                  </option>
+              <div className="dashboard-grid">
+                <article className="list-card compact">
+                  <strong>Mapeo visible</strong>
+                  <div className="stack-list compact-stack">
+                    {importTemplateHeaders.slice(0, 6).map((header) => (
+                      <label key={header}>
+                        {header}
+                        <select
+                          value={columnMapping[header]}
+                          onChange={(event) =>
+                            setColumnMapping((current) => ({
+                              ...current,
+                              [header]: event.target.value
+                            }))
+                          }
+                        >
+                          {importTemplateHeaders.map((item) => (
+                            <option key={item}>{item}</option>
+                          ))}
+                        </select>
+                      </label>
+                    ))}
+                  </div>
+                </article>
+                <article className="list-card compact">
+                  <strong>Resumen de validación</strong>
+                  <div className="stack-list compact-stack">
+                    <p>{importSummary.validRows} filas válidas</p>
+                    <p>{importSummary.errorRows} con observaciones</p>
+                    <p>{importSummary.newStudents} altas</p>
+                    <p>{importSummary.updatedStudents} actualizaciones</p>
+                    <p>{importSummary.inactiveStudents} inactivos</p>
+                  </div>
+                </article>
+              </div>
+
+              <div className="stack-list compact-stack">
+                <strong>Vista previa</strong>
+                {importPreviewRows.map((row) => (
+                  <article key={row.matricula} className="list-card compact">
+                    <div>
+                      <strong>
+                        {row.nombre} · {row.matricula}
+                      </strong>
+                      <p>
+                        Grupo {row.grupo} · {row.estatus} · {row.perfil}
+                      </p>
+                    </div>
+                    <div className="inline-tags">
+                      <Tag>{row.validacion}</Tag>
+                      <Tag>{row.permisos}</Tag>
+                    </div>
+                  </article>
                 ))}
-              </select>
-            </label>
+              </div>
+            </SectionCard>
+
+            <SectionCard
+              title="Alta rápida de docentes"
+              description="Registro inmediato para operación escolar"
+            >
+              <form className="form-grid" onSubmit={(event) => event.preventDefault()}>
+                <label>
+                  Nombre completo
+                  <input
+                    type="text"
+                    placeholder="Captura nombre completo"
+                    value={form.nombreCompleto}
+                    onChange={(event) => updateField("nombreCompleto", event.target.value)}
+                  />
+                </label>
+                <label>
+                  Correo institucional
+                  <input
+                    type="email"
+                    placeholder="Captura correo institucional"
+                    value={form.correoInstitucional}
+                    onChange={(event) =>
+                      updateField("correoInstitucional", event.target.value)
+                    }
+                  />
+                </label>
+                <label>
+                  Materia principal
+                  <input
+                    type="text"
+                    placeholder="Captura materia principal"
+                    value={form.materiaPrincipal}
+                    onChange={(event) => updateField("materiaPrincipal", event.target.value)}
+                  />
+                </label>
+                <label>
+                  Grupos asignados
+                  <input
+                    type="text"
+                    placeholder="Captura grupos asignados"
+                    value={form.gruposAsignados}
+                    onChange={(event) => updateField("gruposAsignados", event.target.value)}
+                  />
+                </label>
+                <label className="full-span">
+                  Observaciones
+                  <textarea
+                    value={form.observaciones}
+                    onChange={(event) => updateField("observaciones", event.target.value)}
+                  />
+                </label>
+              </form>
+              <div className="cta-row">
+                <button className="primary-button" type="button" onClick={handleSaveTeacher}>
+                  Guardar registro docente
+                </button>
+              </div>
+              <p className="action-feedback">{statusMessage}</p>
+              <div className="stack-list compact-stack" id="docentes">
+                {teachers.slice(0, 4).map((teacher) => (
+                  <article key={teacher.id} className="list-card compact">
+                    <strong>{teacher.displayName}</strong>
+                    <p>
+                      {teacher.area} · {teacher.institution}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </SectionCard>
           </div>
-          <div className="stack-list">
-            {filteredStudents.slice(0, 12).map((student) => (
-              <article
-                key={student.id}
-                className={`list-card ${selectedStudentId === student.id ? "template-card-active" : ""}`}
-              >
-                <div>
-                  <strong>{student.name}</strong>
-                  <p>
-                    Matrícula: {student.id} · {student.semester} · Grupo: {student.group}
-                  </p>
-                  <p>{student.barrier}</p>
-                  <p>{student.note}</p>
+
+          <div className="dashboard-grid" id="base-escolar">
+            <SectionCard
+              title="Base de datos de alumnos"
+              description="Consulta y organiza la base general"
+              accent="mint"
+            >
+              <div className="form-grid">
+                <label>
+                  Buscar por nombre o matrícula
+                  <input
+                    type="text"
+                    value={searchStudent}
+                    onChange={(event) => setSearchStudent(event.target.value)}
+                    placeholder="Ejemplo: E001 o Andrea López Ramírez"
+                  />
+                </label>
+                <label>
+                  Filtrar por grupo
+                  <select
+                    value={selectedGroup}
+                    onChange={(event) => setSelectedGroup(event.target.value)}
+                  >
+                    {groupOptions.map((group) => (
+                      <option key={group} value={group}>
+                        {group === "all" ? "Todos los grupos" : group}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <div className="stack-list compact-stack">
+                {filteredStudents.slice(0, 10).map((student) => (
+                  <article
+                    key={student.id}
+                    className={`list-card compact ${selectedStudentId === student.id ? "template-card-active" : ""}`}
+                  >
+                    <div>
+                      <strong>{student.name}</strong>
+                      <p>
+                        Matrícula: {student.id} · {student.semester} · Grupo: {student.group}
+                      </p>
+                    </div>
+                    <div className="inline-tags">
+                      <Tag>{student.support}</Tag>
+                      <Tag>{student.sex}</Tag>
+                      <Tag>{student.age} años</Tag>
+                      <button
+                        className="ghost-button"
+                        type="button"
+                        onClick={() => handleSelectStudent(student.id)}
+                      >
+                        Ver perfil individual
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              <article className="student-profile-inspector">
+                <div className="student-profile-head">
+                  <div>
+                    <span className="hero-kicker">Perfil individual del alumno</span>
+                    <h3>{selectedStudent?.name ?? "Sin selección"}</h3>
+                    <p>
+                      Matrícula {selectedStudent?.id} · {selectedStudent?.semester} · Grupo{" "}
+                      {selectedStudent?.group}
+                    </p>
+                  </div>
+                  <div className="inline-tags">
+                    <Tag>{selectedStudent?.support ?? "Sin apoyo adicional"}</Tag>
+                    <Tag>
+                      {selectedStudentProfile
+                        ? selectedStudentProfile.priorityLevel
+                        : "Seguimiento general"}
+                    </Tag>
+                  </div>
                 </div>
-                <div className="inline-tags">
-                  <Tag>{student.support}</Tag>
-                  <Tag>{student.sex}</Tag>
-                  <Tag>{student.age} años</Tag>
+
+                <div className="student-profile-grid">
+                  <article className="list-card compact">
+                    <strong>Datos escolares visibles</strong>
+                    <p>{selectedStudent?.barrier}</p>
+                    <p>{selectedStudent?.note}</p>
+                    <p>
+                      Edad {selectedStudent?.age} · Sexo {selectedStudent?.sex}
+                    </p>
+                  </article>
+
+                  <article className="list-card compact">
+                    <strong>Apoyos visibles para docente</strong>
+                    {selectedStudentProfile ? (
+                      <>
+                        <p>Salida sugerida: {selectedStudentProfile.teacherView.suggestedMaterial}</p>
+                        <div className="inline-tags">
+                          {selectedStudentProfile.teacherView.recommendedSupports.map((item) => (
+                            <Tag key={item}>{item}</Tag>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <p>Solo material base y apoyos generales del grupo.</p>
+                    )}
+                  </article>
+
+                  <article className="list-card compact sensitive-card">
+                    <strong>Registro interno autorizado</strong>
+                    {selectedStudentProfile ? (
+                      <>
+                        <p>{selectedStudentProfile.conditionRecord}</p>
+                        <p>{selectedStudentProfile.diagnosisRecord}</p>
+                        <div className="inline-tags">
+                          {selectedStudentProfile.visibility.map((item) => (
+                            <Tag key={item}>{item}</Tag>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <p>No existe un registro sensible activo para este alumno.</p>
+                    )}
+                  </article>
+
+                  <article className="list-card compact">
+                    <strong>Bitácora breve</strong>
+                    {selectedStudentProfile ? (
+                      <InfoList items={selectedStudentProfile.history} />
+                    ) : (
+                      <p>Sin movimientos sensibles registrados.</p>
+                    )}
+                  </article>
+                </div>
+
+                <div className="cta-row">
+                  <button
+                    className="primary-button"
+                    type="button"
+                    onClick={() =>
+                      selectedStudentProfile
+                        ? (handleProfileSelection(selectedStudentProfile.studentId), openSection("profiles"))
+                        : setProfileStatus(
+                            `No existe un perfil sensible activo para ${selectedStudent?.name}.`
+                          )
+                    }
+                  >
+                    Abrir perfil pedagógico
+                  </button>
                   <button
                     className="ghost-button"
                     type="button"
-                    onClick={() => handleSelectStudent(student.id)}
+                    onClick={() => openSection("privacy")}
                   >
-                    Ver perfil individual
+                    Ver bitácora y permisos
                   </button>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <article className="student-profile-inspector">
-            <div className="student-profile-head">
-              <div>
-                <span className="hero-kicker">Perfil individual del alumno</span>
-                <h3>{selectedStudent?.name ?? "Sin selección"}</h3>
-                <p>
-                  Matrícula {selectedStudent?.id} · {selectedStudent?.semester} · Grupo{" "}
-                  {selectedStudent?.group}
-                </p>
-              </div>
-              <div className="inline-tags">
-                <Tag>{selectedStudent?.support ?? "Sin apoyo adicional"}</Tag>
-                <Tag>
-                  {selectedStudentProfile
-                    ? selectedStudentProfile.priorityLevel
-                    : "Seguimiento general"}
-                </Tag>
-              </div>
-            </div>
-
-            <div className="student-profile-grid">
-              <article className="list-card compact">
-                <strong>Datos escolares visibles</strong>
-                <p>{selectedStudent?.barrier}</p>
-                <p>{selectedStudent?.note}</p>
-                <p>
-                  Edad {selectedStudent?.age} · Sexo {selectedStudent?.sex}
-                </p>
-              </article>
-
-              <article className="list-card compact">
-                <strong>Apoyos visibles para docente</strong>
-                {selectedStudentProfile ? (
-                  <>
-                    <p>Salida sugerida: {selectedStudentProfile.teacherView.suggestedMaterial}</p>
-                    <div className="inline-tags">
-                      {selectedStudentProfile.teacherView.recommendedSupports.map((item) => (
-                        <Tag key={item}>{item}</Tag>
-                      ))}
-                    </div>
-                    <InfoList items={selectedStudentProfile.teacherView.practicalRecommendations} />
-                  </>
-                ) : (
-                  <p>
-                    Este alumno no tiene un perfil sensible activo. El docente solo ve el
-                    material base y los apoyos generales del grupo.
-                  </p>
-                )}
-              </article>
-
-              <article className="list-card compact sensitive-card">
-                <strong>Registro interno autorizado</strong>
-                {selectedStudentProfile ? (
-                  <>
-                    <p>{selectedStudentProfile.conditionRecord}</p>
-                    <p>{selectedStudentProfile.diagnosisRecord}</p>
-                    <p>{selectedStudentProfile.pedagogicalObservations}</p>
-                    <div className="inline-tags">
-                      {selectedStudentProfile.visibility.map((item) => (
-                        <Tag key={item}>{item}</Tag>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <p>
-                    No existe un diagnóstico previo o condición identificada activa dentro
-                    del registro autorizado de este alumno.
-                  </p>
-                )}
-              </article>
-
-              <article className="list-card compact">
-                <strong>Bitácora breve</strong>
-                {selectedStudentProfile ? (
-                  <InfoList items={selectedStudentProfile.history} />
-                ) : (
-                  <p>Sin movimientos sensibles registrados para este expediente.</p>
-                )}
-              </article>
-            </div>
-
-            <div className="cta-row">
-              <button
-                className="primary-button"
-                type="button"
-                onClick={() =>
-                  selectedStudentProfile
-                    ? handleProfileSelection(selectedStudentProfile.studentId)
-                    : setProfileStatus(
-                        `No existe un perfil sensible activo para ${selectedStudent?.name}.`
-                      )
-                }
-              >
-                Abrir perfil pedagógico
-              </button>
-              <button
-                className="ghost-button"
-                type="button"
-                onClick={() =>
-                  document
-                    .getElementById("privacidad")
-                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
-                }
-              >
-                Ver bitácora y permisos
-              </button>
-              {selectedStudentProfile ? (
-                <button
-                  className="ghost-button"
-                  type="button"
-                  onClick={handleToggleDeactivateProfile}
-                >
-                  {disabledProfiles.includes(selectedStudentProfile.studentId)
-                    ? "Reactivar apoyos"
-                    : "Desactivar apoyos"}
-                </button>
-              ) : null}
-            </div>
-          </article>
-        </SectionCard>
-
-        <SectionCard
-          title="Grupos, salones y materias"
-          description="Relación operativa de la base escolar"
-        >
-          <div className="stack-list">
-            {teacherGroups.map((group) => (
-              <article key={group.id} className="list-card compact">
-                <strong>{group.name}</strong>
-                <p>
-                  {group.grade} · {group.shift}
-                </p>
-              </article>
-            ))}
-            {teacherSubjects.map((subject) => (
-              <article key={subject.id} className="list-card compact">
-                <strong>{subject.name}</strong>
-                <p>{subject.area}</p>
-              </article>
-            ))}
-          </div>
-        </SectionCard>
-      </div>
-
-      <div className="dashboard-grid" id="perfiles">
-        <SectionCard
-          title="Perfiles pedagógicos y accesibilidad"
-          description="Gestión pedagógica, no clínica, con historial y permisos restringidos"
-          accent="sky"
-        >
-          <div className="inline-tags">
-            {accessibilityProfiles.map((profile) => (
-              <Tag key={profile}>{profile}</Tag>
-            ))}
-          </div>
-          <div className="dashboard-grid">
-            <div className="stack-list">
-              {profiles.map((profile) => (
-                <article
-                  key={profile.studentId}
-                  className={`list-card compact ${selectedProfileId === profile.studentId ? "template-card-active" : ""}`}
-                >
-                  <div>
-                    <strong>{profile.studentName}</strong>
-                    <p>
-                      Perfil actual: {profile.currentProfile} · Última actualización:{" "}
-                      {profile.updatedAt}
-                    </p>
-                  </div>
-                  <div className="cta-row">
+                  {selectedStudentProfile ? (
                     <button
                       className="ghost-button"
                       type="button"
-                      onClick={() => handleProfileSelection(profile.studentId)}
+                      onClick={handleToggleDeactivateProfile}
                     >
-                      Ver detalle
+                      {disabledProfiles.includes(selectedStudentProfile.studentId)
+                        ? "Reactivar apoyos"
+                        : "Desactivar apoyos"}
                     </button>
+                  ) : null}
+                </div>
+              </article>
+            </SectionCard>
+
+            <SectionCard
+              title="Grupos, salones y materias"
+              description="Relación operativa de la base escolar"
+            >
+              <div className="section-stack">
+                <section className="section-block">
+                  <div className="section-block-header">
+                    <strong>Grupos y salones</strong>
+                  </div>
+                  <div className="stack-list compact-stack">
+                    {teacherGroups.map((group) => (
+                      <article key={group.id} className="list-card compact">
+                        <strong>{group.name}</strong>
+                        <p>
+                          {group.grade} · {group.shift}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+                <section className="section-block">
+                  <div className="section-block-header">
+                    <strong>Materias</strong>
+                  </div>
+                  <div className="stack-list compact-stack">
+                    {teacherSubjects.map((subject) => (
+                      <article key={subject.id} className="list-card compact">
+                        <strong>{subject.name}</strong>
+                        <p>{subject.area}</p>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            </SectionCard>
+          </div>
+        </>
+      ) : null}
+
+      {activeSection === "profiles" ? (
+        <div className="dashboard-grid" id="perfiles">
+          <SectionCard
+            title="Perfiles pedagógicos y accesibilidad"
+            description="Gestión pedagógica con historial y permisos restringidos"
+            accent="sky"
+          >
+            <div className="inline-tags">
+              {accessibilityProfiles.map((profile) => (
+                <Tag key={profile}>{profile}</Tag>
+              ))}
+            </div>
+            <div className="dashboard-grid">
+              <div className="stack-list compact-stack">
+                {profiles.map((profile) => (
+                  <article
+                    key={profile.studentId}
+                    className={`list-card compact ${selectedProfileId === profile.studentId ? "template-card-active" : ""}`}
+                  >
+                    <div>
+                      <strong>{profile.studentName}</strong>
+                      <p>
+                        {profile.currentProfile} · {profile.updatedAt}
+                      </p>
+                    </div>
+                    <div className="cta-row">
+                      <button
+                        className="ghost-button"
+                        type="button"
+                        onClick={() => handleProfileSelection(profile.studentId)}
+                      >
+                        Ver detalle
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <article className="list-card">
+                <strong>{selectedProfile.studentName}</strong>
+                <p>
+                  {selectedProfile.currentProfile} · Registró: {selectedProfile.registeredBy}
+                </p>
+                <p>
+                  Alta: {selectedProfile.createdAt} · Última modificación: {selectedProfile.updatedAt}
+                </p>
+                <div className="dashboard-grid">
+                  <article className="list-card compact">
+                    <strong>Registro autorizado</strong>
+                    <p>{selectedProfile.conditionRecord}</p>
+                    <p>{selectedProfile.diagnosisRecord}</p>
+                    <p>
+                      Prioridad: {selectedProfile.priorityLevel} · Responsable: {selectedProfile.responsibleArea}
+                    </p>
+                    <div className="inline-tags">
+                      {selectedProfile.visibility.map((item) => (
+                        <Tag key={item}>{item}</Tag>
+                      ))}
+                    </div>
+                  </article>
+                  <article className="list-card compact">
+                    <strong>Vista docente</strong>
+                    <p>{selectedProfile.pedagogicalObservations}</p>
+                    <p>Salida sugerida: {selectedProfile.teacherView.suggestedMaterial}</p>
+                    <div className="inline-tags">
+                      {selectedProfile.teacherView.recommendedSupports.map((item) => (
+                        <Tag key={item}>{item}</Tag>
+                      ))}
+                    </div>
+                  </article>
+                </div>
+                <div className="inline-tags">
+                  {selectedSupports.map((support) => (
+                    <button
+                      key={support}
+                      className="ghost-button"
+                      type="button"
+                      onClick={() => handleToggleSupport(support)}
+                    >
+                      {support}
+                    </button>
+                  ))}
+                </div>
+                <div className="stack-list compact-stack">
+                  <article className="list-card compact">
+                    <strong>Apoyos sugeridos</strong>
+                    <p>{selectedProfile.suggestedSupports.join(" · ")}</p>
+                  </article>
+                  <article className="list-card compact">
+                    <strong>Adaptaciones recomendadas</strong>
+                    <p>{selectedProfile.recommendedAdaptations.join(" · ")}</p>
+                  </article>
+                  <article className="list-card compact">
+                    <strong>Qué verá el docente</strong>
+                    <InfoList items={selectedProfile.teacherView.practicalRecommendations} />
+                  </article>
+                </div>
+                <div className="stack-list compact-stack">
+                  {accessibilityProfiles.slice(0, 6).map((support) => (
+                    <button
+                      key={support}
+                      className="ghost-button"
+                      type="button"
+                      onClick={() => handleToggleSupport(support)}
+                    >
+                      {selectedSupports.includes(support) ? `Quitar ${support}` : `Agregar ${support}`}
+                    </button>
+                  ))}
+                </div>
+                <div className="cta-row">
+                  <button className="primary-button" type="button" onClick={handleSaveProfile}>
+                    Guardar cambios
+                  </button>
+                  <button
+                    className="ghost-button"
+                    type="button"
+                    onClick={handleToggleDeactivateProfile}
+                  >
+                    {profileDisabled ? "Reactivar perfil" : "Desactivar perfil"}
+                  </button>
+                </div>
+                <p className="action-feedback">{profileStatus}</p>
+                <div className="stack-list compact-stack">
+                  {selectedProfile.history.map((item) => (
+                    <article key={item} className="list-card compact">
+                      <p>{item}</p>
+                    </article>
+                  ))}
+                </div>
+              </article>
+            </div>
+          </SectionCard>
+
+          <SectionCard
+            title="Contexto agregado de accesibilidad"
+            description="Necesidades observadas y apoyos sugeridos"
+            accent="mint"
+          >
+            <div className="stack-list compact-stack">
+              {accessibilityContext.map((item) => (
+                <article key={item.category} className="list-card compact">
+                  <strong>{item.category}</strong>
+                  <p>{item.observedNeed}</p>
+                  <p>Apoyo sugerido: {item.suggestedSupport}</p>
+                  <div className="inline-tags">
+                    <Tag>{item.count} registros</Tag>
+                  </div>
+                </article>
+              ))}
+              <article className="list-card compact">
+                <strong>Categorías internas autorizadas</strong>
+                <div className="inline-tags">
+                  {sensitiveCategoryExamples.map((item) => (
+                    <Tag key={item}>{item}</Tag>
+                  ))}
+                </div>
+              </article>
+            </div>
+          </SectionCard>
+        </div>
+      ) : null}
+
+      {activeSection === "reports" ? (
+        <div className="dashboard-grid">
+          <SectionCard
+            title="Reportes y analítica"
+            description="Lectura agregada por fecha, grupo, materia y apoyo"
+          >
+            <div className="report-grid">
+              {reportCards.map((card) => (
+                <article key={card.title} className="report-card">
+                  <span>{card.title}</span>
+                  <strong>{card.value}</strong>
+                  <p>{card.copy}</p>
+                </article>
+              ))}
+            </div>
+            <div className="inline-tags">
+              {analytics.filters.map((filter) => (
+                <Tag key={filter}>{filter}</Tag>
+              ))}
+            </div>
+            <div className="cta-row">
+              <Link className="primary-button" href="/admin/reportes">
+                Ver reportes completos
+              </Link>
+            </div>
+          </SectionCard>
+
+          <SectionCard
+            title="Lectura rápida"
+            description="Tendencias y distribución"
+            accent="sky"
+          >
+            <div className="section-stack">
+              <section className="section-block">
+                <div className="section-block-header">
+                  <strong>Por materia</strong>
+                </div>
+                <div className="stack-list compact-stack">
+                  {analytics.usageBySubject.slice(0, 4).map((item) => (
+                    <article key={item.label} className="list-card compact">
+                      <strong>{item.label}</strong>
+                      <p>{item.value} materiales</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+              <section className="section-block">
+                <div className="section-block-header">
+                  <strong>Adaptaciones más usadas</strong>
+                </div>
+                <div className="stack-list compact-stack">
+                  {analytics.usageByAdaptation.slice(0, 4).map((item) => (
+                    <article key={item.label} className="list-card compact">
+                      <strong>{item.label}</strong>
+                      <p>{item.value} usos</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            </div>
+          </SectionCard>
+        </div>
+      ) : null}
+
+      {activeSection === "privacy" ? (
+        <div className="dashboard-grid" id="privacidad">
+          <SectionCard
+            title="Privacidad y control de acceso"
+            description="Quién puede ver, editar y auditar cada módulo"
+            accent="mint"
+          >
+            <div className="stack-list compact-stack">
+              {permissions.map((permission) => (
+                <article key={permission.module} className="list-card compact">
+                  <strong>{permission.module}</strong>
+                  <p>Administración: {permission.admin}</p>
+                  <p>Docente: {permission.teacher}</p>
+                  <p>Estudiante: {permission.student}</p>
+                </article>
+              ))}
+              <article className="list-card compact">
+                <strong>Principio de privacidad aplicada</strong>
+                <p>La información sensible se traduce en apoyos pedagógicos concretos antes de la operación docente.</p>
+              </article>
+            </div>
+          </SectionCard>
+
+          <SectionCard
+            title="Bitácora de acciones"
+            description="Cambios sensibles y trazabilidad institucional"
+          >
+            <div className="stack-list compact-stack">
+              {auditLog.map((entry) => (
+                <article key={`${entry.timestamp}-${entry.action}`} className="list-card compact">
+                  <strong>{entry.action}</strong>
+                  <p>
+                    {entry.timestamp} · {entry.actor}
+                  </p>
+                  <p>{entry.module}</p>
+                  <p>{entry.detail}</p>
+                </article>
+              ))}
+            </div>
+          </SectionCard>
+        </div>
+      ) : null}
+
+      {activeSection === "integrations" ? (
+        <div className="dashboard-grid">
+          <SectionCard
+            title="Integraciones futuras"
+            description="Ruta de crecimiento institucional"
+            accent="sky"
+          >
+            <div className="stack-list compact-stack">
+              {integrations.map((integration) => (
+                <article key={integration.title} className="list-card compact">
+                  <strong>{integration.title}</strong>
+                  <p>{integration.copy}</p>
+                  <div className="inline-tags">
+                    <Tag>{integration.status}</Tag>
                   </div>
                 </article>
               ))}
             </div>
-            <article className="list-card">
-              <strong>{selectedProfile.studentName}</strong>
-              <p>
-                Perfil actual: {selectedProfile.currentProfile} · Registró:{" "}
-                {selectedProfile.registeredBy}
-              </p>
-              <p>
-                Fecha de alta: {selectedProfile.createdAt} · Última modificación:{" "}
-                {selectedProfile.updatedAt}
-              </p>
-              <div className="dashboard-grid">
-                <article className="list-card compact">
-                  <strong>Información sensible autorizada</strong>
-                  <p>{selectedProfile.conditionRecord}</p>
-                  <p>{selectedProfile.diagnosisRecord}</p>
-                  <p>
-                    Prioridad educativa: {selectedProfile.priorityLevel} · Responsable:{" "}
-                    {selectedProfile.responsibleArea}
-                  </p>
-                  <div className="inline-tags">
-                    {selectedProfile.visibility.map((item) => (
-                      <Tag key={item}>{item}</Tag>
-                    ))}
-                  </div>
-                </article>
-                <article className="list-card compact">
-                  <strong>Traducción pedagógica para operación docente</strong>
-                  <p>{selectedProfile.pedagogicalObservations}</p>
-                  <p>Salida sugerida: {selectedProfile.teacherView.suggestedMaterial}</p>
-                  <div className="inline-tags">
-                    {selectedProfile.teacherView.recommendedSupports.map((item) => (
-                      <Tag key={item}>{item}</Tag>
-                    ))}
-                  </div>
-                </article>
-              </div>
-              <div className="inline-tags">
-                {selectedSupports.map((support) => (
-                  <button
-                    key={support}
-                    className="ghost-button"
-                    type="button"
-                    onClick={() => handleToggleSupport(support)}
-                  >
-                    {support}
-                  </button>
-                ))}
-              </div>
-              <div className="stack-list compact-stack">
-                <article className="list-card compact">
-                  <strong>Apoyos sugeridos por el área autorizada</strong>
-                  <p>{selectedProfile.suggestedSupports.join(" · ")}</p>
-                </article>
-                <article className="list-card compact">
-                  <strong>Adaptaciones recomendadas</strong>
-                  <p>{selectedProfile.recommendedAdaptations.join(" · ")}</p>
-                </article>
-                <article className="list-card compact">
-                  <strong>Qué verá el docente</strong>
-                  <InfoList items={selectedProfile.teacherView.practicalRecommendations} />
-                </article>
-              </div>
-              <div className="stack-list compact-stack">
-                {accessibilityProfiles.slice(0, 6).map((support) => (
-                  <button
-                    key={support}
-                    className="ghost-button"
-                    type="button"
-                    onClick={() => handleToggleSupport(support)}
-                  >
-                    {selectedSupports.includes(support) ? `Quitar ${support}` : `Agregar ${support}`}
-                  </button>
-                ))}
-              </div>
-              <div className="cta-row">
-                <button className="primary-button" type="button" onClick={handleSaveProfile}>
-                  Guardar cambios
-                </button>
-                <button
-                  className="ghost-button"
-                  type="button"
-                  onClick={handleToggleDeactivateProfile}
-                >
-                  {profileDisabled ? "Reactivar perfil" : "Desactivar perfil"}
-                </button>
-              </div>
-              <p className="action-feedback">{profileStatus}</p>
-              <div className="stack-list compact-stack">
-                {selectedProfile.history.map((item) => (
-                  <article key={item} className="list-card compact">
-                    <p>{item}</p>
-                  </article>
-                ))}
-              </div>
-            </article>
-          </div>
-        </SectionCard>
-
-        <SectionCard
-          title="Contexto agregado de accesibilidad"
-          description="Necesidades observadas y apoyos sugeridos por la investigación"
-          accent="mint"
-        >
-          <div className="stack-list">
-            {accessibilityContext.map((item) => (
-              <article key={item.category} className="list-card compact">
-                <strong>{item.category}</strong>
-                <p>{item.observedNeed}</p>
-                <p>Apoyo sugerido: {item.suggestedSupport}</p>
-                <div className="inline-tags">
-                  <Tag>{item.count} registros agregados</Tag>
-                </div>
-              </article>
-            ))}
-            <article className="list-card compact">
-              <strong>Categorías internas autorizadas</strong>
-              <p>
-                Solo visibles para administración, orientación y roles autorizados.
-                Nunca se muestran como etiqueta diagnóstica al estudiante.
-              </p>
-              <div className="inline-tags">
-                {sensitiveCategoryExamples.map((item) => (
-                  <Tag key={item}>{item}</Tag>
-                ))}
-              </div>
-            </article>
-          </div>
-        </SectionCard>
-      </div>
-
-      <div className="dashboard-grid">
-        <SectionCard
-          title="Reportes y analítica"
-          description="Lectura agregada por fecha, grupo, materia, docente y tipo de apoyo"
-        >
-          <div className="report-grid">
-            {reportCards.map((card) => (
-              <article key={card.title} className="report-card">
-                <span>{card.title}</span>
-                <strong>{card.value}</strong>
-                <p>{card.copy}</p>
-              </article>
-            ))}
-          </div>
-          <div className="inline-tags">
-            {analytics.filters.map((filter) => (
-              <Tag key={filter}>{filter}</Tag>
-            ))}
-          </div>
-          <div className="cta-row">
-            <Link className="primary-button" href="/admin/reportes">
-              Ver reportes completos
-            </Link>
-          </div>
-        </SectionCard>
-
-        <SectionCard
-          title="Integraciones futuras"
-          description="Ruta de crecimiento para la operación institucional"
-          accent="sky"
-        >
-          <div className="stack-list">
-            {integrations.map((integration) => (
-              <article key={integration.title} className="list-card compact">
-                <strong>{integration.title}</strong>
-                <p>{integration.copy}</p>
-                <div className="inline-tags">
-                  <Tag>{integration.status}</Tag>
-                </div>
-              </article>
-            ))}
-          </div>
-          <div className="cta-row">
-            <Link className="ghost-button" href="/integraciones">
-              Abrir ruta de integraciones
-            </Link>
-          </div>
-        </SectionCard>
-      </div>
-
-      <div className="dashboard-grid" id="privacidad">
-        <SectionCard
-          title="Privacidad y control de acceso"
-          description="Quién puede ver, editar y auditar cada módulo"
-          accent="mint"
-        >
-          <div className="stack-list">
-            {permissions.map((permission) => (
-              <article key={permission.module} className="list-card">
-                <strong>{permission.module}</strong>
-                <p>Administración: {permission.admin}</p>
-                <p>Docente: {permission.teacher}</p>
-                <p>Estudiante: {permission.student}</p>
-              </article>
-            ))}
-            <article className="list-card compact">
-              <strong>Principio de privacidad aplicada</strong>
-              <p>
-                La plataforma puede resguardar diagnósticos previos o condiciones
-                identificadas, pero los convierte en apoyos pedagógicos concretos
-                antes de la operación docente y la entrega al estudiante.
-              </p>
-            </article>
-          </div>
-        </SectionCard>
-
-        <SectionCard
-          title="Bitácora de acciones"
-          description="Trazabilidad institucional y cambios sensibles"
-        >
-          <div className="stack-list">
-            {auditLog.map((entry) => (
-              <article key={`${entry.timestamp}-${entry.action}`} className="list-card">
-                <strong>{entry.action}</strong>
-                <p>
-                  {entry.timestamp} · {entry.actor}
-                </p>
-                <p>{entry.module}</p>
-                <p>{entry.detail}</p>
-              </article>
-            ))}
-          </div>
-        </SectionCard>
-      </div>
+            <div className="cta-row">
+              <Link className="ghost-button" href="/integraciones">
+                Abrir ruta de integraciones
+              </Link>
+            </div>
+          </SectionCard>
+        </div>
+      ) : null}
     </AppShell>
   );
 }

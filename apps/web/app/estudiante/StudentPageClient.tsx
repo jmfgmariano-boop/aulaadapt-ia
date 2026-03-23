@@ -22,6 +22,9 @@ export function StudentPageClient({
   material,
   student
 }: StudentPageClientProps) {
+  const [activeWorkspace, setActiveWorkspace] = useState<"clase" | "historial" | "guardados">(
+    "clase"
+  );
   const [isReviewed, setIsReviewed] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [viewMode, setViewMode] = useState<"resumida" | "detallada">("resumida");
@@ -253,21 +256,30 @@ export function StudentPageClient({
     <AppShell
       role="student"
       title={`Bienvenido, ${student.name}`}
-      subtitle="Encuentra rápido lo importante de cada clase: resumen, pasos, conceptos y tarea en un solo lugar."
+      subtitle="Encuentra rápido lo importante de cada clase con una vista clara para repasar, guardar y volver a consultar."
     >
       <div className="workspace-strip">
-        <a className="workspace-chip" href="#materiales">
-          Materiales
-        </a>
-        <a className="workspace-chip" href="#historial">
+        <button
+          className={`workspace-chip ${activeWorkspace === "clase" ? "active" : ""}`}
+          type="button"
+          onClick={() => setActiveWorkspace("clase")}
+        >
+          Clase de hoy
+        </button>
+        <button
+          className={`workspace-chip ${activeWorkspace === "historial" ? "active" : ""}`}
+          type="button"
+          onClick={() => setActiveWorkspace("historial")}
+        >
           Historial
-        </a>
-        <a className="workspace-chip" href="#tareas">
-          Tareas
-        </a>
-        <a className="workspace-chip" href="#guardados">
+        </button>
+        <button
+          className={`workspace-chip ${activeWorkspace === "guardados" ? "active" : ""}`}
+          type="button"
+          onClick={() => setActiveWorkspace("guardados")}
+        >
           Guardados
-        </a>
+        </button>
       </div>
 
       <div className="student-hero">
@@ -300,35 +312,87 @@ export function StudentPageClient({
         </article>
       </div>
 
-      <div className="dashboard-grid" id="historial">
-        <SectionCard title="Explorar materiales" description="Busca por fecha, tema o materia">
-          <div className="form-grid">
-            <label>
-              Buscar material
-              <input
-                type="text"
-                value={searchTerm}
-                placeholder="Ejemplo: Fotosíntesis o Texto argumentativo"
-                onChange={(event) => setSearchTerm(event.target.value)}
-              />
-            </label>
-            <label>
-              Materia
-              <select
-                value={selectedSubject}
-                onChange={(event) => setSelectedSubject(event.target.value)}
-              >
-                <option value="all">Todas las materias</option>
-                {Array.from(new Set(demoStudent.subjectHistory.map((item) => item.subject))).map(
-                  (subject) => (
-                    <option key={subject} value={subject}>
-                      {subject}
-                    </option>
-                  )
-                )}
-              </select>
-            </label>
-            <label className="full-span">
+      {activeWorkspace === "historial" ? (
+        <div className="dashboard-grid">
+          <SectionCard title="Explorar materiales" description="Busca por fecha, tema o materia">
+            <div className="form-grid">
+              <label>
+                Buscar material
+                <input
+                  type="text"
+                  value={searchTerm}
+                  placeholder="Ejemplo: Fotosíntesis o Texto argumentativo"
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                />
+              </label>
+              <label>
+                Materia
+                <select
+                  value={selectedSubject}
+                  onChange={(event) => setSelectedSubject(event.target.value)}
+                >
+                  <option value="all">Todas las materias</option>
+                  {Array.from(new Set(demoStudent.subjectHistory.map((item) => item.subject))).map(
+                    (subject) => (
+                      <option key={subject} value={subject}>
+                        {subject}
+                      </option>
+                    )
+                  )}
+                </select>
+              </label>
+            </div>
+
+            <div className="stack-list compact-stack">
+              {filteredHistory.map((item) => (
+                <article key={`${item.subject}-${item.title}`} className="list-card compact history-item">
+                  <div>
+                    <strong>{item.title}</strong>
+                    <p>
+                      {item.subject} · {item.date}
+                    </p>
+                  </div>
+                  <div className="inline-tags">
+                    <Tag>{item.status}</Tag>
+                    <button
+                      className="ghost-button"
+                      type="button"
+                      onClick={() => toggleFavorite(item.title)}
+                    >
+                      <AppIcon name="bookmark" size={16} />
+                      {favoriteTopics.includes(item.title) ? "Favorito" : "Guardar"}
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </SectionCard>
+
+          <SectionCard title="Recordatorios y favoritos" description="Lo importante de esta semana" accent="sky">
+            <div className="stack-list compact-stack">
+              {demoStudent.reminders.map((reminder) => (
+                <article key={reminder} className="list-card compact">
+                  <strong>Recordatorio</strong>
+                  <p>{reminder}</p>
+                </article>
+              ))}
+              <article className="list-card compact">
+                <strong>Favoritos</strong>
+                <div className="inline-tags">
+                  {favoriteTopics.map((item) => (
+                    <Tag key={item}>{item}</Tag>
+                  ))}
+                </div>
+              </article>
+            </div>
+          </SectionCard>
+        </div>
+      ) : null}
+
+      {activeWorkspace === "clase" ? (
+        <>
+          <div className="dashboard-grid">
+            <SectionCard title="Resumen postclase" description="Versión principal de estudio">
               <div className="view-toggle">
                 <button
                   className={viewMode === "resumida" ? "primary-button" : "ghost-button"}
@@ -345,193 +409,147 @@ export function StudentPageClient({
                   Vista detallada
                 </button>
               </div>
-            </label>
-          </div>
-
-          <div className="stack-list">
-            {filteredHistory.map((item) => (
-              <article key={`${item.subject}-${item.title}`} className="list-card compact history-item">
-                <div>
-                  <strong>{item.title}</strong>
-                  <p>
-                    {item.subject} · {item.date}
-                  </p>
-                </div>
-                <div className="inline-tags">
-                  <Tag>{item.status}</Tag>
-                  <button
-                    className="ghost-button"
-                    type="button"
-                    onClick={() => toggleFavorite(item.title)}
-                  >
-                    <AppIcon name="bookmark" size={16} />
-                    {favoriteTopics.includes(item.title) ? "Favorito" : "Guardar"}
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-        </SectionCard>
-
-        <SectionCard title="Recordatorios y favoritos" description="Sigue lo importante sin perderte" accent="sky">
-          <div className="stack-list">
-            {demoStudent.reminders.map((reminder) => (
-              <article key={reminder} className="list-card compact">
-                <strong>Recordatorio</strong>
-                <p>{reminder}</p>
-              </article>
-            ))}
-            <article className="list-card compact">
-              <strong>Favoritos</strong>
+              <p className="reading-block">{material.summary}</p>
+            </SectionCard>
+            <SectionCard
+              title="Vista adaptada"
+              description="Lenguaje claro y estructura segmentada"
+              accent="mint"
+            >
+              <p className="reading-block">{material.simplifiedVersion}</p>
               <div className="inline-tags">
-                {favoriteTopics.map((item) => (
-                  <Tag key={item}>{item}</Tag>
+                {material.selectedAdaptations.map((adaptation) => (
+                  <Tag key={adaptation}>{adaptation.replaceAll("_", " ")}</Tag>
                 ))}
               </div>
-            </article>
+            </SectionCard>
           </div>
-        </SectionCard>
-      </div>
 
-      <div className="dashboard-grid" id="materiales">
-        <SectionCard title="Resumen postclase" description="Versión principal de estudio">
-          <p className="reading-block">{material.summary}</p>
-        </SectionCard>
-        <SectionCard
-          title="Vista adaptada"
-          description="Lenguaje claro y estructura segmentada"
-          accent="mint"
-        >
-          <p className="reading-block">{material.simplifiedVersion}</p>
-          <div className="inline-tags">
-            {material.selectedAdaptations.map((adaptation) => (
-              <Tag key={adaptation}>{adaptation.replaceAll("_", " ")}</Tag>
-            ))}
+          {viewMode === "detallada" ? (
+            <div className="dashboard-grid">
+              <SectionCard title="Pasos para repasar" description="Sigue esta ruta para estudiar">
+                <InfoList items={material.steps} />
+              </SectionCard>
+              <SectionCard
+                title="Glosario sencillo"
+                description="Conceptos clave explicados con lenguaje simple"
+                accent="sky"
+              >
+                <div className="glossary-list">
+                  {material.glossary.map((item) => (
+                    <article key={item.term}>
+                      <h3>{item.term}</h3>
+                      <p>{item.definition}</p>
+                    </article>
+                  ))}
+                </div>
+              </SectionCard>
+            </div>
+          ) : null}
+
+          {viewMode === "detallada" ? (
+            <div className="dashboard-grid">
+              <SectionCard title="Materias" description="Accede por asignatura, fecha o docente">
+                <div className="inline-tags">
+                  <Tag>Biología</Tag>
+                  <Tag>Comunicación</Tag>
+                  <Tag>22 mar 2026</Tag>
+                  <Tag>Mariana Torres Villaseñor</Tag>
+                </div>
+              </SectionCard>
+              <SectionCard title="Conceptos clave" description="Ideas centrales de la clase" accent="sky">
+                <div className="inline-tags">
+                  {material.concepts.map((concept) => (
+                    <Tag key={concept}>{concept}</Tag>
+                  ))}
+                </div>
+              </SectionCard>
+            </div>
+          ) : null}
+
+          <div className="dashboard-grid">
+            <SectionCard title="Tarea y entregable" description="Lo importante para después de clase">
+              <div className="task-card">
+                <strong>{material.homeworkReminder}</strong>
+                <p>Marca esta actividad como revisada cuando termines de estudiar.</p>
+                <div className="cta-row">
+                  <button className="primary-button" type="button" onClick={handleReview}>
+                    {isReviewed ? "Revisado" : "Marcar como revisado"}
+                  </button>
+                  <button className="ghost-button" type="button" onClick={handleSave}>
+                    {isSaved ? "Guardado" : "Guardar material"}
+                  </button>
+                </div>
+                <p className="action-feedback">{statusMessage}</p>
+              </div>
+            </SectionCard>
+            <SectionCard title="Esquema breve" description="Apoyo visual rápido">
+              <InfoList items={material.visualOutline} />
+              <div className="stack-list compact-stack">
+                {demoStudent.helperCards.map((card) => (
+                  <article key={card.title} className="list-card compact">
+                    <strong>{card.title}</strong>
+                    <p>{card.copy}</p>
+                  </article>
+                ))}
+              </div>
+            </SectionCard>
           </div>
-        </SectionCard>
-      </div>
+        </>
+      ) : null}
 
-      {viewMode === "detallada" ? (
+      {activeWorkspace === "guardados" ? (
         <div className="dashboard-grid">
-          <SectionCard title="Pasos para repasar" description="Sigue esta ruta para estudiar">
-            <InfoList items={material.steps} />
-          </SectionCard>
           <SectionCard
-            title="Glosario sencillo"
-            description="Conceptos clave explicados con lenguaje simple"
-            accent="sky"
+            title="Descargas recientes"
+            description="Materiales guardados para repaso sin conexión"
           >
-            <div className="glossary-list">
-              {material.glossary.map((item) => (
-                <article key={item.term}>
-                  <h3>{item.term}</h3>
-                  <p>{item.definition}</p>
+            <div className="stack-list compact-stack">
+              {recentDownloads.map((item) => (
+                <article key={item.id} className="list-card compact download-card">
+                  <div>
+                    <strong>{item.title}</strong>
+                    <p>{item.description}</p>
+                  </div>
+                  <div className="cta-row">
+                    <button
+                      className="ghost-button"
+                      type="button"
+                      onClick={() => handleOpen(item)}
+                    >
+                      Abrir
+                    </button>
+                    <button
+                      className="primary-button"
+                      type="button"
+                      onClick={() => handleDownload(item)}
+                    >
+                      Descargar otra vez
+                    </button>
+                  </div>
                 </article>
               ))}
             </div>
+            <p className="action-feedback">{downloadMessage}</p>
           </SectionCard>
-        </div>
-      ) : null}
-
-      {viewMode === "detallada" ? (
-        <div className="dashboard-grid" id="materias">
-          <SectionCard title="Materias" description="Accede por asignatura, fecha o docente">
-            <div className="inline-tags">
-              <Tag>Biología</Tag>
-              <Tag>Comunicación</Tag>
-              <Tag>22 mar 2026</Tag>
-              <Tag>Mariana Torres Villaseñor</Tag>
-            </div>
-          </SectionCard>
-          <SectionCard title="Conceptos clave" description="Ideas centrales de la clase" accent="sky">
-            <div className="inline-tags">
-              {material.concepts.map((concept) => (
-                <Tag key={concept}>{concept}</Tag>
-              ))}
+          <SectionCard
+            title="Privacidad y apoyos"
+            description="Tu experiencia se adapta sin exponer información sensible"
+            accent="mint"
+          >
+            <div className="stack-list compact-stack">
+              <article className="list-card compact">
+                <strong>Material privado por perfil</strong>
+                <p>Solo ves los apoyos pedagógicos que corresponden a tu configuración autorizada.</p>
+              </article>
+              <article className="list-card compact">
+                <strong>Lectura clara</strong>
+                <p>Puedes ajustar tamaño de letra, contraste y densidad visual desde configuración.</p>
+              </article>
             </div>
           </SectionCard>
         </div>
       ) : null}
-
-      <div className="dashboard-grid" id="tareas">
-        <SectionCard title="Tarea y entregable" description="Lo más importante para después de clase">
-          <div className="task-card">
-            <strong>{material.homeworkReminder}</strong>
-            <p>Marca esta actividad como revisada cuando termines de leer el material.</p>
-            <div className="cta-row">
-              <button className="primary-button" type="button" onClick={handleReview}>
-                {isReviewed ? "Revisado" : "Marcar como revisado"}
-              </button>
-              <button className="ghost-button" type="button" onClick={handleSave}>
-                {isSaved ? "Guardado" : "Guardar material"}
-              </button>
-            </div>
-            <p className="action-feedback">{statusMessage}</p>
-          </div>
-        </SectionCard>
-        <SectionCard title="Esquema breve" description="Apoyo visual rápido">
-          <InfoList items={material.visualOutline} />
-          <div className="stack-list compact-stack">
-            {demoStudent.helperCards.map((card) => (
-              <article key={card.title} className="list-card compact">
-                <strong>{card.title}</strong>
-                <p>{card.copy}</p>
-              </article>
-            ))}
-          </div>
-        </SectionCard>
-      </div>
-
-      <div className="dashboard-grid" id="guardados">
-        <SectionCard
-          title="Descargas recientes"
-          description="Materiales guardados para repaso sin conexión"
-        >
-          <div className="stack-list">
-            {recentDownloads.map((item) => (
-              <article key={item.id} className="list-card compact download-card">
-                <div>
-                  <strong>{item.title}</strong>
-                  <p>{item.description}</p>
-                </div>
-                <div className="cta-row">
-                  <button
-                    className="ghost-button"
-                    type="button"
-                    onClick={() => handleOpen(item)}
-                  >
-                    Abrir
-                  </button>
-                  <button
-                    className="primary-button"
-                    type="button"
-                    onClick={() => handleDownload(item)}
-                  >
-                    Descargar otra vez
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-          <p className="action-feedback">{downloadMessage}</p>
-        </SectionCard>
-        <SectionCard
-          title="Privacidad y apoyos"
-          description="Tu experiencia se adapta sin exponer información sensible"
-          accent="mint"
-        >
-          <div className="stack-list">
-            <article className="list-card compact">
-              <strong>Material privado por perfil</strong>
-              <p>Solo ves los apoyos pedagógicos que corresponden a tu configuración autorizada.</p>
-            </article>
-            <article className="list-card compact">
-              <strong>Lectura clara</strong>
-              <p>Puedes ajustar tamaño de letra, contraste y densidad visual desde configuración.</p>
-            </article>
-          </div>
-        </SectionCard>
-      </div>
     </AppShell>
   );
 }

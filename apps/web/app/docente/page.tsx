@@ -9,17 +9,17 @@ export default function TeacherDashboardPage() {
     <AppShell
       role="teacher"
       title={`Hola, ${teacher.name}`}
-      subtitle="Genera materiales postclase en pocos pasos, revísalos y entrégalos con una experiencia clara para tu grupo."
+      subtitle="Genera, revisa y entrega materiales postclase desde una vista compacta y operativa."
     >
       <div className="workspace-strip">
-        <a className="workspace-chip" href="#historial">
-          Historial
+        <a className="workspace-chip" href="#hoy">
+          Hoy
         </a>
-        <a className="workspace-chip" href="#materias">
-          Materias
+        <a className="workspace-chip" href="#reciente">
+          Trabajo reciente
         </a>
-        <a className="workspace-chip" href="#grupos">
-          Grupos
+        <a className="workspace-chip" href="#recursos">
+          Recursos
         </a>
         <Link className="workspace-chip" href="/docente/comparativa">
           Comparativa
@@ -33,7 +33,7 @@ export default function TeacherDashboardPage() {
         <div className="hero-banner-copy">
           <span className="hero-kicker">Recorrido docente</span>
           <h2>Nueva clase en menos de 5 minutos</h2>
-          <p>{demoTeacher.focusCards[0].copy}</p>
+          <p>Captura la sesión, genera el borrador y decide la entrega desde un solo flujo.</p>
           <div className="hero-actions">
             <Link className="primary-button" href="/docente/nueva-clase">
               <AppIcon name="spark" size={16} />
@@ -64,7 +64,7 @@ export default function TeacherDashboardPage() {
         </div>
       </section>
 
-      <section className="utility-grid">
+      <section className="utility-grid" id="hoy">
         <Link className="utility-card" href="/docente/nueva-clase">
           <span className="icon-badge">
             <AppIcon name="microphone" />
@@ -109,143 +109,156 @@ export default function TeacherDashboardPage() {
         ))}
       </div>
 
-      <div className="dashboard-grid">
-        <SectionCard title="Historial reciente" description="Sesiones y materiales más recientes">
-          <div id="historial" />
-          <div className="stack-list">
-            {recentSessions.map((session) => (
-              <article key={session.id} className="list-card">
-                <div>
-                  <strong>{session.topic}</strong>
-                  <p>{session.date}</p>
-                </div>
-                <div className="inline-tags">
-                  <Tag>{teacherSubjects.find((subject) => subject.id === session.subjectId)?.name}</Tag>
-                  <Tag>{teacherGroups.find((group) => group.id === session.groupId)?.name}</Tag>
-                  <Tag>{session.status}</Tag>
-                </div>
-              </article>
-            ))}
+      <div className="dashboard-main-grid" id="reciente">
+        <SectionCard title="Trabajo reciente" description="Sesiones y borradores activos">
+          <div className="section-stack">
+            <section className="section-block">
+              <div className="section-block-header">
+                <strong>Sesiones recientes</strong>
+                <Link className="ghost-button" href="/docente/historial">
+                  Ver historial
+                </Link>
+              </div>
+              <div className="stack-list compact-stack">
+                {recentSessions.slice(0, 3).map((session) => (
+                  <article key={session.id} className="list-card compact">
+                    <div>
+                      <strong>{session.topic}</strong>
+                      <p>{session.date}</p>
+                    </div>
+                    <div className="inline-tags">
+                      <Tag>{teacherSubjects.find((subject) => subject.id === session.subjectId)?.name}</Tag>
+                      <Tag>{teacherGroups.find((group) => group.id === session.groupId)?.name}</Tag>
+                      <Tag>{session.status}</Tag>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className="section-block">
+              <div className="section-block-header">
+                <strong>Materiales generados</strong>
+                <Link className="ghost-button" href="/docente/materiales">
+                  Abrir materiales
+                </Link>
+              </div>
+              <div className="stack-list compact-stack">
+                {generatedMaterials.slice(0, 3).map((material) => (
+                  <article key={material.id} className="material-card compact">
+                    <div>
+                      <strong>{material.title}</strong>
+                      <p>{material.summary}</p>
+                    </div>
+                    <div className="inline-tags">
+                      {material.selectedAdaptations.slice(0, 3).map((adaptation) => (
+                        <Tag key={adaptation}>{adaptation.replaceAll("_", " ")}</Tag>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
           </div>
         </SectionCard>
 
-        <SectionCard title="Materias activas" description="Organiza tu carga académica" accent="sky">
-          <div id="materias" />
-          <div className="stack-list">
-            {teacherSubjects.map((subject) => (
-              <article key={subject.id} className="list-card compact">
-                <strong>{subject.name}</strong>
-                <p>{subject.area}</p>
+        <div className="dashboard-aside-stack">
+          <SectionCard title="Estado del día" description="Pendientes, entregas y alertas" accent="mint">
+            <div className="stack-list compact-stack">
+              {deliveryQueue.slice(0, 2).map((delivery) => (
+                <article key={delivery.id} className="list-card compact">
+                  <strong>{delivery.channel === "platform" ? "Entrega por plataforma" : "Entrega por correo"}</strong>
+                  <p>{new Date(delivery.scheduledFor).toLocaleString("es-MX")}</p>
+                </article>
+              ))}
+              {demoTeacher.notifications.slice(0, 2).map((item) => (
+                <article key={item.title} className="list-card compact">
+                  <strong>{item.title}</strong>
+                  <p>{item.copy}</p>
+                </article>
+              ))}
+            </div>
+          </SectionCard>
+
+          <SectionCard title="Recursos clave" description="Plantillas, comparativa y apoyos" accent="sky">
+            <div className="stack-list compact-stack">
+              <article className="list-card compact">
+                <strong>{demoTeacher.templates[0].title}</strong>
+                <p>{demoTeacher.templates[0].focus}</p>
               </article>
-            ))}
-            <article className="list-card compact emphasis-card">
-              <strong>{demoTeacher.focusCards[1].title}</strong>
-              <p>{demoTeacher.focusCards[1].copy}</p>
-            </article>
-          </div>
-        </SectionCard>
+              <article className="list-card compact">
+                <strong>{demoTeacher.authorizedSupportGuides[0].title}</strong>
+                <p>Salida sugerida: {demoTeacher.authorizedSupportGuides[0].suggestedMaterial}</p>
+              </article>
+            </div>
+            <div className="cta-row">
+              <Link className="ghost-button" href="/docente/plantillas">
+                Abrir plantillas
+              </Link>
+              <Link className="ghost-button" href="/docente/comparativa">
+                Abrir comparativa
+              </Link>
+            </div>
+          </SectionCard>
+        </div>
       </div>
 
-      <div className="dashboard-grid">
-        <SectionCard title="Materiales generados" description="Últimos borradores y versiones finales">
-          <div className="stack-list">
-            {generatedMaterials.map((material) => (
-              <article key={material.id} className="material-card">
-                <div>
-                  <strong>{material.title}</strong>
-                  <p>{material.summary}</p>
-                </div>
-                <div className="inline-tags">
-                  {material.selectedAdaptations.map((adaptation) => (
-                    <Tag key={adaptation}>{adaptation.replaceAll("_", " ")}</Tag>
-                  ))}
-                </div>
-              </article>
-            ))}
+      <div className="dashboard-grid" id="recursos">
+        <SectionCard title="Materias y grupos" description="Carga académica activa">
+          <div className="section-stack">
+            <section className="section-block">
+              <div className="section-block-header">
+                <strong>Materias</strong>
+                <span className="status-pill">
+                  <AppIcon name="book" size={14} />
+                  {teacherSubjects.length} activas
+                </span>
+              </div>
+              <div className="stack-list compact-stack">
+                {teacherSubjects.map((subject) => (
+                  <article key={subject.id} className="list-card compact">
+                    <strong>{subject.name}</strong>
+                    <p>{subject.area}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className="section-block">
+              <div className="section-block-header">
+                <strong>Grupos</strong>
+                <span className="status-pill">
+                  <AppIcon name="users" size={14} />
+                  {teacherGroups.length} asignados
+                </span>
+              </div>
+              <div className="stack-list compact-stack">
+                {teacherGroups.map((group) => (
+                  <article key={group.id} className="list-card compact">
+                    <strong>{group.name}</strong>
+                    <p>
+                      {group.grade} · {group.shift}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </section>
           </div>
         </SectionCard>
 
-        <SectionCard title="Entregas programadas" description="Cola de distribución postclase" accent="mint">
-          <div id="grupos" />
-          <div className="stack-list">
-            {deliveryQueue.map((delivery) => (
-              <article key={delivery.id} className="list-card compact">
-                <strong>{delivery.channel === "platform" ? "Plataforma interna" : "Correo"}</strong>
-                <p>{new Date(delivery.scheduledFor).toLocaleString("es-MX")}</p>
-              </article>
-            ))}
-          </div>
-        </SectionCard>
-      </div>
-
-      <div className="dashboard-grid">
-        <SectionCard title="Notificaciones" description="Seguimiento rápido de tareas docentes">
-          <div className="stack-list">
-            {demoTeacher.notifications.map((item) => (
-              <article key={item.title} className="list-card">
-                <strong>{item.title}</strong>
-                <p>{item.copy}</p>
-              </article>
-            ))}
-          </div>
-        </SectionCard>
-
-        <SectionCard title="Biblioteca de plantillas" description="Formatos reutilizables para ahorrar tiempo" accent="sky">
-          <div className="stack-list">
-            {demoTeacher.templates.map((template) => (
-              <article key={template.title} className="list-card compact">
-                <strong>{template.title}</strong>
-                <p>{template.copy}</p>
-              </article>
-            ))}
-            <Link className="ghost-button" href="/docente/plantillas">
-              Ver biblioteca completa
-            </Link>
-          </div>
-        </SectionCard>
-      </div>
-
-      <div className="dashboard-grid">
-        <SectionCard
-          title="Apoyos pedagógicos autorizados"
-          description="Traducción docente de información institucional protegida"
-          accent="mint"
-        >
-          <div className="stack-list">
-            {demoTeacher.authorizedSupportGuides.map((guide) => (
-              <article key={guide.title} className="list-card">
+        <SectionCard title="Apoyos autorizados" description="Traducción pedagógica para el envío" accent="mint">
+          <div className="stack-list compact-stack">
+            {demoTeacher.authorizedSupportGuides.slice(0, 2).map((guide) => (
+              <article key={guide.title} className="list-card compact">
                 <strong>{guide.title}</strong>
                 <p>{guide.copy}</p>
-                <p>Salida sugerida: {guide.suggestedMaterial}</p>
                 <div className="inline-tags">
-                  {guide.supports.map((support) => (
+                  {guide.supports.slice(0, 3).map((support) => (
                     <Tag key={support}>{support}</Tag>
                   ))}
                 </div>
               </article>
             ))}
-          </div>
-        </SectionCard>
-
-        <SectionCard
-          title="Comparativa y trazabilidad"
-          description="Demuestra cómo la IA apoya y el docente decide"
-          accent="sky"
-        >
-          <div className="stack-list">
-            <article className="list-card compact">
-              <strong>Comparativa de generación</strong>
-              <p>Visualiza entrada original, borrador IA, revisión docente y salida final antes del envío.</p>
-            </article>
-            <article className="list-card compact">
-              <strong>Privacidad y permisos</strong>
-              <p>Los apoyos llegan al docente como recomendaciones pedagógicas, no como etiquetas sensibles para el grupo.</p>
-            </article>
-            <div className="cta-row">
-              <Link className="ghost-button" href="/docente/comparativa">
-                Abrir comparativa
-              </Link>
-            </div>
           </div>
         </SectionCard>
       </div>

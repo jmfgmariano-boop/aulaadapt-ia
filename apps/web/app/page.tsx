@@ -5,8 +5,6 @@ import { RoleSwitcher } from "../components/RoleSwitcher";
 import { demoConfig, demoLanding, demoRoleLabels, demoRoutes } from "../lib/demo";
 
 export default function HomePage() {
-  const highlightIcons = ["book", "teacher", "spark", "layers"] as const;
-
   return (
     <main className="landing-page">
       <section className="landing-topbar">
@@ -142,19 +140,6 @@ export default function HomePage() {
               height={540}
             />
           </div>
-          <div className="showcase-grid">
-            {demoLanding.highlights.map((highlight, index) => (
-              <article key={highlight.title}>
-                <div className="role-card-head compact-head">
-                  <span className="icon-badge">
-                    <AppIcon name={highlightIcons[index] ?? "spark"} />
-                  </span>
-                  <strong>{highlight.title}</strong>
-                </div>
-                <p>{highlight.copy}</p>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -195,51 +180,6 @@ export default function HomePage() {
           <h2>Un flujo simple para convertir una clase en apoyo postclase entendible y útil.</h2>
         </div>
         <FlowSteps items={demoLanding.howItWorks} />
-      </section>
-
-      <section className="trust-strip">
-        {demoLanding.valuePillars.map((pillar) => (
-          <div key={pillar.title}>
-            <strong>{pillar.title}</strong>
-            <p>{pillar.copy}</p>
-          </div>
-        ))}
-      </section>
-
-      <section className="institutional-panel">
-        <div className="section-title">
-          <span>Presentación institucional</span>
-          <h2>Diseñada para operar como una plataforma escolar profesional, clara y escalable.</h2>
-        </div>
-        <div className="institutional-grid">
-          <article className="role-card">
-            <div className="role-card-head">
-              <span className="icon-badge">
-                <AppIcon name="layers" />
-              </span>
-              <h3>Operación escolar clara</h3>
-            </div>
-            <p>Integra captura docente, revisión, entrega y seguimiento con una experiencia comprensible para toda la institución.</p>
-          </article>
-          <article className="role-card">
-            <div className="role-card-head">
-              <span className="icon-badge">
-                <AppIcon name="shield" />
-              </span>
-              <h3>Imagen institucional sólida</h3>
-            </div>
-            <p>La interfaz integra identidad institucional, jerarquía clara, accesibilidad visual y una navegación lista para crecer con la escuela.</p>
-          </article>
-          <article className="role-card">
-            <div className="role-card-head">
-              <span className="icon-badge">
-                <AppIcon name="report" />
-              </span>
-              <h3>Escalabilidad real</h3>
-            </div>
-            <p>La base funcional ya contempla operación por grupos, materias, perfiles, materiales y futuras integraciones académicas.</p>
-          </article>
-        </div>
       </section>
     </main>
   );

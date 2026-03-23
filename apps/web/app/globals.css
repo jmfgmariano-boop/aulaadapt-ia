@@ -336,6 +336,15 @@ textarea {
   color: var(--ink);
   font-weight: 700;
   white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  appearance: none;
+}
+
+.workspace-chip.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
 }
 
 body[data-theme="dark"] .workspace-chip {
@@ -1033,6 +1042,36 @@ body[data-theme="dark"] .profile-chip {
   grid-template-columns: 1.3fr 0.9fr;
 }
 
+.dashboard-main-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.85fr;
+  gap: 18px;
+}
+
+.dashboard-aside-stack,
+.section-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.section-block {
+  display: grid;
+  gap: 14px;
+}
+
+.section-block + .section-block {
+  padding-top: 18px;
+  border-top: 1px solid rgba(121, 36, 47, 0.08);
+}
+
+.section-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .utility-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1044,11 +1083,14 @@ body[data-theme="dark"] .profile-chip {
   align-items: flex-start;
   gap: 14px;
   padding: 18px;
+  width: 100%;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(121, 36, 47, 0.08);
   background: rgba(255, 255, 255, 0.88);
   box-shadow: var(--shadow);
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  cursor: pointer;
+  text-align: left;
 }
 
 .utility-card:hover {
@@ -1644,6 +1686,7 @@ button:disabled {
 @media (max-width: 1080px) {
   .hero-panel,
   .hero-banner,
+  .dashboard-main-grid,
   .dashboard-grid,
   .composer-grid,
   .review-layout,
@@ -1720,6 +1763,7 @@ button:disabled {
   .glossary-list,
   .form-grid,
   .hero-mini-flow,
+  .dashboard-main-grid,
   .utility-grid,
   .recipient-summary-grid,
   .comparison-grid {
