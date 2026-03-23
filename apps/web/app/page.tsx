@@ -63,7 +63,7 @@ export default function HomePage() {
               </span>
               <div>
                 <strong>Material base para todo el grupo</strong>
-                <p>Resumen, pasos, conceptos y glosario listos para enviarse por medios oficiales.</p>
+                <p>Resumen, pasos, conceptos y glosario generados después de clase para fortalecer el repaso de todo el grupo.</p>
               </div>
             </article>
             <article className="hero-proof">
@@ -72,10 +72,13 @@ export default function HomePage() {
               </span>
               <div>
                 <strong>Entrega institucional al alumnado</strong>
-                <p>Correo, exportación y plataformas escolares dentro del mismo flujo docente.</p>
+                <p>Correo institucional, exportación y plataformas escolares integradas en un mismo flujo docente.</p>
               </div>
             </article>
           </div>
+          <p className="helper-copy">
+            La IA organiza el contenido. El docente revisa, aprueba y define la entrega institucional al alumnado.
+          </p>
           <div className="hero-metrics">
             {demoLanding.metrics.map((metric) => (
               <article key={metric.label} className="hero-metric-card">
@@ -84,6 +87,7 @@ export default function HomePage() {
               </article>
             ))}
           </div>
+          <p className="helper-copy">Indicadores del entorno actual cargado para esta demostración institucional.</p>
           <section className="profile-selector-card">
             <div className="profile-selector-copy">
               <span>Elegir perfil</span>

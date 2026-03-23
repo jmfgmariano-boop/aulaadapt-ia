@@ -126,6 +126,9 @@ type AdminPanelClientProps = {
   analytics: {
     filters: readonly string[];
     metrics: readonly { label: string; value: string; helper: string }[];
+    usageByTeacher: readonly AnalyticsItem[];
+    usageByGroup: readonly AnalyticsItem[];
+    usageByChannel: readonly AnalyticsItem[];
     usageBySubject: readonly AnalyticsItem[];
     usageByAdaptation: readonly AnalyticsItem[];
     trend: readonly { period: string; value: number }[];
@@ -625,13 +628,35 @@ export function AdminPanelClient({
           <div className="dashboard-grid">
             <SectionCard
               title="Importar base escolar"
-              description="Carga, mapeo y validación"
+              description="Carga masiva, mapeo visible, validación y actualización de registros"
               accent="sky"
             >
               <div className="inline-tags">
                 {importSources.map((source) => (
                   <Tag key={source}>{source}</Tag>
                 ))}
+              </div>
+              <div className="mini-stat-grid">
+                <article className="mini-stat-card">
+                  <span>Registros válidos</span>
+                  <strong>{importSummary.validRows}</strong>
+                  <p>Listos para integrarse en la base escolar.</p>
+                </article>
+                <article className="mini-stat-card">
+                  <span>Errores detectados</span>
+                  <strong>{importSummary.errorRows}</strong>
+                  <p>Filas con observaciones para corregir antes de guardar.</p>
+                </article>
+                <article className="mini-stat-card">
+                  <span>Registros nuevos</span>
+                  <strong>{importSummary.newStudents}</strong>
+                  <p>Altas disponibles en esta actualización.</p>
+                </article>
+                <article className="mini-stat-card">
+                  <span>Registros actualizados</span>
+                  <strong>{importSummary.updatedStudents}</strong>
+                  <p>Filas coincidentes con cambios listos para aplicar.</p>
+                </article>
               </div>
               <div className="form-grid">
                 <label>
@@ -664,25 +689,53 @@ export function AdminPanelClient({
                 }
               />
               <div className="cta-row">
-                <button className="primary-button" type="button" onClick={handleFilePick}>
+                <button
+                  className="primary-button"
+                  type="button"
+                  onClick={() => {
+                    setSelectedImportSource("Excel institucional");
+                    handleFilePick();
+                  }}
+                >
                   <AppIcon name="database" size={16} />
-                  Cargar archivo
+                  Cargar Excel
+                </button>
+                <button
+                  className="ghost-button"
+                  type="button"
+                  onClick={() => {
+                    setSelectedImportSource("CSV");
+                    handleFilePick();
+                  }}
+                >
+                  Cargar CSV
                 </button>
                 <button className="ghost-button" type="button" onClick={handleDownloadTemplate}>
                   Descargar plantilla
                 </button>
+                <button
+                  className="ghost-button"
+                  type="button"
+                  onClick={() =>
+                    setImportStatus(
+                      "Mapeo listo para revisión. Verifica columnas visibles y confirma la validación antes de importar."
+                    )
+                  }
+                >
+                  Mapear columnas
+                </button>
                 <button className="ghost-button" type="button" onClick={handleValidateImport}>
-                  Validar
+                  Validar datos
                 </button>
                 <button className="ghost-button" type="button" onClick={handleImportBase}>
-                  Actualizar base
+                  Confirmar importación
                 </button>
               </div>
               <p className="action-feedback">{importStatus}</p>
 
               <div className="dashboard-grid">
                 <article className="list-card compact">
-                  <strong>Mapeo visible</strong>
+                  <strong>Mapeo de columnas</strong>
                   <div className="stack-list compact-stack">
                     {importTemplateHeaders.slice(0, 6).map((header) => (
                       <label key={header}>
@@ -717,7 +770,7 @@ export function AdminPanelClient({
               </div>
 
               <div className="stack-list compact-stack">
-                <strong>Vista previa</strong>
+                <strong>Vista previa de registros</strong>
                 {importPreviewRows.map((row) => (
                   <article key={row.matricula} className="list-card compact">
                     <div>
@@ -1017,13 +1070,35 @@ export function AdminPanelClient({
         <div className="dashboard-grid" id="perfiles">
           <SectionCard
             title="Perfiles pedagógicos y accesibilidad"
-            description="Gestión pedagógica con historial y permisos restringidos"
+            description="Apoyos activos, trazabilidad y visibilidad por rol dentro de un flujo institucional"
             accent="sky"
           >
             <div className="inline-tags">
               {accessibilityProfiles.map((profile) => (
                 <Tag key={profile}>{profile}</Tag>
               ))}
+            </div>
+            <div className="mini-stat-grid">
+              <article className="mini-stat-card">
+                <span>Apoyos activos</span>
+                <strong>{selectedProfile.activeSupports.length}</strong>
+                <p>Asociados al expediente institucional seleccionado.</p>
+              </article>
+              <article className="mini-stat-card">
+                <span>Última actualización</span>
+                <strong>{selectedProfile.updatedAt}</strong>
+                <p>Último movimiento visible para coordinación.</p>
+              </article>
+              <article className="mini-stat-card">
+                <span>Registró</span>
+                <strong>{selectedProfile.registeredBy}</strong>
+                <p>Responsable del expediente pedagógico actual.</p>
+              </article>
+              <article className="mini-stat-card">
+                <span>Visibilidad</span>
+                <strong>{selectedProfile.visibility.length} roles</strong>
+                <p>Accesos autorizados sobre este perfil.</p>
+              </article>
             </div>
             <div className="dashboard-grid">
               <div className="stack-list compact-stack">
@@ -1105,6 +1180,10 @@ export function AdminPanelClient({
                     <p>{selectedProfile.recommendedAdaptations.join(" · ")}</p>
                   </article>
                   <article className="list-card compact">
+                    <strong>Permisos de visibilidad</strong>
+                    <p>{selectedProfile.visibility.join(" · ")}</p>
+                  </article>
+                  <article className="list-card compact">
                     <strong>Qué verá el docente</strong>
                     <InfoList items={selectedProfile.teacherView.practicalRecommendations} />
                   </article>
@@ -1178,7 +1257,7 @@ export function AdminPanelClient({
         <div className="dashboard-grid">
           <SectionCard
             title="Reportes y analítica"
-            description="Lectura agregada por fecha, grupo, materia y apoyo"
+            description="Lectura agregada del entorno actual por fecha, grupo, materia, docente y canal de entrega"
           >
             <div className="report-grid">
               {reportCards.map((card) => (
@@ -1189,6 +1268,9 @@ export function AdminPanelClient({
                 </article>
               ))}
             </div>
+            <p className="helper-copy">
+              Métricas del entorno actual cargado para esta demostración institucional.
+            </p>
             <div className="inline-tags">
               {analytics.filters.map((filter) => (
                 <Tag key={filter}>{filter}</Tag>
@@ -1209,6 +1291,19 @@ export function AdminPanelClient({
             <div className="section-stack">
               <section className="section-block">
                 <div className="section-block-header">
+                  <strong>Por docente</strong>
+                </div>
+                <div className="stack-list compact-stack">
+                  {analytics.usageByTeacher.slice(0, 4).map((item) => (
+                    <article key={item.label} className="list-card compact">
+                      <strong>{item.label}</strong>
+                      <p>{item.value} materiales</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+              <section className="section-block">
+                <div className="section-block-header">
                   <strong>Por materia</strong>
                 </div>
                 <div className="stack-list compact-stack">
@@ -1222,10 +1317,36 @@ export function AdminPanelClient({
               </section>
               <section className="section-block">
                 <div className="section-block-header">
+                  <strong>Por grupo</strong>
+                </div>
+                <div className="stack-list compact-stack">
+                  {analytics.usageByGroup.slice(0, 4).map((item) => (
+                    <article key={item.label} className="list-card compact">
+                      <strong>{item.label}</strong>
+                      <p>{item.value} entregas</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+              <section className="section-block">
+                <div className="section-block-header">
                   <strong>Adaptaciones más usadas</strong>
                 </div>
                 <div className="stack-list compact-stack">
                   {analytics.usageByAdaptation.slice(0, 4).map((item) => (
+                    <article key={item.label} className="list-card compact">
+                      <strong>{item.label}</strong>
+                      <p>{item.value} usos</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+              <section className="section-block">
+                <div className="section-block-header">
+                  <strong>Canales de entrega</strong>
+                </div>
+                <div className="stack-list compact-stack">
+                  {analytics.usageByChannel.slice(0, 4).map((item) => (
                     <article key={item.label} className="list-card compact">
                       <strong>{item.label}</strong>
                       <p>{item.value} usos</p>
@@ -1284,13 +1405,14 @@ export function AdminPanelClient({
       {activeSection === "integrations" ? (
         <div className="dashboard-grid">
           <SectionCard
-            title="Integraciones futuras"
-            description="Ruta de crecimiento institucional"
+            title="Integraciones"
+            description="Canales operativos actuales y ruta de crecimiento institucional"
             accent="sky"
           >
-            <div className="stack-list compact-stack">
+            <div className="report-grid">
               {integrations.map((integration) => (
-                <article key={integration.title} className="list-card compact">
+                <article key={integration.title} className="report-card compact">
+                  <span>{integration.status}</span>
                   <strong>{integration.title}</strong>
                   <p>{integration.copy}</p>
                   <div className="inline-tags">
@@ -1299,6 +1421,9 @@ export function AdminPanelClient({
                 </article>
               ))}
             </div>
+            <p className="helper-copy">
+              Correo institucional y exportación ya forman parte del flujo actual; Classroom, Teams y LMS quedan visibles como camino real de crecimiento.
+            </p>
             <div className="cta-row">
               <Link className="ghost-button" href="/integraciones">
                 Abrir ruta de integraciones

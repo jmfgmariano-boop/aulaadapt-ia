@@ -217,8 +217,8 @@ export function AppShell({
         ) : null}
 
         <div className="ethics-card">
-          <span>Uso responsable</span>
-          <p>La IA organiza el contenido. El docente revisa, aprueba y define la entrega institucional al alumnado.</p>
+          <span>Privacidad institucional</span>
+          <p>Permisos, trazabilidad y apoyos pedagógicos autorizados dentro de un flujo escolar controlado.</p>
         </div>
       </aside>
 

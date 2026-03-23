@@ -208,7 +208,7 @@ export function MaterialsReviewClient({
       }
 
       setStatusMessage(
-        `Material programado para ${scheduledFor.replace("T", " ")} por ${channel === "platform" ? "plataforma interna" : "correo institucional"} con ${recipientCount} destinatarios y ${additionalSupportCount} apoyos adicionales activos.`
+        `Material programado para ${scheduledFor.replace("T", " ")} por ${channel === "platform" ? "LMS institucional" : "correo institucional"} con ${recipientCount} destinatarios y ${additionalSupportCount} apoyos adicionales activos.`
       );
     } catch (error) {
       setStatusMessage(

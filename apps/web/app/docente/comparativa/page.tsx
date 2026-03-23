@@ -6,13 +6,13 @@ export default function TeacherComparisonPage() {
   return (
     <AppShell
       role="teacher"
-      title="Comparativa de generación"
-      subtitle="Visualiza con claridad la diferencia entre la entrada docente, el borrador de IA, la revisión humana y el resultado final enviado."
+      title="Comparativa del material"
+      subtitle="Visualiza con claridad la diferencia entre la entrada docente, el borrador de IA, la revisión humana y la versión final lista para entrega."
     >
       <div className="dashboard-grid">
         <SectionCard
-          title="Antes y después del procesamiento"
-          description="La IA organiza el contenido y el docente conserva la decisión final."
+          title="Comparativa del proceso"
+          description="Entrada, borrador, revisión y resultado final en un mismo bloque visual."
         >
           <div className="comparison-grid">
             <article className="comparison-card">
@@ -44,7 +44,7 @@ export default function TeacherComparisonPage() {
             </article>
             <article className="comparison-card">
               <span className="comparison-label">Resultado final</span>
-              <strong>Material entregado</strong>
+              <strong>Versión final enviada</strong>
               <ul className="comparison-list">
                 {demoTeacher.comparisonCase.finalResult.map((item) => (
                   <li key={item}>{item}</li>

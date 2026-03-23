@@ -24,7 +24,7 @@ export default function AdminReportsPage() {
       <div className="dashboard-grid">
         <SectionCard
           title="Filtros disponibles"
-          description="Explora la analítica por segmento institucional"
+          description="Explora la analítica del entorno actual por segmento institucional"
         >
           <div className="inline-tags">
             {demoAdmin.analytics.filters.map((filter) => (
@@ -33,7 +33,7 @@ export default function AdminReportsPage() {
           </div>
           <p className="helper-copy">
             Los reportes se muestran de forma agregada y priorizan patrones de uso,
-            volumen operativo y adopción por grupo, materia y tipo de apoyo.
+            volumen operativo y adopción por grupo, materia, docente, canal y tipo de apoyo.
           </p>
         </SectionCard>
 
@@ -51,6 +51,47 @@ export default function AdminReportsPage() {
                 </div>
                 <div className="analytics-bar-track">
                   <span style={{ width: `${Math.min(item.value, 100)}%` }} />
+                </div>
+              </article>
+            ))}
+          </div>
+        </SectionCard>
+      </div>
+
+      <div className="dashboard-grid">
+        <SectionCard
+          title="Uso por docente"
+          description="Docentes con mayor generación de materiales en el entorno actual"
+        >
+          <div className="stack-list">
+            {demoAdmin.analytics.usageByTeacher.map((item) => (
+              <article key={item.label} className="list-card compact analytics-bar-card">
+                <div className="analytics-bar-label">
+                  <strong>{item.label}</strong>
+                  <span>{item.value} materiales</span>
+                </div>
+                <div className="analytics-bar-track">
+                  <span style={{ width: `${item.value * 2}%` }} />
+                </div>
+              </article>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard
+          title="Actividad por grupo"
+          description="Grupos con mayor movimiento de entregas y materiales"
+          accent="sky"
+        >
+          <div className="stack-list">
+            {demoAdmin.analytics.usageByGroup.map((item) => (
+              <article key={item.label} className="list-card compact analytics-bar-card">
+                <div className="analytics-bar-label">
+                  <strong>{item.label}</strong>
+                  <span>{item.value} entregas</span>
+                </div>
+                <div className="analytics-bar-track">
+                  <span style={{ width: `${item.value * 2.2}%` }} />
                 </div>
               </article>
             ))}
@@ -79,9 +120,29 @@ export default function AdminReportsPage() {
         </SectionCard>
 
         <SectionCard
+          title="Canales de entrega"
+          description="Rutas de salida más usadas dentro del flujo institucional"
+          accent="mint"
+        >
+          <div className="stack-list">
+            {demoAdmin.analytics.usageByChannel.map((item) => (
+              <article key={item.label} className="list-card compact analytics-bar-card">
+                <div className="analytics-bar-label">
+                  <strong>{item.label}</strong>
+                  <span>{item.value} usos</span>
+                </div>
+                <div className="analytics-bar-track">
+                  <span style={{ width: `${item.value * 2.5}%` }} />
+                </div>
+              </article>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard
           title="Adaptaciones más usadas"
           description="Apoyos pedagógicos con mayor recurrencia"
-          accent="mint"
+          accent="sky"
         >
           <div className="stack-list">
             {demoAdmin.analytics.usageByAdaptation.map((item) => (

@@ -9,7 +9,7 @@ export default function TeacherDashboardPage() {
     <AppShell
       role="teacher"
       title={`Hola, ${teacher.name}`}
-      subtitle="Genera, revisa y entrega materiales postclase desde una vista compacta y operativa."
+      subtitle="Genera, revisa y entrega materiales postclase claros y accesibles desde una vista compacta y operativa."
     >
       <div className="workspace-strip">
         <a className="workspace-chip" href="#hoy">
@@ -33,7 +33,10 @@ export default function TeacherDashboardPage() {
         <div className="hero-banner-copy">
           <span className="hero-kicker">Recorrido docente</span>
           <h2>Nueva clase en menos de 5 minutos</h2>
-          <p>Captura la sesión, genera el borrador y decide la entrega desde un solo flujo.</p>
+          <p>Captura la sesión, genera un borrador con IA y decide la entrega institucional desde un solo flujo.</p>
+          <p className="helper-copy">
+            La IA organiza el contenido. El docente revisa, aprueba y define la entrega institucional al alumnado.
+          </p>
           <div className="hero-actions">
             <Link className="primary-button" href="/docente/nueva-clase">
               <AppIcon name="spark" size={16} />
@@ -173,7 +176,7 @@ export default function TeacherDashboardPage() {
               ))}
               {deliveryQueue.slice(0, 2).map((delivery) => (
                 <article key={delivery.id} className="list-card compact">
-                  <strong>{delivery.channel === "platform" ? "Entrega por plataforma" : "Entrega por correo"}</strong>
+                  <strong>{delivery.channel === "platform" ? "Entrega por LMS" : "Entrega por correo"}</strong>
                   <p>{new Date(delivery.scheduledFor).toLocaleString("es-MX")}</p>
                 </article>
               ))}
@@ -291,7 +294,11 @@ export default function TeacherDashboardPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Apoyos autorizados" description="Traducción pedagógica para el envío" accent="mint">
+        <SectionCard
+          title="Apoyos autorizados"
+          description="Apoyos pedagógicos autorizados para personalizar el material postclase"
+          accent="mint"
+        >
           <div className="stack-list compact-stack">
             {demoTeacher.authorizedSupportGuides.slice(0, 2).map((guide) => (
               <article key={guide.title} className="list-card compact">

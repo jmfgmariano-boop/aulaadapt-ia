@@ -48,9 +48,9 @@ export const demoRoleLabels: Record<UserRole, string> = {
 export const demoLanding = {
   kicker: "IA postclase para educación media superior",
   title:
-    "Plataforma de apoyo docente e institucional para entregar materiales postclase por medios oficiales.",
+    "Plataforma de apoyo docente e institucional para transformar clases en materiales postclase claros, accesibles y listos para enviarse por medios oficiales.",
   description:
-    "AulaAdapt IA transforma la explicación de clase en materiales postclase accesibles, resumidos y personalizados, listos para enviarse al alumnado por correo institucional, plataformas escolares o exportación controlada.",
+    "AulaAdapt IA convierte la explicación de clase en materiales postclase claros, resumidos y personalizados para que el equipo docente y la institución los entreguen al alumnado por canales oficiales.",
   primaryCta: {
     href: "/docente/nueva-clase",
     label: "Explorar panel docente"
@@ -173,22 +173,22 @@ export const demoTeacher = {
     {
       label: "Materiales esta semana",
       value: String(usageSnapshot.generatedThisWeek),
-      helper: "Generados en la preparatoria"
+      helper: "Entorno actual cargado"
     },
     {
       label: "Tasa de aprobación",
       value: `${usageSnapshot.approvedRate}%`,
-      helper: "Borradores revisados antes de entregarse"
+      helper: "Revisión docente antes del envío"
     },
     {
       label: "Grupos activos",
       value: String(usageSnapshot.activeGroups),
-      helper: "Con uso reciente dentro de la plataforma"
+      helper: "Con actividad en la carga actual"
     },
     {
       label: "Entrega promedio",
       value: `${usageSnapshot.averageDeliveryMinutes} min`,
-      helper: "Entre cierre de clase y publicación"
+      helper: "Entre cierre de clase y salida institucional"
     }
   ],
   focusCards: [
@@ -216,7 +216,7 @@ export const demoTeacher = {
     },
     {
       title: "Entregas programadas",
-      copy: "2 publicaciones quedarán listas hoy por correo y plataforma."
+      copy: "2 publicaciones quedarán listas hoy por correo institucional y LMS."
     },
     {
       title: "Historial reciente",
@@ -236,7 +236,7 @@ export const demoTeacher = {
     },
     {
       title: "Entrega programada hoy",
-      copy: "Comunicación 4B se publicará a las 16:30 por plataforma interna."
+      copy: "Comunicación 4B se enviará a las 16:30 por correo institucional y exportación PDF."
     },
     {
       title: "Plantilla reutilizable disponible",
@@ -256,7 +256,7 @@ export const demoTeacher = {
     {
       id: "notif-2",
       title: "Entrega programada hoy",
-      copy: "Comunicación 4B se publicará a las 16:30 por plataforma interna.",
+      copy: "Comunicación 4B se enviará a las 16:30 por correo institucional y exportación PDF.",
       priority: "Media",
       category: "Entrega",
       date: "22 mar · 14:20",
@@ -440,7 +440,7 @@ export const demoTeacher = {
     finalResult: [
       "Material base para todo el grupo.",
       "Versión adaptada con lenguaje simplificado para estudiantes con apoyo activo.",
-      "Entrega programada por plataforma y correo institucional."
+      "Entrega programada por LMS institucional y correo institucional."
     ]
   },
   exampleOutputs: [
@@ -464,14 +464,14 @@ export const demoTeacher = {
     {
       title: "Atención sostenida",
       copy:
-        "Cuando existe un registro institucional autorizado relacionado con atención, el docente ve solo ajustes pedagógicos concretos.",
+        "Cuando existe un registro institucional autorizado relacionado con atención o seguimiento, el docente visualiza únicamente ajustes pedagógicos concretos.",
       supports: ["Pasos cortos", "Bloques breves", "Recordatorios claros"],
       suggestedMaterial: "Checklist + repaso breve + cierre con tarea visible"
     },
     {
       title: "Lenguaje y comprensión",
       copy:
-        "Si hay antecedentes autorizados de lenguaje o comprensión, la plataforma sugiere materiales con lenguaje claro y glosario ampliado.",
+        "Cuando hay antecedentes autorizados relacionados con lenguaje o comprensión, la plataforma sugiere materiales más claros, estructurados y con glosario ampliado.",
       supports: ["Lenguaje simplificado", "Glosario ampliado", "Secuencia visible"],
       suggestedMaterial: "Resumen accesible + glosario + ejemplo resuelto"
     },
@@ -592,12 +592,12 @@ export const demoAdmin = {
     {
       title: "Alumnos registrados",
       value: String(registeredStudentsCount),
-      copy: "Registros válidos integrados desde la base aplicada del proyecto."
+      copy: "Registros válidos integrados en el entorno actual cargado."
     },
     {
       title: "Personal entrevistado",
       value: String(interviewedTeachersCount),
-      copy: "Docentes y personal escolar considerados para el diseño funcional."
+      copy: "Docentes y personal escolar visibles en esta carga institucional."
     },
     {
       title: "Grupos detectados",
@@ -813,10 +813,28 @@ export const demoAdmin = {
   analytics: {
     filters: ["Fecha", "Grupo", "Materia", "Docente", "Tipo de salida", "Tipo de apoyo"],
     metrics: [
-        { label: "Materiales generados", value: "184", helper: "Último mes" },
-        { label: "Entregas realizadas", value: "162", helper: "Por plataforma y correo" },
-        { label: "Consultas de materiales", value: "1,248", helper: "Aperturas registradas" },
-        { label: "Descargas", value: "392", helper: "Biblioteca del estudiante" }
+      { label: "Materiales generados", value: "184", helper: "Entorno actual · último mes" },
+      { label: "Entregas realizadas", value: "162", helper: "Correo, PDF, Word y LMS" },
+      { label: "Consultas registradas", value: "1,248", helper: "Seguimiento agregado del entorno" },
+      { label: "Descargas", value: "392", helper: "Canales de exportación y consulta" }
+    ],
+    usageByTeacher: [
+      { label: teacherName("D06"), value: 46 },
+      { label: teacherName("D03"), value: 34 },
+      { label: teacherName("D01"), value: 29 },
+      { label: teacherName("D08"), value: 24 }
+    ],
+    usageByGroup: [
+      { label: "5A", value: 38 },
+      { label: "4B", value: 31 },
+      { label: "3C", value: 27 },
+      { label: "2A", value: 18 }
+    ],
+    usageByChannel: [
+      { label: "Correo institucional", value: 58 },
+      { label: "Exportación PDF", value: 44 },
+      { label: "Exportación Word", value: 27 },
+      { label: "Classroom / Teams", value: 19 }
     ],
     usageBySubject: [
       { label: "Biología", value: 42 },
