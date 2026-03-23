@@ -1350,7 +1350,8 @@ body[data-theme="dark"] .profile-chip {
 }
 
 body[data-theme="dark"] .mini-stat-card,
-body[data-theme="dark"] .student-profile-inspector {
+body[data-theme="dark"] .student-profile-inspector,
+body[data-theme="dark"] .integration-preview-card {
   background: rgba(39, 29, 32, 0.94);
   border-color: rgba(255, 255, 255, 0.08);
 }
@@ -1633,6 +1634,39 @@ button:disabled {
   background: linear-gradient(135deg, var(--ink) 0%, var(--accent) 100%);
 }
 
+.integration-workspace {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 18px;
+}
+
+.integration-preview-card {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 24px;
+  border: 1px solid rgba(121, 36, 47, 0.08);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--shadow);
+}
+
+.integration-field {
+  display: grid;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.integration-material-summary {
+  display: grid;
+  gap: 14px;
+}
+
+.integration-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
 .comparison-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1708,6 +1742,10 @@ button:disabled {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .integration-workspace {
+    grid-template-columns: 1fr;
+  }
+
   .student-profile-grid,
   .mini-stat-grid {
     grid-template-columns: 1fr;
@@ -1766,7 +1804,8 @@ button:disabled {
   .dashboard-main-grid,
   .utility-grid,
   .recipient-summary-grid,
-  .comparison-grid {
+  .comparison-grid,
+  .integration-actions-grid {
     grid-template-columns: 1fr;
   }
 
