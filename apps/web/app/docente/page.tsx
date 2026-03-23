@@ -54,6 +54,7 @@ export default function TeacherDashboardPage() {
         </SectionCard>
 
         <SectionCard title="Materias activas" description="Organiza tu carga académica" accent="sky">
+          <div id="materias" />
           <div className="stack-list">
             {teacherSubjects.map((subject) => (
               <article key={subject.id} className="list-card compact">
@@ -97,6 +98,33 @@ export default function TeacherDashboardPage() {
                 <p>{new Date(delivery.scheduledFor).toLocaleString("es-MX")}</p>
               </article>
             ))}
+          </div>
+        </SectionCard>
+      </div>
+
+      <div className="dashboard-grid">
+        <SectionCard title="Notificaciones" description="Seguimiento rápido de tareas docentes">
+          <div className="stack-list">
+            {demoTeacher.notifications.map((item) => (
+              <article key={item.title} className="list-card">
+                <strong>{item.title}</strong>
+                <p>{item.copy}</p>
+              </article>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard title="Biblioteca de plantillas" description="Formatos reutilizables para ahorrar tiempo" accent="sky">
+          <div className="stack-list">
+            {demoTeacher.templates.map((template) => (
+              <article key={template.title} className="list-card compact">
+                <strong>{template.title}</strong>
+                <p>{template.copy}</p>
+              </article>
+            ))}
+            <Link className="ghost-button" href="/docente/plantillas">
+              Ver biblioteca completa
+            </Link>
           </div>
         </SectionCard>
       </div>

@@ -78,9 +78,14 @@ export default function StudentPage() {
           <div className="task-card">
             <strong>{material.homeworkReminder}</strong>
             <p>Marca esta actividad como revisada cuando termines de leer el material.</p>
-            <button className="primary-button" type="button">
-              Marcar como revisado
-            </button>
+            <div className="cta-row">
+              <button className="primary-button" type="button">
+                Marcar como revisado
+              </button>
+              <button className="ghost-button" type="button">
+                Guardar material
+              </button>
+            </div>
           </div>
         </SectionCard>
         <SectionCard title="Esquema breve" description="Apoyo visual rápido">
@@ -92,6 +97,31 @@ export default function StudentPage() {
                 <p>{card.copy}</p>
               </article>
             ))}
+          </div>
+        </SectionCard>
+      </div>
+
+      <div className="dashboard-grid">
+        <SectionCard title="Descargas recientes" description="Materiales guardados para repaso sin conexión">
+          <div className="stack-list">
+            {demoStudent.recentDownloads.map((item) => (
+              <article key={item} className="list-card compact">
+                <strong>{item}</strong>
+                <p>Disponible en tu biblioteca personal.</p>
+              </article>
+            ))}
+          </div>
+        </SectionCard>
+        <SectionCard title="Privacidad y apoyos" description="Tu experiencia se adapta sin exponer información sensible" accent="mint">
+          <div className="stack-list">
+            <article className="list-card compact">
+              <strong>Material privado por perfil</strong>
+              <p>Solo ves los apoyos pedagógicos que corresponden a tu configuración autorizada.</p>
+            </article>
+            <article className="list-card compact">
+              <strong>Lectura clara</strong>
+              <p>Puedes ajustar tamaño de letra, contraste y densidad visual desde configuración.</p>
+            </article>
           </div>
         </SectionCard>
       </div>

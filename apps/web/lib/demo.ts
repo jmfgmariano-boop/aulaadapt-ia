@@ -98,6 +98,29 @@ export const demoLanding = {
   ]
 };
 
+export const demoAccess = {
+  title: "Acceso institucional",
+  description:
+    "Ingresa a la plataforma con tus credenciales escolares para acceder a los flujos de docente, estudiante o coordinación académica.",
+  roles: [
+    {
+      role: "teacher" as const,
+      title: "Docente",
+      copy: "Crea sesiones, revisa borradores generados por IA y entrega materiales postclase con control editorial."
+    },
+    {
+      role: "student" as const,
+      title: "Estudiante",
+      copy: "Consulta materiales recientes, tareas, glosarios y apoyos personalizados con una experiencia clara y privada."
+    },
+    {
+      role: "admin" as const,
+      title: "Coordinación académica",
+      copy: "Gestiona bases escolares, permisos, perfiles de accesibilidad autorizados y reportes de uso institucional."
+    }
+  ]
+};
+
 export const demoOutputs = outputOptions;
 export const demoAdaptations = adaptationOptions;
 export const demoGroups = groups;
@@ -146,6 +169,39 @@ export const demoTeacher = {
     "Pausar o reanudar",
     "Detener y adjuntar",
     "Generar transcripción"
+  ],
+  notifications: [
+    {
+      title: "Material pendiente de revisión",
+      copy: "Biología 5A tiene un borrador generado hace 12 minutos y listo para editar."
+    },
+    {
+      title: "Entrega programada hoy",
+      copy: "Comunicación 4B se publicará a las 16:30 por plataforma interna."
+    },
+    {
+      title: "Plantilla reutilizable disponible",
+      copy: "La estructura de repaso breve de Ciencias puede aplicarse a una nueva sesión."
+    }
+  ],
+  templates: [
+    {
+      title: "Resumen accesible + tarea",
+      copy: "Ideal para clases expositivas con cierre y recordatorio breve."
+    },
+    {
+      title: "Glosario + pasos secuenciales",
+      copy: "Pensada para actividades con instrucciones segmentadas."
+    },
+    {
+      title: "Repaso visual reforzado",
+      copy: "Incluye esquema breve, conceptos clave y lenguaje simplificado."
+    }
+  ],
+  historySummary: [
+    "Sesiones filtrables por fecha, materia, grupo y estado de aprobación.",
+    "Trazabilidad de quién generó, editó, aprobó y envió cada material.",
+    "Reutilización rápida de formatos anteriores para ahorrar tiempo docente."
   ]
 };
 
@@ -161,6 +217,11 @@ export const demoStudent = {
       title: "Lectura sencilla",
       copy: "Contenido segmentado, etiquetas neutrales y ruido visual mínimo."
     }
+  ],
+  recentDownloads: [
+    "Resumen de fotosíntesis.pdf",
+    "Glosario de biología.png",
+    "Pasos de actividad - comunicación.docx"
   ]
 };
 
@@ -195,6 +256,19 @@ export const demoAdmin = {
     "Materia principal",
     "Grupos asignados"
   ],
+  importSources: ["Excel institucional", "CSV", "Captura manual"],
+  accessibilityProfiles: [
+    "Comprensión general",
+    "Lenguaje simplificado",
+    "Apoyo visual",
+    "Repaso breve",
+    "Estructura paso a paso",
+    "Segmentación de actividades",
+    "Baja saturación visual",
+    "Repaso reforzado",
+    "Recordatorios frecuentes",
+    "Guía secuencial"
+  ],
   reportCards: [
     {
       title: "Generación semanal",
@@ -210,6 +284,41 @@ export const demoAdmin = {
       title: "Roles protegidos",
       value: "Vistas separadas",
       copy: "Administración, docente y estudiante con recorridos diferenciados."
+    }
+  ]
+};
+
+export const demoProfile = {
+  avatarActions: ["Subir foto", "Cambiar foto", "Eliminar foto", "Usar avatar predeterminado"],
+  appearanceModes: ["Claro", "Oscuro"],
+  accentColors: ["Azul académico", "Azul petróleo", "Turquesa suave", "Verde menta"],
+  densityModes: ["Cómoda", "Compacta"],
+  contrastModes: ["Estándar", "Alto contraste"]
+};
+
+export const demoHelp = {
+  onboardingSteps: [
+    "Selecciona tu perfil e identifica tu panel principal.",
+    "Ubica tus accesos rápidos, notificaciones y materiales recientes.",
+    "Crea o consulta una clase, revisa el contenido y confirma la entrega.",
+    "Personaliza lectura, contraste, tamaño de letra y preferencias visuales."
+  ],
+  faqs: [
+    {
+      question: "¿La plataforma sustituye al docente?",
+      answer: "No. AulaAdapt IA sugiere borradores editables y el docente conserva la revisión, edición y aprobación final."
+    },
+    {
+      question: "¿La plataforma diagnostica a los estudiantes?",
+      answer: "No. Solo trabaja con apoyos pedagógicos y perfiles de accesibilidad previamente autorizados por la institución."
+    },
+    {
+      question: "¿Puedo cargar base escolar completa?",
+      answer: "Sí. La coordinación puede registrar alumnos, docentes, grupos y materias por carga masiva o captura manual."
+    },
+    {
+      question: "¿Cómo se entregan los materiales?",
+      answer: "Pueden publicarse por plataforma interna, correo institucional, por grupo o para estudiantes específicos."
     }
   ]
 };

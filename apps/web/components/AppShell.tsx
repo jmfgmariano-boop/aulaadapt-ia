@@ -10,26 +10,34 @@ type NavItem = {
 
 const navByRole: Record<"teacher" | "student" | "admin", NavItem[]> = {
   teacher: [
-    { href: "/docente", label: "Dashboard" },
+    { href: "/docente", label: "Inicio" },
     { href: "/docente/nueva-clase", label: "Nueva clase" },
-    { href: "/docente#historial", label: "Historial" },
+    { href: "/docente#grupos", label: "Mis grupos" },
+    { href: "/docente#materias", label: "Mis materias" },
     { href: "/docente/materiales", label: "Materiales" },
-    { href: "/docente#grupos", label: "Grupos" },
+    { href: "/docente/historial", label: "Historial" },
+    { href: "/docente/plantillas", label: "Plantillas" },
+    { href: "/docente/notificaciones", label: "Notificaciones" },
+    { href: "/perfil", label: "Perfil" },
     { href: "/configuracion", label: "Configuración" }
   ],
   student: [
     { href: "/estudiante", label: "Inicio" },
-    { href: "/estudiante#materiales", label: "Materiales" },
     { href: "/estudiante#materias", label: "Materias" },
+    { href: "/estudiante#materiales", label: "Materiales" },
     { href: "/estudiante#tareas", label: "Tareas" },
+    { href: "/perfil", label: "Perfil" },
     { href: "/configuracion", label: "Configuración" }
   ],
   admin: [
-    { href: "/admin", label: "Dashboard" },
+    { href: "/admin", label: "Panel general" },
+    { href: "/admin#alumnos", label: "Estudiantes" },
     { href: "/admin#docentes", label: "Docentes" },
     { href: "/admin#grupos", label: "Grupos" },
     { href: "/admin#materias", label: "Materias" },
+    { href: "/admin#perfiles", label: "Accesibilidad" },
     { href: "/admin#reportes", label: "Reportes" },
+    { href: "/perfil", label: "Perfil" },
     { href: "/configuracion", label: "Configuración" }
   ]
 };

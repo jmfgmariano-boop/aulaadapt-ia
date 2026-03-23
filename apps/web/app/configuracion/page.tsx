@@ -11,6 +11,22 @@ export default function SettingsPage() {
         <SectionCard title="Preferencias de lectura" description="Adaptaciones visuales de la interfaz">
           <form className="form-grid">
             <label>
+              Tema
+              <select defaultValue="light">
+                <option value="light">Claro</option>
+                <option value="dark">Oscuro</option>
+              </select>
+            </label>
+            <label>
+              Color principal
+              <select defaultValue="petroleum">
+                <option value="petroleum">Azul petróleo</option>
+                <option value="academic">Azul académico</option>
+                <option value="mint">Verde menta</option>
+                <option value="turquoise">Turquesa suave</option>
+              </select>
+            </label>
+            <label>
               Idioma
               <select defaultValue="es">
                 <option value="es">Español</option>
@@ -23,6 +39,20 @@ export default function SettingsPage() {
                 <option value="normal">Normal</option>
                 <option value="large">Grande</option>
                 <option value="xlarge">Muy grande</option>
+              </select>
+            </label>
+            <label>
+              Densidad visual
+              <select defaultValue="comfortable">
+                <option value="comfortable">Cómoda</option>
+                <option value="compact">Compacta</option>
+              </select>
+            </label>
+            <label>
+              Contraste
+              <select defaultValue="standard">
+                <option value="standard">Estándar</option>
+                <option value="high">Alto contraste</option>
               </select>
             </label>
             <label className="full-span">

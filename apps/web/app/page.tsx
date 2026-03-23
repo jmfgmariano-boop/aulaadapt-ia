@@ -17,6 +17,9 @@ export default function HomePage() {
         </Link>
         <div className="landing-topbar-actions">
           <Tag>IA educativa</Tag>
+          <Link className="ghost-button" href="/acceso">
+            Acceso institucional
+          </Link>
           <Link className="ghost-button" href={`mailto:${demoConfig.supportEmail}`}>
             Contacto institucional
           </Link>

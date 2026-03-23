@@ -100,6 +100,34 @@ export default function AdminPage() {
         </SectionCard>
       </div>
 
+      <div className="dashboard-grid">
+        <SectionCard title="Carga institucional de base escolar" description="Importa información desde distintos formatos y organiza la escuela por grupos, materias y salones">
+          <div className="inline-tags">
+            {demoAdmin.importSources.map((source) => (
+              <Tag key={source}>{source}</Tag>
+            ))}
+          </div>
+          <div className="stack-list">
+            <article className="list-card compact">
+              <strong>Campos sugeridos</strong>
+              <p>Matrícula, nombre completo, grado, grupo, turno, materias inscritas, correo institucional y estatus activo.</p>
+            </article>
+            <article className="list-card compact">
+              <strong>Observaciones autorizadas</strong>
+              <p>La institución puede registrar apoyos pedagógicos, materiales recomendados y notas internas con control de acceso.</p>
+            </article>
+          </div>
+        </SectionCard>
+
+        <SectionCard title="Perfiles de accesibilidad autorizados" description="Apoyos pedagógicos neutrales para personalización postclase" accent="sky">
+          <div className="inline-tags" id="perfiles">
+            {demoAdmin.accessibilityProfiles.map((profile) => (
+              <Tag key={profile}>{profile}</Tag>
+            ))}
+          </div>
+        </SectionCard>
+      </div>
+
       <SectionCard title="Reportes de uso" description="Analítica agregada sin invadir datos sensibles" accent="mint">
         <div className="report-grid" id="reportes">
           {demoAdmin.reportCards.map((card) => (
