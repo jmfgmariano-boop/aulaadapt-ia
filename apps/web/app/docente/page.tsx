@@ -11,6 +11,24 @@ export default function TeacherDashboardPage() {
       title={`Hola, ${teacher.name}`}
       subtitle="Genera materiales postclase en pocos pasos, revísalos y entrégalos con una experiencia clara para tu grupo."
     >
+      <div className="workspace-strip">
+        <a className="workspace-chip" href="#historial">
+          Historial
+        </a>
+        <a className="workspace-chip" href="#materias">
+          Materias
+        </a>
+        <a className="workspace-chip" href="#grupos">
+          Grupos
+        </a>
+        <Link className="workspace-chip" href="/docente/comparativa">
+          Comparativa
+        </Link>
+        <Link className="workspace-chip" href="/docente/plantillas">
+          Plantillas
+        </Link>
+      </div>
+
       <section className="hero-banner">
         <div className="hero-banner-copy">
           <span className="hero-kicker">Recorrido docente</span>

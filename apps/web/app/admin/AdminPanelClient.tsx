@@ -161,6 +161,9 @@ export function AdminPanelClient({
   const [selectedFileName, setSelectedFileName] = useState("");
   const [selectedImportSource, setSelectedImportSource] = useState(importSources[0] ?? "");
   const [selectedProfileId, setSelectedProfileId] = useState(profileRegistry[0]?.studentId ?? "");
+  const [selectedStudentId, setSelectedStudentId] = useState(
+    profileRegistry[0]?.studentId ?? studentRegistry[0]?.id ?? ""
+  );
   const [disabledProfiles, setDisabledProfiles] = useState<string[]>([]);
   const [selectedSupports, setSelectedSupports] = useState<string[]>(
     profileRegistry[0]?.activeSupports ?? []
@@ -207,6 +210,10 @@ export function AdminPanelClient({
 
   const selectedProfile =
     profileRegistry.find((item) => item.studentId === selectedProfileId) ?? profileRegistry[0];
+  const selectedStudent =
+    students.find((item) => item.id === selectedStudentId) ?? students[0];
+  const selectedStudentProfile =
+    profileRegistry.find((item) => item.studentId === selectedStudentId) ?? null;
   const profileDisabled = disabledProfiles.includes(selectedProfile.studentId);
 
   function updateField(field: keyof typeof form, value: string) {
@@ -324,6 +331,25 @@ export function AdminPanelClient({
     );
   }
 
+  function handleSelectStudent(studentId: string) {
+    setSelectedStudentId(studentId);
+
+    const linkedProfile =
+      profileRegistry.find((item) => item.studentId === studentId) ?? null;
+
+    if (linkedProfile) {
+      setSelectedProfileId(linkedProfile.studentId);
+      setSelectedSupports(linkedProfile.activeSupports);
+      setProfileStatus(
+        `Se abrió el perfil individual de ${linkedProfile.studentName} con apoyos, permisos y trazabilidad institucional.`
+      );
+    } else {
+      setProfileStatus(
+        `Se abrió el expediente académico de ${studentId}. No hay un perfil sensible activo en este momento.`
+      );
+    }
+  }
+
   function handleToggleSupport(support: string) {
     setSelectedSupports((current) =>
       current.includes(support)
@@ -363,6 +389,24 @@ export function AdminPanelClient({
       title="Coordinación académica"
       subtitle="Gestiona base escolar, perfiles pedagógicos, permisos, reportes e integraciones con una vista institucional clara."
     >
+      <div className="workspace-strip">
+        <a className="workspace-chip" href="#base-escolar">
+          Base escolar
+        </a>
+        <a className="workspace-chip" href="#perfiles">
+          Perfiles
+        </a>
+        <Link className="workspace-chip" href="/admin/reportes">
+          Reportes
+        </Link>
+        <a className="workspace-chip" href="#privacidad">
+          Privacidad
+        </a>
+        <Link className="workspace-chip" href="/integraciones">
+          Integraciones
+        </Link>
+      </div>
+
       <div className="metric-grid">
         <MetricCard
           label="Docentes y personal"
@@ -606,7 +650,10 @@ export function AdminPanelClient({
           </div>
           <div className="stack-list">
             {filteredStudents.slice(0, 12).map((student) => (
-              <article key={student.id} className="list-card">
+              <article
+                key={student.id}
+                className={`list-card ${selectedStudentId === student.id ? "template-card-active" : ""}`}
+              >
                 <div>
                   <strong>{student.name}</strong>
                   <p>
@@ -619,10 +666,137 @@ export function AdminPanelClient({
                   <Tag>{student.support}</Tag>
                   <Tag>{student.sex}</Tag>
                   <Tag>{student.age} años</Tag>
+                  <button
+                    className="ghost-button"
+                    type="button"
+                    onClick={() => handleSelectStudent(student.id)}
+                  >
+                    Ver perfil individual
+                  </button>
                 </div>
               </article>
             ))}
           </div>
+
+          <article className="student-profile-inspector">
+            <div className="student-profile-head">
+              <div>
+                <span className="hero-kicker">Perfil individual del alumno</span>
+                <h3>{selectedStudent?.name ?? "Sin selección"}</h3>
+                <p>
+                  Matrícula {selectedStudent?.id} · {selectedStudent?.semester} · Grupo{" "}
+                  {selectedStudent?.group}
+                </p>
+              </div>
+              <div className="inline-tags">
+                <Tag>{selectedStudent?.support ?? "Sin apoyo adicional"}</Tag>
+                <Tag>
+                  {selectedStudentProfile
+                    ? selectedStudentProfile.priorityLevel
+                    : "Seguimiento general"}
+                </Tag>
+              </div>
+            </div>
+
+            <div className="student-profile-grid">
+              <article className="list-card compact">
+                <strong>Datos escolares visibles</strong>
+                <p>{selectedStudent?.barrier}</p>
+                <p>{selectedStudent?.note}</p>
+                <p>
+                  Edad {selectedStudent?.age} · Sexo {selectedStudent?.sex}
+                </p>
+              </article>
+
+              <article className="list-card compact">
+                <strong>Apoyos visibles para docente</strong>
+                {selectedStudentProfile ? (
+                  <>
+                    <p>Salida sugerida: {selectedStudentProfile.teacherView.suggestedMaterial}</p>
+                    <div className="inline-tags">
+                      {selectedStudentProfile.teacherView.recommendedSupports.map((item) => (
+                        <Tag key={item}>{item}</Tag>
+                      ))}
+                    </div>
+                    <InfoList items={selectedStudentProfile.teacherView.practicalRecommendations} />
+                  </>
+                ) : (
+                  <p>
+                    Este alumno no tiene un perfil sensible activo. El docente solo ve el
+                    material base y los apoyos generales del grupo.
+                  </p>
+                )}
+              </article>
+
+              <article className="list-card compact sensitive-card">
+                <strong>Registro interno autorizado</strong>
+                {selectedStudentProfile ? (
+                  <>
+                    <p>{selectedStudentProfile.conditionRecord}</p>
+                    <p>{selectedStudentProfile.diagnosisRecord}</p>
+                    <p>{selectedStudentProfile.pedagogicalObservations}</p>
+                    <div className="inline-tags">
+                      {selectedStudentProfile.visibility.map((item) => (
+                        <Tag key={item}>{item}</Tag>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <p>
+                    No existe un diagnóstico previo o condición identificada activa dentro
+                    del registro autorizado de este alumno.
+                  </p>
+                )}
+              </article>
+
+              <article className="list-card compact">
+                <strong>Bitácora breve</strong>
+                {selectedStudentProfile ? (
+                  <InfoList items={selectedStudentProfile.history} />
+                ) : (
+                  <p>Sin movimientos sensibles registrados para este expediente.</p>
+                )}
+              </article>
+            </div>
+
+            <div className="cta-row">
+              <button
+                className="primary-button"
+                type="button"
+                onClick={() =>
+                  selectedStudentProfile
+                    ? handleProfileSelection(selectedStudentProfile.studentId)
+                    : setProfileStatus(
+                        `No existe un perfil sensible activo para ${selectedStudent?.name}.`
+                      )
+                }
+              >
+                Abrir perfil pedagógico
+              </button>
+              <button
+                className="ghost-button"
+                type="button"
+                onClick={() =>
+                  document
+                    .getElementById("privacidad")
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                }
+              >
+                Ver bitácora y permisos
+              </button>
+              {selectedStudentProfile ? (
+                <button
+                  className="ghost-button"
+                  type="button"
+                  onClick={handleToggleDeactivateProfile}
+                >
+                  {disabledProfiles.includes(selectedStudentProfile.studentId)
+                    ? "Reactivar apoyos"
+                    : "Desactivar apoyos"}
+                </button>
+              ) : null}
+            </div>
+          </article>
         </SectionCard>
 
         <SectionCard

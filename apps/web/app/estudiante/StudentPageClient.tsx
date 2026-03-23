@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { GeneratedMaterial, User } from "@aulaadapt/domain";
 import { AppShell } from "../../components/AppShell";
-import { InfoList, SectionCard, Tag } from "../../components/Ui";
+import { AppIcon, InfoList, SectionCard, Tag } from "../../components/Ui";
 import { demoStudent } from "../../lib/demo";
 
 const REVIEWED_KEY = "aulaadapt-reviewed-materials";
 const SAVED_KEY = "aulaadapt-saved-materials";
 const DOWNLOADS_KEY = "aulaadapt-recent-downloads";
+const FAVORITES_KEY = "aulaadapt-student-favorites";
 
 type DownloadItem = (typeof demoStudent.recentDownloads)[number];
 
@@ -23,6 +24,10 @@ export function StudentPageClient({
 }: StudentPageClientProps) {
   const [isReviewed, setIsReviewed] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [viewMode, setViewMode] = useState<"resumida" | "detallada">("resumida");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("all");
+  const [favoriteTopics, setFavoriteTopics] = useState<string[]>(demoStudent.favorites);
   const [recentDownloads, setRecentDownloads] = useState<DownloadItem[]>(
     demoStudent.recentDownloads
   );
@@ -98,7 +103,34 @@ export function StudentPageClient({
         JSON.stringify(demoStudent.recentDownloads)
       );
     }
+
+    const storedFavorites = window.localStorage.getItem(FAVORITES_KEY);
+    if (storedFavorites) {
+      try {
+        setFavoriteTopics(JSON.parse(storedFavorites) as string[]);
+      } catch {
+        window.localStorage.removeItem(FAVORITES_KEY);
+      }
+    }
   }, [material.id]);
+
+  const filteredHistory = useMemo(() => {
+    const normalized = searchTerm.trim().toLowerCase();
+    return demoStudent.subjectHistory.filter((item) => {
+      const matchesSubject = selectedSubject === "all" || item.subject === selectedSubject;
+      const matchesSearch =
+        !normalized ||
+        item.title.toLowerCase().includes(normalized) ||
+        item.subject.toLowerCase().includes(normalized) ||
+        item.date.toLowerCase().includes(normalized);
+      return matchesSubject && matchesSearch;
+    });
+  }, [searchTerm, selectedSubject]);
+
+  function updateFavorites(nextFavorites: string[]) {
+    setFavoriteTopics(nextFavorites);
+    window.localStorage.setItem(FAVORITES_KEY, JSON.stringify(nextFavorites));
+  }
 
   function updateDownloads(nextDownloads: DownloadItem[]) {
     setRecentDownloads(nextDownloads);
@@ -204,12 +236,40 @@ export function StudentPageClient({
     ]);
   }
 
+  function toggleFavorite(topic: string) {
+    const nextFavorites = favoriteTopics.includes(topic)
+      ? favoriteTopics.filter((item) => item !== topic)
+      : [topic, ...favoriteTopics];
+
+    updateFavorites(nextFavorites);
+    setStatusMessage(
+      nextFavorites.includes(topic)
+        ? `"${topic}" se agregó a tus favoritos.`
+        : `"${topic}" se quitó de tus favoritos.`
+    );
+  }
+
   return (
     <AppShell
       role="student"
       title={`Bienvenido, ${student.name}`}
       subtitle="Encuentra rápido lo importante de cada clase: resumen, pasos, conceptos y tarea en un solo lugar."
     >
+      <div className="workspace-strip">
+        <a className="workspace-chip" href="#materiales">
+          Materiales
+        </a>
+        <a className="workspace-chip" href="#historial">
+          Historial
+        </a>
+        <a className="workspace-chip" href="#tareas">
+          Tareas
+        </a>
+        <a className="workspace-chip" href="#guardados">
+          Guardados
+        </a>
+      </div>
+
       <div className="student-hero">
         <div className="class-of-day">
           <span className="hero-kicker">Clase del día</span>
@@ -221,6 +281,116 @@ export function StudentPageClient({
             <Tag key={filter}>{filter}</Tag>
           ))}
         </div>
+      </div>
+
+      <div className="mini-stat-grid">
+        <article className="mini-stat-card">
+          <span>Materiales nuevos</span>
+          <strong>
+            {demoStudent.subjectHistory.filter((item) => item.status === "Nuevo").length}
+          </strong>
+        </article>
+        <article className="mini-stat-card">
+          <span>Guardados</span>
+          <strong>{recentDownloads.length}</strong>
+        </article>
+        <article className="mini-stat-card">
+          <span>Favoritos</span>
+          <strong>{favoriteTopics.length}</strong>
+        </article>
+      </div>
+
+      <div className="dashboard-grid" id="historial">
+        <SectionCard title="Explorar materiales" description="Busca por fecha, tema o materia">
+          <div className="form-grid">
+            <label>
+              Buscar material
+              <input
+                type="text"
+                value={searchTerm}
+                placeholder="Ejemplo: Revolución Mexicana o Biología"
+                onChange={(event) => setSearchTerm(event.target.value)}
+              />
+            </label>
+            <label>
+              Materia
+              <select
+                value={selectedSubject}
+                onChange={(event) => setSelectedSubject(event.target.value)}
+              >
+                <option value="all">Todas las materias</option>
+                {Array.from(new Set(demoStudent.subjectHistory.map((item) => item.subject))).map(
+                  (subject) => (
+                    <option key={subject} value={subject}>
+                      {subject}
+                    </option>
+                  )
+                )}
+              </select>
+            </label>
+            <label className="full-span">
+              <div className="view-toggle">
+                <button
+                  className={viewMode === "resumida" ? "primary-button" : "ghost-button"}
+                  type="button"
+                  onClick={() => setViewMode("resumida")}
+                >
+                  Vista resumida
+                </button>
+                <button
+                  className={viewMode === "detallada" ? "primary-button" : "ghost-button"}
+                  type="button"
+                  onClick={() => setViewMode("detallada")}
+                >
+                  Vista detallada
+                </button>
+              </div>
+            </label>
+          </div>
+
+          <div className="stack-list">
+            {filteredHistory.map((item) => (
+              <article key={`${item.subject}-${item.title}`} className="list-card compact history-item">
+                <div>
+                  <strong>{item.title}</strong>
+                  <p>
+                    {item.subject} · {item.date}
+                  </p>
+                </div>
+                <div className="inline-tags">
+                  <Tag>{item.status}</Tag>
+                  <button
+                    className="ghost-button"
+                    type="button"
+                    onClick={() => toggleFavorite(item.title)}
+                  >
+                    <AppIcon name="bookmark" size={16} />
+                    {favoriteTopics.includes(item.title) ? "Favorito" : "Guardar"}
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard title="Recordatorios y favoritos" description="Sigue lo importante sin perderte" accent="sky">
+          <div className="stack-list">
+            {demoStudent.reminders.map((reminder) => (
+              <article key={reminder} className="list-card compact">
+                <strong>Recordatorio</strong>
+                <p>{reminder}</p>
+              </article>
+            ))}
+            <article className="list-card compact">
+              <strong>Favoritos</strong>
+              <div className="inline-tags">
+                {favoriteTopics.map((item) => (
+                  <Tag key={item}>{item}</Tag>
+                ))}
+              </div>
+            </article>
+          </div>
+        </SectionCard>
       </div>
 
       <div className="dashboard-grid" id="materiales">
@@ -241,43 +411,47 @@ export function StudentPageClient({
         </SectionCard>
       </div>
 
-      <div className="dashboard-grid">
-        <SectionCard title="Pasos para repasar" description="Sigue esta ruta para estudiar">
-          <InfoList items={material.steps} />
-        </SectionCard>
-        <SectionCard
-          title="Glosario sencillo"
-          description="Conceptos clave explicados con lenguaje simple"
-          accent="sky"
-        >
-          <div className="glossary-list">
-            {material.glossary.map((item) => (
-              <article key={item.term}>
-                <h3>{item.term}</h3>
-                <p>{item.definition}</p>
-              </article>
-            ))}
-          </div>
-        </SectionCard>
-      </div>
+      {viewMode === "detallada" ? (
+        <div className="dashboard-grid">
+          <SectionCard title="Pasos para repasar" description="Sigue esta ruta para estudiar">
+            <InfoList items={material.steps} />
+          </SectionCard>
+          <SectionCard
+            title="Glosario sencillo"
+            description="Conceptos clave explicados con lenguaje simple"
+            accent="sky"
+          >
+            <div className="glossary-list">
+              {material.glossary.map((item) => (
+                <article key={item.term}>
+                  <h3>{item.term}</h3>
+                  <p>{item.definition}</p>
+                </article>
+              ))}
+            </div>
+          </SectionCard>
+        </div>
+      ) : null}
 
-      <div className="dashboard-grid" id="materias">
-        <SectionCard title="Materias" description="Accede por asignatura, fecha o docente">
-          <div className="inline-tags">
-            <Tag>Biología</Tag>
-            <Tag>Comunicación</Tag>
-            <Tag>22 mar 2026</Tag>
-            <Tag>Docente D06</Tag>
-          </div>
-        </SectionCard>
-        <SectionCard title="Conceptos clave" description="Ideas centrales de la clase" accent="sky">
-          <div className="inline-tags">
-            {material.concepts.map((concept) => (
-              <Tag key={concept}>{concept}</Tag>
-            ))}
-          </div>
-        </SectionCard>
-      </div>
+      {viewMode === "detallada" ? (
+        <div className="dashboard-grid" id="materias">
+          <SectionCard title="Materias" description="Accede por asignatura, fecha o docente">
+            <div className="inline-tags">
+              <Tag>Biología</Tag>
+              <Tag>Comunicación</Tag>
+              <Tag>22 mar 2026</Tag>
+              <Tag>Docente D06</Tag>
+            </div>
+          </SectionCard>
+          <SectionCard title="Conceptos clave" description="Ideas centrales de la clase" accent="sky">
+            <div className="inline-tags">
+              {material.concepts.map((concept) => (
+                <Tag key={concept}>{concept}</Tag>
+              ))}
+            </div>
+          </SectionCard>
+        </div>
+      ) : null}
 
       <div className="dashboard-grid" id="tareas">
         <SectionCard title="Tarea y entregable" description="Lo más importante para después de clase">
@@ -308,7 +482,7 @@ export function StudentPageClient({
         </SectionCard>
       </div>
 
-      <div className="dashboard-grid">
+      <div className="dashboard-grid" id="guardados">
         <SectionCard
           title="Descargas recientes"
           description="Materiales guardados para repaso sin conexión"
