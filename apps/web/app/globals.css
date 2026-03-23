@@ -1297,6 +1297,81 @@ button:disabled {
   gap: 14px;
 }
 
+.notification-card,
+.recipient-card,
+.analytics-bar-card,
+.comparison-card {
+  display: grid;
+  gap: 14px;
+}
+
+.notification-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.recipient-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.analytics-bar-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.analytics-bar-track {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(121, 36, 47, 0.08);
+  overflow: hidden;
+}
+
+.analytics-bar-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--ink) 0%, var(--accent) 100%);
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.comparison-card {
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(121, 36, 47, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.comparison-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(121, 36, 47, 0.08);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.comparison-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 10px;
+}
+
 .reading-block {
   font-size: 1.05rem;
 }
@@ -1332,6 +1407,10 @@ button:disabled {
 
   .hero-metrics {
     grid-template-columns: 1fr;
+  }
+
+  .comparison-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .utility-grid {
@@ -1371,7 +1450,9 @@ button:disabled {
   .glossary-list,
   .form-grid,
   .hero-mini-flow,
-  .utility-grid {
+  .utility-grid,
+  .recipient-summary-grid,
+  .comparison-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1442,6 +1523,12 @@ button:disabled {
   .mobile-nav-link.active {
     background: linear-gradient(135deg, rgba(121, 36, 47, 0.12) 0%, rgba(241, 138, 0, 0.16) 100%);
     color: var(--ink);
+  }
+
+  .notification-card-header,
+  .analytics-bar-label {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .mobile-sheet-backdrop {

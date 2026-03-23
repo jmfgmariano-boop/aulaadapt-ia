@@ -18,7 +18,14 @@ type AppIconName =
   | "bookmark"
   | "microphone"
   | "shield"
-  | "report";
+  | "report"
+  | "database"
+  | "compare"
+  | "download"
+  | "search"
+  | "send"
+  | "lock"
+  | "integration";
 
 export function AppIcon({
   name,
@@ -172,6 +179,60 @@ export function AppIcon({
           <path d="M5 20V10" />
           <path d="M12 20V4" />
           <path d="M19 20v-7" />
+        </svg>
+      );
+    case "database":
+      return (
+        <svg {...commonProps}>
+          <ellipse cx="12" cy="5.5" rx="7" ry="2.5" />
+          <path d="M5 5.5v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-6" />
+          <path d="M5 11.5v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-6" />
+        </svg>
+      );
+    case "compare":
+      return (
+        <svg {...commonProps}>
+          <path d="M8 4H5a2 2 0 0 0-2 2v13l5-3 5 3V6a2 2 0 0 0-2-2Z" />
+          <path d="M16 4h3a2 2 0 0 1 2 2v13l-5-3-5 3" />
+        </svg>
+      );
+    case "download":
+      return (
+        <svg {...commonProps}>
+          <path d="M12 4v11" />
+          <path d="m7.5 11.5 4.5 4.5 4.5-4.5" />
+          <path d="M4 20h16" />
+        </svg>
+      );
+    case "search":
+      return (
+        <svg {...commonProps}>
+          <circle cx="11" cy="11" r="6" />
+          <path d="m20 20-4.2-4.2" />
+        </svg>
+      );
+    case "send":
+      return (
+        <svg {...commonProps}>
+          <path d="M21 3 3 10l7 2 2 7 9-16Z" />
+        </svg>
+      );
+    case "lock":
+      return (
+        <svg {...commonProps}>
+          <rect x="5" y="11" width="14" height="10" rx="2" />
+          <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+        </svg>
+      );
+    case "integration":
+      return (
+        <svg {...commonProps}>
+          <path d="M8 8h4V4" />
+          <path d="M16 16h-4v4" />
+          <path d="M12 4 7 9" />
+          <path d="M12 20 17 15" />
+          <rect x="3" y="9" width="4" height="6" rx="1.5" />
+          <rect x="17" y="9" width="4" height="6" rx="1.5" />
         </svg>
       );
   }

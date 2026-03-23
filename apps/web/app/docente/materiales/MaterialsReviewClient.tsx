@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { GeneratedMaterial, Group } from "@aulaadapt/domain";
 import { AppShell } from "../../../components/AppShell";
-import { InfoList, SectionCard, Tag } from "../../../components/Ui";
+import { AppIcon, InfoList, SectionCard, Tag } from "../../../components/Ui";
+import { demoTeacher } from "../../../lib/demo";
 
 type MaterialsReviewClientProps = {
   material: GeneratedMaterial;
@@ -21,12 +22,72 @@ export function MaterialsReviewClient({
   const [groupId, setGroupId] = useState(teacherGroups[0]?.id ?? "");
   const [channel, setChannel] = useState("platform");
   const [scheduledFor, setScheduledFor] = useState("2026-03-22T16:30");
+  const [recipientMode, setRecipientMode] = useState<"group" | "selected">("group");
+  const [recipientFilter, setRecipientFilter] = useState("");
+  const [showSupportOnly, setShowSupportOnly] = useState(false);
+  const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
+  const [confirmPublish, setConfirmPublish] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isApproved, setIsApproved] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [statusMessage, setStatusMessage] = useState(
     "El borrador está listo para revisión editorial y publicación postclase."
   );
+
+  const recipientGroup =
+    demoTeacher.recipientGroups.find((group) => group.id === groupId) ||
+    demoTeacher.recipientGroups[0];
+
+  useEffect(() => {
+    setSelectedRecipients(recipientGroup?.students.map((student) => student.id) ?? []);
+  }, [recipientGroup?.id]);
+
+  const filteredRecipients = useMemo(() => {
+    const normalizedFilter = recipientFilter.trim().toLowerCase();
+
+    return (recipientGroup?.students ?? []).filter((student) => {
+      const matchesSearch =
+        !normalizedFilter ||
+        student.name.toLowerCase().includes(normalizedFilter) ||
+        student.id.toLowerCase().includes(normalizedFilter);
+      const matchesSupport =
+        !showSupportOnly || student.support !== "Sin apoyo adicional";
+
+      return matchesSearch && matchesSupport;
+    });
+  }, [recipientFilter, recipientGroup, showSupportOnly]);
+
+  const additionalSupportCount =
+    recipientMode === "group"
+      ? recipientGroup?.supportCount ?? 0
+      : (recipientGroup?.students ?? []).filter(
+          (student) =>
+            selectedRecipients.includes(student.id) &&
+            student.support !== "Sin apoyo adicional"
+        ).length;
+
+  const recipientCount =
+    recipientMode === "group"
+      ? recipientGroup?.total ?? 0
+      : selectedRecipients.length;
+
+  const editSummary = [
+    summary !== material.summary ? "Se editó el resumen accesible." : null,
+    simplifiedVersion !== material.simplifiedVersion
+      ? "Se ajustó la versión simplificada."
+      : null,
+    homeworkReminder !== material.homeworkReminder
+      ? "Se actualizó el recordatorio de tarea."
+      : null
+  ].filter(Boolean) as string[];
+
+  function toggleRecipient(studentId: string) {
+    setSelectedRecipients((current) =>
+      current.includes(studentId)
+        ? current.filter((item) => item !== studentId)
+        : [...current, studentId]
+    );
+  }
 
   async function syncDraft() {
     await fetch(`/api/materials/${material.id}`, {
@@ -77,6 +138,13 @@ export function MaterialsReviewClient({
     try {
       setIsPublishing(true);
 
+      if (!confirmPublish) {
+        setStatusMessage(
+          "Confirma primero la entrega final para proteger destinatarios, apoyos y canal de publicación."
+        );
+        return;
+      }
+
       if (!isApproved) {
         await handleApprove();
       }
@@ -88,7 +156,8 @@ export function MaterialsReviewClient({
         },
         body: JSON.stringify({
           materialId: material.id,
-          recipients: [groupId],
+          recipients:
+            recipientMode === "group" ? [groupId] : selectedRecipients,
           channel,
           scheduledFor
         })
@@ -99,7 +168,7 @@ export function MaterialsReviewClient({
       }
 
       setStatusMessage(
-        `Material programado para ${scheduledFor.replace("T", " ")} por ${channel === "platform" ? "plataforma interna" : "correo institucional"}.`
+        `Material programado para ${scheduledFor.replace("T", " ")} por ${channel === "platform" ? "plataforma interna" : "correo institucional"} con ${recipientCount} destinatarios y ${additionalSupportCount} apoyos adicionales activos.`
       );
     } catch (error) {
       setStatusMessage(
@@ -216,9 +285,129 @@ export function MaterialsReviewClient({
                 />
               </label>
             </form>
+            <div className="stack-list">
+              <article className="list-card compact">
+                <strong>Destinatarios del material</strong>
+                <p>
+                  Define si el material base va a todo el grupo o solo a estudiantes
+                  seleccionados, manteniendo apoyos adicionales solo para quienes
+                  corresponda.
+                </p>
+                <div className="inline-tags">
+                  <button
+                    className="ghost-button"
+                    type="button"
+                    onClick={() => setRecipientMode("group")}
+                  >
+                    Enviar a todo el grupo
+                  </button>
+                  <button
+                    className="ghost-button"
+                    type="button"
+                    onClick={() => setRecipientMode("selected")}
+                  >
+                    Selección individual
+                  </button>
+                </div>
+              </article>
+
+              <div className="recipient-summary-grid">
+                <article className="list-card compact">
+                  <strong>Total de destinatarios</strong>
+                  <p>{recipientCount} estudiantes listos para recibir el material.</p>
+                </article>
+                <article className="list-card compact">
+                  <strong>Con apoyos adicionales</strong>
+                  <p>{additionalSupportCount} estudiantes recibirán material adaptado.</p>
+                </article>
+              </div>
+
+              <article className="list-card compact">
+                <strong>Apoyos pedagógicos visibles para el docente</strong>
+                <p>
+                  La plataforma traduce información institucional autorizada en ajustes
+                  de salida concretos, sin mostrar etiquetas diagnósticas en este flujo.
+                </p>
+                <p>Salida sugerida: {recipientGroup?.suggestedMaterial}</p>
+                <div className="inline-tags">
+                  {(recipientGroup?.recommendedSupports ?? []).map((support) => (
+                    <Tag key={support}>{support}</Tag>
+                  ))}
+                </div>
+                <InfoList items={recipientGroup?.practicalRecommendations ?? []} />
+              </article>
+
+              <div className="form-grid">
+                <label>
+                  Buscar estudiante
+                  <input
+                    type="text"
+                    placeholder="Buscar por nombre o matrícula"
+                    value={recipientFilter}
+                    onChange={(event) => setRecipientFilter(event.target.value)}
+                  />
+                </label>
+                <label className="full-span">
+                  <button
+                    className="choice-card switch-card"
+                    type="button"
+                    onClick={() => setShowSupportOnly((current) => !current)}
+                  >
+                    <div>
+                      <strong>Mostrar solo apoyos adicionales</strong>
+                      <p>Filtra estudiantes con apoyos pedagógicos activos.</p>
+                    </div>
+                    <span className={`toggle-chip ${showSupportOnly ? "active" : ""}`}>
+                      {showSupportOnly ? "Activo" : "Inactivo"}
+                    </span>
+                  </button>
+                </label>
+              </div>
+
+              <div className="stack-list">
+                {filteredRecipients.map((student) => {
+                  const isSelected =
+                    recipientMode === "group" ||
+                    selectedRecipients.includes(student.id);
+
+                  return (
+                    <article key={student.id} className="list-card compact recipient-card">
+                      <div>
+                        <strong>{student.name}</strong>
+                        <p>
+                          {student.id} · {student.support}
+                        </p>
+                      </div>
+                      <div className="cta-row">
+                        <Tag>{student.active ? "Activo" : "Inactivo"}</Tag>
+                        <button
+                          className="ghost-button"
+                          type="button"
+                          onClick={() => toggleRecipient(student.id)}
+                          disabled={recipientMode === "group"}
+                        >
+                          {isSelected ? "Seleccionado" : "Seleccionar"}
+                        </button>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
             <p className="helper-copy">
               El flujo contempla revisión, aprobación y programación antes de la entrega a grupos o estudiantes específicos.
             </p>
+            <label className="choice-card switch-card">
+              <div>
+                <strong>Confirmación antes del envío final</strong>
+                <p>Verifica destinatarios, apoyos activos y canal de publicación.</p>
+              </div>
+              <input
+                type="checkbox"
+                checked={confirmPublish}
+                onChange={(event) => setConfirmPublish(event.target.checked)}
+              />
+            </label>
             <div className="cta-row">
               <button className="ghost-button" type="button" onClick={handleEdit}>
                 Editar
@@ -244,6 +433,54 @@ export function MaterialsReviewClient({
           </SectionCard>
         </div>
       </div>
+
+      <SectionCard
+        title="Comparativa de generación"
+        description="Evidencia de cómo la IA organiza y el docente decide"
+      >
+        <div className="comparison-grid">
+          <article className="comparison-card">
+            <span className="comparison-label">Entrada</span>
+            <strong>Contenido original</strong>
+            <ul className="comparison-list">
+              {demoTeacher.comparisonCase.original.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </article>
+          <article className="comparison-card">
+            <span className="comparison-label">Borrador IA</span>
+            <strong>Versión generada</strong>
+            <ul className="comparison-list">
+              <li>{material.summary}</li>
+              <li>{material.simplifiedVersion}</li>
+              <li>{material.homeworkReminder}</li>
+            </ul>
+          </article>
+          <article className="comparison-card">
+            <span className="comparison-label">Revisión docente</span>
+            <strong>Cambios aplicados</strong>
+            <ul className="comparison-list">
+              {(editSummary.length ? editSummary : ["Sin cambios respecto al borrador base."]).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </article>
+          <article className="comparison-card">
+            <span className="comparison-label">Resultado final</span>
+            <strong>Entrega enviada</strong>
+            <ul className="comparison-list">
+              <li>{summary}</li>
+              <li>{homeworkReminder}</li>
+              <li>
+                {recipientMode === "group"
+                  ? `Material base para ${recipientGroup?.group ?? "el grupo seleccionado"}.`
+                  : `Material dirigido a ${recipientCount} estudiantes seleccionados.`}
+              </li>
+            </ul>
+          </article>
+        </div>
+      </SectionCard>
     </AppShell>
   );
 }

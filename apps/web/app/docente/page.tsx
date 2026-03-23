@@ -186,6 +186,51 @@ export default function TeacherDashboardPage() {
           </div>
         </SectionCard>
       </div>
+
+      <div className="dashboard-grid">
+        <SectionCard
+          title="Apoyos pedagógicos autorizados"
+          description="Traducción docente de información institucional protegida"
+          accent="mint"
+        >
+          <div className="stack-list">
+            {demoTeacher.authorizedSupportGuides.map((guide) => (
+              <article key={guide.title} className="list-card">
+                <strong>{guide.title}</strong>
+                <p>{guide.copy}</p>
+                <p>Salida sugerida: {guide.suggestedMaterial}</p>
+                <div className="inline-tags">
+                  {guide.supports.map((support) => (
+                    <Tag key={support}>{support}</Tag>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard
+          title="Comparativa y trazabilidad"
+          description="Demuestra cómo la IA apoya y el docente decide"
+          accent="sky"
+        >
+          <div className="stack-list">
+            <article className="list-card compact">
+              <strong>Comparativa de generación</strong>
+              <p>Visualiza entrada original, borrador IA, revisión docente y salida final antes del envío.</p>
+            </article>
+            <article className="list-card compact">
+              <strong>Privacidad y permisos</strong>
+              <p>Los apoyos llegan al docente como recomendaciones pedagógicas, no como etiquetas sensibles para el grupo.</p>
+            </article>
+            <div className="cta-row">
+              <Link className="ghost-button" href="/docente/comparativa">
+                Abrir comparativa
+              </Link>
+            </div>
+          </div>
+        </SectionCard>
+      </div>
     </AppShell>
   );
 }

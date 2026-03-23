@@ -13,6 +13,15 @@ export default function AdminPage() {
       accessibilityContext={demoAdmin.accessibilityContext}
       importSources={demoAdmin.importSources}
       reportCards={demoAdmin.reportCards}
+      importTemplateHeaders={demoAdmin.importTemplateHeaders}
+      importPreviewRows={demoAdmin.importPreviewRows}
+      importSummary={demoAdmin.importSummary}
+      profileRegistry={demoAdmin.profileRegistry}
+      auditLog={demoAdmin.auditLog}
+      permissions={demoAdmin.permissions}
+      analytics={demoAdmin.analytics}
+      integrations={demoAdmin.integrations}
+      sensitiveCategoryExamples={demoAdmin.sensitiveCategoryExamples}
     />
   );
 }

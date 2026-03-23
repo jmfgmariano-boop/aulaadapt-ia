@@ -2,7 +2,7 @@
 
 import type { GeneratedMaterial } from "@aulaadapt/domain";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { FlowSteps, InfoList, SectionCard } from "../../../components/Ui";
+import { FlowSteps, InfoList, SectionCard, Tag } from "../../../components/Ui";
 import { adaptations, outputs, teacherGroups, teacherSubjects } from "../../../lib/data";
 import { demoTeacher } from "../../../lib/demo";
 import { SELECTED_TEMPLATE_STORAGE_KEY } from "../../../lib/user-preferences";
@@ -64,6 +64,7 @@ export function NewClassComposerClient() {
     "idle"
   );
   const [hasUploadedAudio, setHasUploadedAudio] = useState(false);
+  const [autosaveMessage, setAutosaveMessage] = useState("");
   const [isPending, startTransition] = useTransition();
   const [isTranscribing, startTranscribing] = useTransition();
 
@@ -132,6 +133,20 @@ export function NewClassComposerClient() {
     };
   }, [audioPreviewUrl]);
 
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      window.localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
+      setAutosaveMessage(
+        `Guardado automático ${new Date().toLocaleTimeString("es-MX", {
+          hour: "2-digit",
+          minute: "2-digit"
+        })}`
+      );
+    }, 400);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [draft]);
+
   function updateDraftField<K extends keyof DraftState>(key: K, value: DraftState[K]) {
     setDraft((current) => ({ ...current, [key]: value }));
   }
@@ -154,6 +169,13 @@ export function NewClassComposerClient() {
   async function handleGenerate() {
     setStatusMessage("");
     setResultNote("");
+
+    if (!draft.subjectId || !draft.groupId || !draft.topic.trim() || !draft.explanation.trim()) {
+      setStatusMessage(
+        "Completa materia, grupo, tema y explicación base antes de generar materiales."
+      );
+      return;
+    }
 
     startTransition(async () => {
       const selectedSubject = teacherSubjects.find((subject) => subject.id === draft.subjectId);
@@ -304,9 +326,36 @@ export function NewClassComposerClient() {
     });
   }
 
+  const selectedRecipientGroup =
+    demoTeacher.recipientGroups.find((group) => group.id === draft.groupId) ||
+    demoTeacher.recipientGroups[0];
+  const progressSteps = [
+    Boolean(draft.subjectId && draft.groupId && draft.date),
+    Boolean(draft.topic.trim() && draft.explanation.trim()),
+    Boolean(draft.selectedOutputs.length && draft.selectedAdaptations.length),
+    Boolean(selectedRecipientGroup)
+  ];
+  const progressPercent = Math.round(
+    (progressSteps.filter(Boolean).length / progressSteps.length) * 100
+  );
+
   return (
     <div className="composer-grid">
       <SectionCard title="Datos de la sesión" description="Contexto académico de la clase">
+        <div className="wizard-progress">
+          {demoTeacher.workflowSteps.map((step, index) => (
+            <article
+              key={step.title}
+              className={`wizard-step ${progressSteps[index] ? "completed" : ""}`}
+            >
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <strong>{step.title}</strong>
+                <p>{step.copy}</p>
+              </div>
+            </article>
+          ))}
+        </div>
         <form className="form-grid" onSubmit={(event) => event.preventDefault()}>
           <label>
             Materia
@@ -348,6 +397,7 @@ export function NewClassComposerClient() {
               type="text"
               value={draft.topic}
               onChange={(event) => updateDraftField("topic", event.target.value)}
+              placeholder="Ejemplo: Revolución Mexicana: causas y consecuencias"
             />
           </label>
           <label className="full-span">
@@ -355,6 +405,7 @@ export function NewClassComposerClient() {
             <textarea
               value={draft.explanation}
               onChange={(event) => updateDraftField("explanation", event.target.value)}
+              placeholder="Describe aquí lo que se explicó en clase, los ejemplos usados y qué ideas conviene reforzar."
             />
           </label>
           <label>
@@ -430,6 +481,7 @@ export function NewClassComposerClient() {
             <textarea
               value={draft.keyPoints}
               onChange={(event) => updateDraftField("keyPoints", event.target.value)}
+              placeholder="- Causa principal\n- Concepto clave\n- Actividad central"
             />
           </label>
           <label className="full-span">
@@ -437,6 +489,7 @@ export function NewClassComposerClient() {
             <textarea
               value={draft.assignment}
               onChange={(event) => updateDraftField("assignment", event.target.value)}
+              placeholder="Ejemplo: Elaborar una línea del tiempo con tres momentos clave."
             />
           </label>
           <label className="full-span">
@@ -444,9 +497,11 @@ export function NewClassComposerClient() {
             <textarea
               value={draft.observations}
               onChange={(event) => updateDraftField("observations", event.target.value)}
+              placeholder="Ejemplo: Conviene reforzar conceptos con frases más breves y apoyo visual."
             />
           </label>
         </form>
+        <p className="action-feedback">{autosaveMessage || `Progreso del flujo: ${progressPercent}% completado.`}</p>
       </SectionCard>
 
       <div className="stack-area">
@@ -487,6 +542,11 @@ export function NewClassComposerClient() {
         </SectionCard>
 
         <SectionCard title="Antes de generar" description="Validaciones pedagógicas y éticas">
+          <div className="inline-tags">
+            {demoTeacher.contextualPrompts.map((prompt) => (
+              <Tag key={prompt}>{prompt}</Tag>
+            ))}
+          </div>
           <InfoList
             items={[
               "La IA producirá un borrador editable, no una versión definitiva.",
@@ -495,6 +555,33 @@ export function NewClassComposerClient() {
               "La entrega puede ser inmediata o programada."
             ]}
           />
+          <article className="list-card compact">
+            <strong>Destinatarios del material</strong>
+            <p>
+              {selectedRecipientGroup?.group} · {selectedRecipientGroup?.subject} ·{" "}
+              {selectedRecipientGroup?.total} estudiantes ·{" "}
+              {selectedRecipientGroup?.supportCount} con apoyos adicionales.
+            </p>
+            <div className="inline-tags">
+              <Tag>Material base para todo el grupo</Tag>
+              <Tag>Adaptaciones solo para quienes corresponda</Tag>
+            </div>
+          </article>
+          <article className="list-card compact">
+            <strong>Apoyos recomendados para este grupo</strong>
+            <p>
+              La institución puede tener información previamente autorizada, pero aquí
+              solo se muestran ajustes pedagógicos prácticos para la generación del
+              material.
+            </p>
+            <p>Salida sugerida: {selectedRecipientGroup?.suggestedMaterial}</p>
+            <div className="inline-tags">
+              {selectedRecipientGroup?.recommendedSupports.map((support) => (
+                <Tag key={support}>{support}</Tag>
+              ))}
+            </div>
+            <InfoList items={selectedRecipientGroup?.practicalRecommendations ?? []} />
+          </article>
           <div className="cta-row">
             <button className="primary-button" type="button" onClick={handleGenerate} disabled={isPending}>
               {isPending ? "Generando..." : "Generar materiales con IA"}

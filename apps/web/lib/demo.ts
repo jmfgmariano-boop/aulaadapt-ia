@@ -100,7 +100,26 @@ export const demoLanding = {
     "Procesamiento con IA",
     "Revisión docente",
     "Entrega postclase"
-  ]
+  ],
+  modes: [
+    {
+      title: "Experiencia demostrativa",
+      copy: "Recorridos funcionales con datos simulados para presentar el producto sin comprometer datos reales."
+    },
+    {
+      title: "Operación institucional",
+      copy: "Módulos listos para conectarse con base escolar, directorio académico y permisos formales."
+    }
+  ],
+  example: {
+    topic: "Historia · Revolución Mexicana",
+    input:
+      "Clase con explicación de causas, etapas y consecuencias, más línea del tiempo como actividad.",
+    baseOutput:
+      "Resumen accesible, pasos de actividad, conceptos clave y glosario para todo el grupo.",
+    adaptedOutput:
+      "Versión con lenguaje simplificado, bloques cortos, pasos numerados y apoyo visual."
+  }
 };
 
 export const demoAccess = {
@@ -193,6 +212,44 @@ export const demoTeacher = {
       copy: "La estructura de repaso breve de Ciencias puede aplicarse a una nueva sesión."
     }
   ],
+  notificationCenter: [
+    {
+      id: "notif-1",
+      title: "Material pendiente de revisión",
+      copy: "Biología 5A tiene un borrador generado hace 12 minutos.",
+      priority: "Alta",
+      category: "Revisión",
+      date: "22 mar · 15:42",
+      read: false
+    },
+    {
+      id: "notif-2",
+      title: "Entrega programada hoy",
+      copy: "Comunicación 4B se publicará a las 16:30 por plataforma interna.",
+      priority: "Media",
+      category: "Entrega",
+      date: "22 mar · 14:20",
+      read: true
+    },
+    {
+      id: "notif-3",
+      title: "Perfil pedagógico actualizado",
+      copy: "Se agregó apoyo visual al grupo 5A para una estudiante autorizada.",
+      priority: "Media",
+      category: "Accesibilidad",
+      date: "22 mar · 13:05",
+      read: false
+    },
+    {
+      id: "notif-4",
+      title: "Carga de base escolar completada",
+      copy: "La coordinación integró 69 filas válidas y 3 observaciones para revisión.",
+      priority: "Baja",
+      category: "Base escolar",
+      date: "22 mar · 09:10",
+      read: true
+    }
+  ],
   templates: [
     {
       id: "resumen-accesible",
@@ -247,6 +304,153 @@ export const demoTeacher = {
     "Sesiones filtrables por fecha, materia, grupo y estado de aprobación.",
     "Trazabilidad de quién generó, editó, aprobó y envió cada material.",
     "Reutilización rápida de formatos anteriores para ahorrar tiempo docente."
+  ],
+  modePanels: [
+    {
+      title: "Modo demostración",
+      copy: "Recorridos guiados, datos simulados y módulos visibles para explicar el producto."
+    },
+    {
+      title: "Modo institucional",
+      copy: "Operación con base escolar real, permisos diferenciados, trazabilidad y envío postclase."
+    }
+  ],
+  workflowSteps: [
+    {
+      title: "Contexto de la clase",
+      copy: "Materia, grupo, fecha y tema con ayuda contextual y validación mínima."
+    },
+    {
+      title: "Captura del contenido",
+      copy: "Texto, audio, archivo base, puntos clave y tarea en un mismo flujo."
+    },
+    {
+      title: "Generación y revisión",
+      copy: "La IA propone; el docente edita, compara y aprueba."
+    },
+    {
+      title: "Destinatarios y entrega",
+      copy: "Material base para todos y apoyos adicionales para quienes corresponda."
+    }
+  ],
+  contextualPrompts: [
+    "Ejemplo: 'Clase de Historia sobre Revolución Mexicana con énfasis en causas y consecuencias'.",
+    "Ejemplo de tarea: 'Elabora una línea del tiempo con tres momentos clave'.",
+    "Sugerencia: agrega una observación breve sobre ritmo del grupo o conceptos que conviene reforzar."
+  ],
+  recipientGroups: [
+    {
+      id: "group-5a",
+      subject: "Biología",
+      group: "5A",
+      total: 32,
+      supportCount: 7,
+      recommendedSupports: [
+        "Bloques breves con recordatorios claros",
+        "Lenguaje directo y glosario ampliado",
+        "Formato visual limpio con secuencia estable"
+      ],
+      suggestedMaterial: "Resumen accesible + pasos numerados + apoyo visual breve",
+      practicalRecommendations: [
+        "Mantener instrucciones en 3 o 4 pasos visibles.",
+        "Usar frases cortas y una sola acción por bloque.",
+        "Evitar saturación visual en el material final."
+      ],
+      students: [
+        { id: "E001", name: "Estudiante E001", support: "Lenguaje simplificado", active: true },
+        { id: "E004", name: "Estudiante E004", support: "Apoyo visual", active: true },
+        { id: "E007", name: "Estudiante E007", support: "Repaso breve", active: true },
+        { id: "E010", name: "Estudiante E010", support: "Sin apoyo adicional", active: true },
+        { id: "E014", name: "Estudiante E014", support: "Guía secuencial", active: true },
+        { id: "E018", name: "Estudiante E018", support: "Sin apoyo adicional", active: true }
+      ]
+    },
+    {
+      id: "group-4b",
+      subject: "Comunicación",
+      group: "4B",
+      total: 28,
+      supportCount: 5,
+      recommendedSupports: [
+        "Guía secuencial con estructura predecible",
+        "Repaso breve reforzado al cierre",
+        "Menor carga visual y vocabulario claro"
+      ],
+      suggestedMaterial: "Repaso breve + checklist + glosario con ejemplos",
+      practicalRecommendations: [
+        "Abrir con idea principal y cierre con checklist.",
+        "Separar actividad y tarea en dos bloques distintos.",
+        "Destacar palabras clave con ejemplos breves."
+      ],
+      students: [
+        { id: "E021", name: "Estudiante E021", support: "Glosario ampliado", active: true },
+        { id: "E025", name: "Estudiante E025", support: "Estructura paso a paso", active: true },
+        { id: "E027", name: "Estudiante E027", support: "Sin apoyo adicional", active: true },
+        { id: "E029", name: "Estudiante E029", support: "Baja saturación visual", active: true }
+      ]
+    }
+  ],
+  comparisonCase: {
+    original: [
+      "Clase de Historia sobre Revolución Mexicana con causas políticas, sociales y económicas.",
+      "Audio de explicación docente con énfasis en actores principales.",
+      "Actividad: elaborar línea del tiempo y comparar etapas."
+    ],
+    aiDraft: [
+      "Resumen accesible con causas y etapas principales.",
+      "Pasos de actividad organizados para trabajar la línea del tiempo.",
+      "Glosario con términos como porfiriato, maderismo y constitución."
+    ],
+    teacherEdits: [
+      "Se simplificó el segundo párrafo para 5A.",
+      "Se agregó un ejemplo de línea del tiempo.",
+      "Se ajustó el recordatorio de tarea para entrega el miércoles."
+    ],
+    finalResult: [
+      "Material base para todo el grupo.",
+      "Versión adaptada con lenguaje simplificado para estudiantes con apoyo activo.",
+      "Entrega programada por plataforma y correo institucional."
+    ]
+  },
+  exampleOutputs: [
+    {
+      title: "Entrada docente",
+      body:
+        "Clase de Historia sobre Revolución Mexicana: causas, personajes, etapas y consecuencias."
+    },
+    {
+      title: "Salida base",
+      body:
+        "Resumen breve, pasos de actividad, conceptos clave y glosario para todo el grupo."
+    },
+    {
+      title: "Salida adaptada",
+      body:
+        "Lenguaje simplificado, pasos secuenciales, repaso breve y apoyo visual para estudiantes con apoyos activos."
+    }
+  ],
+  authorizedSupportGuides: [
+    {
+      title: "Atención sostenida",
+      copy:
+        "Cuando existe un registro institucional autorizado relacionado con atención, el docente ve solo ajustes pedagógicos concretos.",
+      supports: ["Pasos cortos", "Bloques breves", "Recordatorios claros"],
+      suggestedMaterial: "Checklist + repaso breve + cierre con tarea visible"
+    },
+    {
+      title: "Lenguaje y comprensión",
+      copy:
+        "Si hay antecedentes autorizados de lenguaje o comprensión, la plataforma sugiere materiales con lenguaje claro y glosario ampliado.",
+      supports: ["Lenguaje simplificado", "Glosario ampliado", "Secuencia visible"],
+      suggestedMaterial: "Resumen accesible + glosario + ejemplo resuelto"
+    },
+    {
+      title: "Regulación sensorial o emocional",
+      copy:
+        "Con autorización institucional, se priorizan materiales menos abrumadores y con baja saturación visual.",
+      supports: ["Baja saturación visual", "Estructura estable", "Repaso breve"],
+      suggestedMaterial: "Versión visual limpia + pasos + recordatorio final"
+    }
   ]
 };
 
@@ -282,6 +486,36 @@ export const demoStudent = {
       description: "Secuencia resumida para revisar antes de entregar.",
       downloadName: "pasos-actividad-comunicacion.txt"
     }
+  ],
+  subjectHistory: [
+    {
+      subject: "Biología",
+      date: "22 mar 2026",
+      title: "Fotosíntesis y flujo de energía",
+      status: "Nuevo"
+    },
+    {
+      subject: "Historia",
+      date: "19 mar 2026",
+      title: "Revolución Mexicana",
+      status: "Guardado"
+    },
+    {
+      subject: "Comunicación",
+      date: "18 mar 2026",
+      title: "Argumentación y texto breve",
+      status: "Consultado"
+    }
+  ],
+  reminders: [
+    "Tarea de Biología con entrega mañana a las 08:00.",
+    "Material nuevo en Historia con apoyo visual disponible.",
+    "Glosario guardado en tu biblioteca personal."
+  ],
+  favorites: [
+    "Revolución Mexicana",
+    "Fotosíntesis",
+    "Texto argumentativo"
   ]
 };
 
@@ -339,6 +573,263 @@ export const demoAdmin = {
       value: String(groupedStudents.length),
       copy: "Organizados automáticamente a partir de la base escolar disponible."
     }
+  ],
+  importTemplateHeaders: [
+    "matrícula",
+    "nombre completo",
+    "grado",
+    "grupo",
+    "turno",
+    "materias inscritas",
+    "docente responsable",
+    "correo institucional",
+    "estatus",
+    "condición previamente identificada",
+    "diagnóstico previo registrado",
+    "observaciones pedagógicas autorizadas",
+    "perfil de accesibilidad",
+    "apoyos sugeridos",
+    "apoyos pedagógicos activos",
+    "adaptaciones recomendadas",
+    "nivel de prioridad educativa",
+    "responsable del registro",
+    "fecha de actualización"
+  ],
+  importPreviewRows: [
+    {
+      matricula: "E001",
+      nombre: "Estudiante E001",
+      grupo: "5A",
+      estatus: "Activo",
+      perfil: "Lenguaje simplificado",
+      condicionInterna: "Atención sostenida",
+      prioridad: "Media",
+      permisos: "Coordinación + docente autorizado",
+      validacion: "Correcto"
+    },
+    {
+      matricula: "E004",
+      nombre: "Estudiante E004",
+      grupo: "5A",
+      estatus: "Activo",
+      perfil: "Apoyo visual",
+      condicionInterna: "Procesamiento sensorial",
+      prioridad: "Alta",
+      permisos: "Orientación + coordinación",
+      validacion: "Correcto"
+    },
+    {
+      matricula: "E021",
+      nombre: "Estudiante E021",
+      grupo: "4B",
+      estatus: "Inactivo",
+      perfil: "Glosario ampliado",
+      condicionInterna: "Lenguaje",
+      prioridad: "Media",
+      permisos: "Coordinación académica",
+      validacion: "Actualizar estatus"
+    }
+  ],
+  importSummary: {
+    validRows: 69,
+    errorRows: 3,
+    newStudents: 12,
+    updatedStudents: 57,
+    inactiveStudents: 4
+  },
+  profileRegistry: [
+    {
+      studentId: "E001",
+      studentName: "Estudiante E001",
+      currentProfile: "Lenguaje simplificado",
+      activeSupports: ["Lenguaje simplificado", "Repaso breve"],
+      conditionRecord: "Condición previamente identificada: TDA/TDAH registrado por el área autorizada",
+      diagnosisRecord: "Diagnóstico previo institucional disponible para administración y orientación autorizadas",
+      pedagogicalObservations:
+        "Se recomienda dividir instrucciones en bloques cortos y reforzar cierre de tarea con recordatorio visible.",
+      suggestedSupports: ["Pasos numerados", "Bloques breves", "Recordatorios claros"],
+      recommendedAdaptations: ["Repaso breve", "Contenido segmentado", "Lenguaje simplificado"],
+      priorityLevel: "Media",
+      visibility: ["Coordinación académica", "Orientación", "Docente autorizado"],
+      responsibleArea: "Coordinación académica",
+      teacherView: {
+        recommendedSupports: ["Pasos numerados", "Recordatorios claros", "Lenguaje directo"],
+        suggestedMaterial: "Resumen breve + checklist + tarea visible",
+        practicalRecommendations: [
+          "Presentar una sola consigna por bloque.",
+          "Resaltar fecha de entrega en la parte final.",
+          "Usar conceptos clave con definición breve."
+        ]
+      },
+      createdAt: "15 ene 2026",
+      updatedAt: "20 mar 2026",
+      registeredBy: "Coordinación académica",
+      history: [
+        "15 ene 2026 · Alta inicial por coordinación académica",
+        "02 feb 2026 · Se agregó repaso breve",
+        "20 mar 2026 · Revisión de apoyos activos por docente titular"
+      ]
+    },
+    {
+      studentId: "E004",
+      studentName: "Estudiante E004",
+      currentProfile: "Apoyo visual",
+      activeSupports: ["Apoyo visual", "Contenido segmentado"],
+      conditionRecord: "Condición previamente identificada: procesamiento sensorial registrado",
+      diagnosisRecord: "Registro interno con acceso restringido a administración autorizada",
+      pedagogicalObservations:
+        "Conviene mantener baja saturación visual, secuencia estable y separación clara de bloques.",
+      suggestedSupports: ["Baja saturación visual", "Apoyo visual", "Secuencia predecible"],
+      recommendedAdaptations: ["Formato visual", "Contenido segmentado", "Guía secuencial"],
+      priorityLevel: "Alta",
+      visibility: ["Orientación", "Coordinación académica"],
+      responsibleArea: "Orientación institucional",
+      teacherView: {
+        recommendedSupports: ["Apoyo visual", "Guía secuencial", "Baja saturación visual"],
+        suggestedMaterial: "Esquema breve + instrucciones lineales + glosario corto",
+        practicalRecommendations: [
+          "Evitar tablas saturadas o demasiado densas.",
+          "Mantener orden fijo de resumen, pasos y tarea.",
+          "Usar un máximo de un color de énfasis por bloque."
+        ]
+      },
+      createdAt: "10 feb 2026",
+      updatedAt: "18 mar 2026",
+      registeredBy: "Orientación institucional",
+      history: [
+        "10 feb 2026 · Registro de apoyo visual autorizado",
+        "18 mar 2026 · Se agregó contenido segmentado"
+      ]
+    },
+    {
+      studentId: "E021",
+      studentName: "Estudiante E021",
+      currentProfile: "Glosario ampliado",
+      activeSupports: ["Glosario ampliado", "Lenguaje simplificado", "Repaso breve"],
+      conditionRecord: "Condición previamente identificada: alteración del lenguaje registrada",
+      diagnosisRecord: "Dato clínico previo resguardado por el área autorizada",
+      pedagogicalObservations:
+        "Se recomienda material breve, vocabulario claro y apoyo de conceptos antes de la tarea.",
+      suggestedSupports: ["Glosario ampliado", "Lenguaje simplificado", "Secuencia ordenada"],
+      recommendedAdaptations: ["Lenguaje simplificado", "Repaso breve", "Estructura paso a paso"],
+      priorityLevel: "Media",
+      visibility: ["Coordinación académica", "Orientación", "Docente autorizado"],
+      responsibleArea: "Área psicopedagógica",
+      teacherView: {
+        recommendedSupports: ["Glosario ampliado", "Lenguaje claro", "Secuencia ordenada"],
+        suggestedMaterial: "Resumen accesible + glosario + pasos visibles",
+        practicalRecommendations: [
+          "Definir términos antes de la actividad.",
+          "Separar conceptos clave de instrucciones.",
+          "Evitar párrafos largos sin subtítulos."
+        ]
+      },
+      createdAt: "08 feb 2026",
+      updatedAt: "22 mar 2026",
+      registeredBy: "Área psicopedagógica",
+      history: [
+        "08 feb 2026 · Alta institucional por observación autorizada",
+        "01 mar 2026 · Se añadió glosario ampliado",
+        "22 mar 2026 · Revisión conjunta con coordinación académica"
+      ]
+    }
+  ],
+  auditLog: [
+    {
+      timestamp: "22 mar 2026 · 15:12",
+      actor: "Coordinación académica",
+      action: "Carga masiva de base escolar",
+      module: "Base escolar",
+      detail: "Se integraron 69 filas válidas y se marcaron 4 alumnos inactivos."
+    },
+    {
+      timestamp: "22 mar 2026 · 16:08",
+      actor: "Docente D06",
+      action: "Aprobación de material",
+      module: "Materiales postclase",
+      detail: "Se aprobó el material de Fotosíntesis para Biología 5A."
+    },
+    {
+      timestamp: "22 mar 2026 · 16:18",
+      actor: "Coordinación académica",
+      action: "Actualización de perfil pedagógico",
+      module: "Perfiles de accesibilidad",
+      detail: "Se agregó apoyo visual al registro E004."
+    }
+  ],
+  permissions: [
+    {
+      module: "Base escolar",
+      admin: "Ver, editar, importar y desactivar registros",
+      teacher: "Consultar grupo asignado",
+      student: "Sin acceso"
+    },
+    {
+      module: "Perfiles pedagógicos",
+      admin:
+        "Registrar diagnósticos previos o condiciones identificadas, editar apoyos, definir visibilidad y auditar cambios",
+      teacher:
+        "Ver solo apoyos autorizados, material sugerido y recomendaciones pedagógicas sin diagnóstico visible",
+      student: "Recibe solo el material correspondiente"
+    },
+    {
+      module: "Reportes y analítica",
+      admin: "Vista completa agregada",
+      teacher: "Métricas de sus grupos y materiales",
+      student: "Sin acceso"
+    }
+  ],
+  analytics: {
+    filters: ["Fecha", "Grupo", "Materia", "Docente", "Tipo de salida", "Tipo de apoyo"],
+    metrics: [
+      { label: "Materiales generados", value: "184", helper: "Último mes" },
+      { label: "Entregas realizadas", value: "162", helper: "Por plataforma y correo" },
+      { label: "Consultas de materiales", value: "1,248", helper: "Aperturas registradas" },
+      { label: "Descargas", value: "392", helper: "Biblioteca del estudiante" }
+    ],
+    usageBySubject: [
+      { label: "Biología", value: 42 },
+      { label: "Historia", value: 31 },
+      { label: "Comunicación", value: 28 },
+      { label: "Matemáticas", value: 19 }
+    ],
+    usageByAdaptation: [
+      { label: "Repaso breve", value: 38 },
+      { label: "Lenguaje simplificado", value: 34 },
+      { label: "Apoyo visual", value: 27 },
+      { label: "Estructura paso a paso", value: 21 }
+    ],
+    trend: [
+      { period: "Semana 1", value: 28 },
+      { period: "Semana 2", value: 36 },
+      { period: "Semana 3", value: 44 },
+      { period: "Semana 4", value: 52 }
+    ]
+  },
+  integrations: [
+    {
+      title: "Google Classroom",
+      status: "Ruta de crecimiento",
+      copy: "Publicación de materiales y sincronización de tareas por grupo."
+    },
+    {
+      title: "Microsoft Teams",
+      status: "Ruta de crecimiento",
+      copy: "Distribución institucional y seguimiento desde entornos híbridos."
+    },
+    {
+      title: "Correo institucional y exportación",
+      status: "Listo para activarse",
+      copy: "Salida por correo, PDF y Word para compartir materiales postclase."
+    }
+  ],
+  sensitiveCategoryExamples: [
+    "TDA / TDAH",
+    "TEA nivel 1",
+    "Alteración del lenguaje",
+    "Procesamiento sensorial",
+    "Ansiedad o crisis de pánico",
+    "Depresión"
   ]
 };
 
@@ -367,12 +858,84 @@ export const demoHelp = {
       answer: "No. Solo trabaja con apoyos pedagógicos y perfiles de accesibilidad previamente autorizados por la institución."
     },
     {
+      question: "¿Puede usar diagnósticos previos o condiciones ya registradas por la escuela?",
+      answer:
+        "Sí, pero únicamente como información institucional protegida para activar apoyos pedagógicos concretos. La interfaz docente prioriza apoyos y ajustes, no etiquetas clínicas visibles."
+    },
+    {
       question: "¿Puedo cargar base escolar completa?",
       answer: "Sí. La coordinación puede registrar alumnos, docentes, grupos y materias por carga masiva o captura manual."
     },
     {
       question: "¿Cómo se entregan los materiales?",
       answer: "Pueden publicarse por plataforma interna, correo institucional, por grupo o para estudiantes específicos."
+    }
+  ],
+  onboardingByRole: {
+    teacher: [
+      "Selecciona materia, grupo y fecha de la sesión.",
+      "Carga texto, audio o puntos clave de la explicación.",
+      "Genera el borrador, compáralo y edítalo antes de aprobar.",
+      "Define destinatarios, adapta y programa el envío postclase."
+    ],
+    student: [
+      "Ubica materiales nuevos, favoritos e historial por materia.",
+      "Consulta resumen, pasos, glosario y tarea en vista resumida o detallada.",
+      "Guarda, descarga o marca materiales para repaso posterior."
+    ],
+    admin: [
+      "Importa base escolar, revisa validaciones y actualiza registros.",
+      "Gestiona perfiles pedagógicos autorizados y permisos por rol.",
+      "Consulta reportes agregados, bitácora e integraciones futuras."
+    ]
+  },
+  moduleMap: [
+    {
+      title: "Base escolar",
+      copy: "Alumnos, docentes, grupos, materias, estatus y apoyos pedagógicos."
+    },
+    {
+      title: "Flujo docente",
+      copy: "Captura, IA, revisión, comparativa y envío por destinatarios."
+    },
+    {
+      title: "Experiencia estudiante",
+      copy: "Materiales claros, privados, guardados y descargables."
+    },
+    {
+      title: "Gobernanza institucional",
+      copy: "Permisos, reportes, bitácora, privacidad e integraciones futuras."
+    }
+  ],
+  wireflow: [
+    "Institución importa base escolar -> organiza alumnos, grupos y materias",
+    "Docente crea clase -> IA genera borrador -> docente revisa y aprueba",
+    "Sistema determina destinatarios -> entrega materiales base y adaptados",
+    "Estudiante consulta, guarda y descarga -> analítica agrega uso institucional"
+  ],
+  architectureLayers: [
+    {
+      title: "Capa académica",
+      copy: "Usuarios, grupos, materias, sesiones, materiales y entregas."
+    },
+    {
+      title: "Capa de IA",
+      copy: "Transcripción, generación base, adaptaciones y salida estructurada."
+    },
+    {
+      title: "Capa de control",
+      copy: "Permisos, revisión docente, bitácora y trazabilidad institucional."
+    }
+  ],
+  examples: [
+    {
+      topic: "Historia · Revolución Mexicana",
+      input:
+        "Explicación sobre causas, etapas y consecuencias de la Revolución Mexicana con una línea del tiempo como actividad.",
+      baseOutput:
+        "Resumen de causas, pasos de actividad, conceptos clave y glosario para todo el grupo.",
+      adaptedOutput:
+        "Versión con lenguaje simplificado, pasos secuenciales, bloques cortos y apoyo visual."
     }
   ]
 };

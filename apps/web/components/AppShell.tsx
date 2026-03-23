@@ -28,7 +28,12 @@ type NavItem = {
     | "settings"
     | "admin"
     | "task"
-    | "report";
+    | "report"
+    | "compare"
+    | "database"
+    | "integration"
+    | "lock"
+    | "shield";
 };
 
 const navByRole: Record<"teacher" | "student" | "admin", NavItem[]> = {
@@ -36,9 +41,11 @@ const navByRole: Record<"teacher" | "student" | "admin", NavItem[]> = {
     { href: "/docente", label: "Inicio", icon: "home" },
     { href: "/docente/nueva-clase", label: "Nueva clase", icon: "spark" },
     { href: "/docente/materiales", label: "Materiales", icon: "book" },
+    { href: "/docente/comparativa", label: "Comparativa", icon: "compare" },
     { href: "/docente/historial", label: "Historial", icon: "history" },
     { href: "/docente/plantillas", label: "Plantillas", icon: "template" },
     { href: "/docente/notificaciones", label: "Alertas", icon: "bell" },
+    { href: "/ayuda", label: "Ayuda", icon: "shield" },
     { href: "/perfil", label: "Perfil", icon: "profile" },
     { href: "/configuracion", label: "Ajustes", icon: "settings" }
   ],
@@ -47,14 +54,18 @@ const navByRole: Record<"teacher" | "student" | "admin", NavItem[]> = {
     { href: "/estudiante#materiales", label: "Materiales", icon: "book" },
     { href: "/estudiante#materias", label: "Materias", icon: "users" },
     { href: "/estudiante#tareas", label: "Tareas", icon: "task" },
+    { href: "/ayuda", label: "Ayuda", icon: "shield" },
     { href: "/perfil", label: "Perfil", icon: "profile" },
     { href: "/configuracion", label: "Ajustes", icon: "settings" }
   ],
   admin: [
     { href: "/admin", label: "Panel", icon: "admin" },
-    { href: "/admin#alumnos", label: "Alumnos", icon: "users" },
-    { href: "/admin#docentes", label: "Docentes", icon: "book" },
-    { href: "/admin#reportes", label: "Reportes", icon: "report" },
+    { href: "/admin#base-escolar", label: "Base escolar", icon: "database" },
+    { href: "/admin#perfiles", label: "Perfiles", icon: "users" },
+    { href: "/admin/reportes", label: "Reportes", icon: "report" },
+    { href: "/admin#privacidad", label: "Privacidad", icon: "lock" },
+    { href: "/integraciones", label: "Integraciones", icon: "integration" },
+    { href: "/ayuda", label: "Ayuda", icon: "shield" },
     { href: "/perfil", label: "Perfil", icon: "profile" },
     { href: "/configuracion", label: "Ajustes", icon: "settings" }
   ]
