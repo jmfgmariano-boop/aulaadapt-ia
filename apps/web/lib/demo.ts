@@ -39,10 +39,10 @@ export const demoRoleLabels: Record<UserRole, string> = {
 };
 
 export const demoLanding = {
-  kicker: "Plataforma institucional para educación media superior",
-  title: "AulaAdapt IA transforma la explicación docente en materiales postclase claros, accesibles y listos para entregarse.",
+  kicker: "IA postclase para educación media superior",
+  title: "Materiales claros, accesibles y listos para entregar después de cada clase.",
   description:
-    "Diseñada para la Preparatoria de la Universidad Autónoma de Guadalajara con flujos claros para docentes, estudiantes y coordinación académica.",
+    "Docentes capturan la sesión, la IA organiza borradores editables y la institución entrega apoyos pedagógicos con trazabilidad y control docente.",
   primaryCta: {
     href: "/docente/nueva-clase",
     label: "Explorar panel docente"
@@ -68,19 +68,19 @@ export const demoLanding = {
   highlights: [
     {
       title: "Resumen accesible",
-      copy: "Repaso breve, claro y ordenado."
+      copy: "Una síntesis breve para ubicar lo esencial."
     },
     {
       title: "Revisión docente",
-      copy: "La IA propone; el docente revisa y decide."
+      copy: "Cada borrador se edita antes de enviarse."
     },
     {
       title: "Adaptaciones neutrales",
-      copy: "Apoyos pedagógicos claros, visuales y secuenciales."
+      copy: "Apoyos visibles como estructura, claridad y formato."
     },
     {
       title: "Escalable para escuelas",
-      copy: "Lista para crecer por grupos, materias e integraciones."
+      copy: "Preparada para crecer por grupos, materias y sedes."
     }
   ],
   valuePillars: [

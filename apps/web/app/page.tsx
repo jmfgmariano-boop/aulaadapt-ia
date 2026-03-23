@@ -10,22 +10,22 @@ export default function HomePage() {
   return (
     <main className="landing-page">
       <section className="landing-topbar">
-        <Link className="brand brand-inline" href="/">
+        <Link className="brand brand-inline institution-brand" href="/">
           <Image
-            className="brand-logo brand-logo-home"
-            src="/logo-inicio-uag.svg"
+            className="brand-logo brand-logo-institution"
+            src="/prepauag-lifevalue.svg"
             alt="Logo de la Preparatoria de la Universidad Autónoma de Guadalajara"
-            width={260}
-            height={90}
+            width={182}
+            height={104}
             priority
           />
-          <div>
-            <strong>AulaAdapt IA</strong>
+          <div className="institution-brand-copy">
+            <strong>Implementación institucional</strong>
             <p>{demoConfig.schoolName}</p>
           </div>
         </Link>
         <div className="landing-topbar-actions">
-          <Tag>IA educativa</Tag>
+          <Tag>Prepa UAG</Tag>
           <Link className="ghost-button" href="/acceso">
             Acceso institucional
           </Link>
@@ -37,7 +37,17 @@ export default function HomePage() {
 
       <section className="hero-panel">
         <div className="hero-copy">
-          <span className="hero-kicker">{demoLanding.kicker}</span>
+          <div className="hero-brand-block">
+            <span className="hero-kicker">{demoLanding.kicker}</span>
+            <Image
+              className="hero-product-logo"
+              src="/logo-inicio-uag.svg"
+              alt="Logo de AulaAdapt IA"
+              width={620}
+              height={220}
+              priority
+            />
+          </div>
           <h1>{demoLanding.title}</h1>
           <p>{demoLanding.description}</p>
           <div className="hero-actions">
