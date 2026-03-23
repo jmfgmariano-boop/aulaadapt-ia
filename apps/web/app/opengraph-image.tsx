@@ -52,7 +52,7 @@ export default function OpenGraphImage() {
               A
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ fontSize: 24, opacity: 0.9 }}>Demo pública para presentación institucional</div>
+              <div style={{ fontSize: 24, opacity: 0.9 }}>Plataforma institucional para educación media superior</div>
               <div style={{ fontSize: 44, fontWeight: 800 }}>AulaAdapt IA</div>
             </div>
           </div>

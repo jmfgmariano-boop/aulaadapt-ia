@@ -3,14 +3,15 @@ import "./globals.css";
 import { demoConfig } from "../lib/demo";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://aulaadapt-ia-demo.vercel.app"),
-  title: "AulaAdapt IA | Demo pública para educación media superior",
-  description: "Demo pública de AulaAdapt IA, una plataforma web para transformar explicaciones de clase en materiales postclase accesibles y revisables.",
+  metadataBase: new URL("https://aulaadapt-ia.vercel.app"),
+  title: "AulaAdapt IA | Plataforma para educación media superior",
+  description:
+    "AulaAdapt IA es una plataforma web para transformar explicaciones de clase en materiales postclase accesibles, claros y revisables.",
   openGraph: {
     title: "AulaAdapt IA",
     description:
-      "Explicación docente, IA, revisión humana y entrega postclase en una demo pública lista para compartir.",
-    url: "https://aulaadapt-ia-demo.vercel.app",
+      "Explicación docente, IA, revisión humana y entrega postclase en una plataforma lista para pilotaje escolar.",
+    url: "https://aulaadapt-ia.vercel.app",
     siteName: "AulaAdapt IA",
     images: [
       {
@@ -26,8 +27,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "AulaAdapt IA",
-    description:
-      "Demo pública para presentar una plataforma de apoyo docente postclase con enfoque inclusivo.",
+    description: "Plataforma de apoyo docente postclase con enfoque inclusivo para educación media superior.",
     images: ["/opengraph-image"]
   },
   icons: {

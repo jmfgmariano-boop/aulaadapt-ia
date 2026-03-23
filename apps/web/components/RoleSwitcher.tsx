@@ -49,7 +49,7 @@ export function RoleSwitcher() {
       </div>
       {preferredRole && pathname === "/" ? (
         <Link className="role-continue-link" href={demoRoutes[preferredRole as keyof typeof demoRoutes]}>
-          Continuar demo: {demoRoleLabels[preferredRole as keyof typeof demoRoleLabels]}
+          Continuar como {demoRoleLabels[preferredRole as keyof typeof demoRoleLabels]}
         </Link>
       ) : null}
     </div>

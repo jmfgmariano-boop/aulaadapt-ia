@@ -1,7 +1,6 @@
 import { AppShell } from "../../../components/AppShell";
 import { InfoList, SectionCard, Tag } from "../../../components/Ui";
 import { generatedMaterials, teacherGroups } from "../../../lib/data";
-import { demoConfig } from "../../../lib/demo";
 
 const material = generatedMaterials[0];
 
@@ -42,7 +41,7 @@ export default function MaterialsReviewPage() {
         <div className="stack-area">
           <SectionCard title="Vista previa final" description="Así lo verá el estudiante" accent="sky">
             <div className="preview-card">
-              <span className="demo-chip">Vista estudiante simulada</span>
+              <span className="demo-chip">Vista estudiante</span>
               <strong>Resumen</strong>
               <p>{material.summary}</p>
               <strong>Pasos</strong>
@@ -84,7 +83,7 @@ export default function MaterialsReviewPage() {
               </label>
             </form>
             <p className="helper-copy">
-              En esta demo pública, el envío no persiste cambios. Se muestra el flujo final que luego podrá conectarse a backend real.
+              El flujo de publicación ya contempla revisión, aprobación y programación antes de la entrega a grupos o estudiantes.
             </p>
             <div className="cta-row">
               <button className="ghost-button" type="button">
@@ -94,7 +93,7 @@ export default function MaterialsReviewPage() {
                 Aprobar
               </button>
               <button className="primary-button" type="button">
-                Enviar en {demoConfig.appMode}
+                Publicar material
               </button>
             </div>
           </SectionCard>

@@ -1,7 +1,5 @@
 import { AppShell } from "../../components/AppShell";
 import { SectionCard } from "../../components/Ui";
-import { demoConfig } from "../../lib/demo";
-
 export default function SettingsPage() {
   return (
     <AppShell
@@ -76,7 +74,7 @@ export default function SettingsPage() {
           </article>
           <article className="list-card">
             <strong>Publicación web.</strong>
-            <p>Esta versión está preparada para compartirse como demo pública en Vercel con modo {demoConfig.appMode}.</p>
+            <p>La plataforma está preparada para compartirse por web con una experiencia institucional clara y recorridos diferenciados por perfil.</p>
           </article>
         </div>
       </SectionCard>

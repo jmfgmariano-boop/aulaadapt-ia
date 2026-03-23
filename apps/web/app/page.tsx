@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { DemoBanner } from "../components/DemoBanner";
 import { FlowSteps, Tag } from "../components/Ui";
 import { RoleSwitcher } from "../components/RoleSwitcher";
 import { demoConfig, demoLanding, demoRoleLabels, demoRoutes } from "../lib/demo";
@@ -13,18 +12,16 @@ export default function HomePage() {
           <span className="brand-mark">A</span>
           <div>
             <strong>AulaAdapt IA</strong>
-            <p>Demo pública para compartir por internet</p>
+            <p>{demoConfig.schoolName}</p>
           </div>
         </Link>
         <div className="landing-topbar-actions">
-          <Tag>{demoConfig.appMode}</Tag>
+          <Tag>IA educativa</Tag>
           <Link className="ghost-button" href={`mailto:${demoConfig.supportEmail}`}>
-            Contacto demo
+            Contacto institucional
           </Link>
         </div>
       </section>
-
-      <DemoBanner />
 
       <section className="hero-panel">
         <div className="hero-copy">
@@ -39,13 +36,27 @@ export default function HomePage() {
               {demoLanding.secondaryCta.label}
             </Link>
           </div>
-          <RoleSwitcher />
+          <div className="hero-metrics">
+            {demoLanding.metrics.map((metric) => (
+              <article key={metric.label} className="hero-metric-card">
+                <strong>{metric.value}</strong>
+                <span>{metric.label}</span>
+              </article>
+            ))}
+          </div>
+          <section className="profile-selector-card">
+            <div className="profile-selector-copy">
+              <span>Elegir perfil</span>
+              <p>Selecciona el recorrido que deseas explorar dentro de la plataforma según tu perfil.</p>
+            </div>
+            <RoleSwitcher />
+          </section>
         </div>
         <div className="hero-showcase">
           <div className="showcase-card">
-            <span>Promesa del producto</span>
+            <span>Propuesta institucional</span>
             <strong className="showcase-title">La IA apoya. El docente decide.</strong>
-            <p>Sin diagnósticos, con datos simulados y con control editorial antes del envío en esta demo pública.</p>
+            <p>Diseñada para reforzar la comprensión postclase, mejorar la accesibilidad educativa y mantener al docente en el centro de cada decisión.</p>
           </div>
           <div className="hero-illustration-card">
             <Image
@@ -69,7 +80,7 @@ export default function HomePage() {
       <section className="role-section">
         <div className="section-title">
           <span>Accesos por rol</span>
-          <h2>Una sola plataforma, experiencias distintas según quien la usa.</h2>
+          <h2>Una sola plataforma, experiencias distintas según quién la usa.</h2>
         </div>
         <div className="role-grid">
           {Object.entries(demoRoutes).map(([role, href]) => (
@@ -108,20 +119,20 @@ export default function HomePage() {
       <section className="institutional-panel">
         <div className="section-title">
           <span>Presentación institucional</span>
-          <h2>Lista para compartirse como demo web pública en Vercel.</h2>
+          <h2>Diseñada para presentarse como una plataforma lista para pilotaje escolar.</h2>
         </div>
         <div className="institutional-grid">
           <article className="role-card">
-            <h3>Datos simulados</h3>
-            <p>La demo no requiere credenciales y usa contenido de ejemplo coherente entre pantallas y APIs.</p>
+            <h3>Operación escolar clara</h3>
+            <p>Integra captura docente, revisión, entrega y seguimiento con una experiencia comprensible para toda la institución.</p>
           </article>
           <article className="role-card">
-            <h3>Publicable</h3>
-            <p>Metadatos, Open Graph, favicon y configuración de modo demo listos para compartirse por URL.</p>
+            <h3>Imagen institucional sólida</h3>
+            <p>La experiencia ya cuenta con identidad visual, jerarquía clara y estructura para presentarse como un producto escolar listo para evolucionar.</p>
           </article>
           <article className="role-card">
             <h3>Siguiente iteración</h3>
-            <p>La base queda preparada para pasar después a backend real y, en una fase posterior, IA real.</p>
+            <p>La base queda preparada para avanzar a backend real, grabación funcional de audio e integraciones de IA.</p>
           </article>
         </div>
       </section>

@@ -6,11 +6,11 @@ const appMode = process.env.NEXT_PUBLIC_APP_MODE === "demo" ? "demo" : "demo";
 
 export const demoConfig: DemoAppConfig = {
   appMode,
-  showDemoBanner: true,
+  showDemoBanner: false,
   defaultRole: "teacher",
   schoolName:
     process.env.NEXT_PUBLIC_SCHOOL_NAME || "Preparatoria de la Universidad Autónoma de Guadalajara",
-  supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "demo@aulaadaptia.edu"
+  supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "contacto@aulaadaptia.edu"
 };
 
 export const demoUsers = {
@@ -32,18 +32,32 @@ export const demoRoleLabels: Record<UserRole, string> = {
 };
 
 export const demoLanding = {
-  kicker: "Demo pública para escuelas de educación media superior",
+  kicker: "Plataforma institucional para educación media superior",
   title: "AulaAdapt IA convierte la explicación de clase en materiales postclase accesibles, claros y listos para compartir.",
   description:
-    "Sitio web demostrativo con experiencia docente, estudiante y administrativa. La navegación es pública, los datos son simulados y el flujo muestra cómo una escuela podría operar el producto en un piloto real.",
+    "Una plataforma pensada para la Preparatoria de la Universidad Autónoma de Guadalajara que ayuda a docentes, estudiantes y coordinación académica a organizar mejor el repaso postclase con materiales claros, adaptados y listos para entregar.",
   primaryCta: {
     href: "/docente/nueva-clase",
-    label: "Explorar flujo docente"
+    label: "Explorar panel docente"
   },
   secondaryCta: {
     href: "/estudiante",
-    label: "Ver experiencia estudiante"
+    label: "Explorar vista estudiante"
   },
+  metrics: [
+    {
+      label: "Materiales semanales",
+      value: String(usageSnapshot.generatedThisWeek)
+    },
+    {
+      label: "Aprobación docente",
+      value: `${usageSnapshot.approvedRate}%`
+    },
+    {
+      label: "Grupos activos",
+      value: String(usageSnapshot.activeGroups)
+    }
+  ],
   highlights: [
     {
       title: "Resumen accesible",
@@ -59,13 +73,13 @@ export const demoLanding = {
     },
     {
       title: "Escalable para escuelas",
-      copy: "Pensada para crecer por grupos, materias, docentes y futuras integraciones."
+      copy: "Pensada para crecer por grupos, materias, docentes, alumnos y futuras integraciones institucionales."
     }
   ],
   valuePillars: [
     {
       title: "Privacidad",
-      copy: "La demostración comunica límites claros, roles separados y reportes agregados."
+      copy: "Protege la información escolar con roles separados, trazabilidad y reportes agregados."
     },
     {
       title: "Uso responsable",
@@ -73,7 +87,7 @@ export const demoLanding = {
     },
     {
       title: "Consentimiento institucional",
-      copy: "Preparada para presentarse como piloto escolar con mensajes operativos y éticos."
+      copy: "Preparada para operación escolar con mensajes operativos, éticos y un enfoque pedagógico claro."
     }
   ],
   howItWorks: [
@@ -99,10 +113,9 @@ export const demoTeacher = {
     {
       label: "Materiales esta semana",
       value: String(usageSnapshot.generatedThisWeek),
-      helper: "Generados en esta escuela demostrativa"
+      helper: "Generados en la preparatoria"
     },
     {
-      label: "Tasa de aprobacion",
       label: "Tasa de aprobación",
       value: `${usageSnapshot.approvedRate}%`,
       helper: "Borradores revisados antes de entregarse"
@@ -124,8 +137,8 @@ export const demoTeacher = {
       copy: "Captura explicación, agrega tarea y selecciona apoyos pedagógicos neutrales antes de generar."
     },
     {
-      title: "Modo demostración",
-      copy: "Los datos son simulados y permiten recorrer el flujo completo sin autenticación."
+      title: "Captura multimodal",
+      copy: "Integra texto, audio grabado, archivos y puntos clave en un solo flujo de trabajo."
     }
   ],
   recorderSteps: [

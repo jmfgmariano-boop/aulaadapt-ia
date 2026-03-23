@@ -76,7 +76,7 @@ export default function AdminPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Alta rápida de docentes" description="Formulario demostrativo para registrar información docente">
+        <SectionCard title="Alta rápida de docentes" description="Formulario para registrar información docente">
           <form className="form-grid">
             {demoAdmin.teacherIntakeFields.map((field) => (
               <label key={field}>

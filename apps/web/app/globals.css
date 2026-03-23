@@ -128,6 +128,76 @@ textarea {
   align-items: center;
 }
 
+.hero-copy {
+  position: relative;
+}
+
+.hero-copy::after {
+  content: "";
+  position: absolute;
+  right: 4%;
+  top: 6%;
+  width: 160px;
+  height: 160px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(100, 199, 178, 0.24) 0%, rgba(100, 199, 178, 0) 72%);
+  pointer-events: none;
+  filter: blur(6px);
+}
+
+.profile-selector-card {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+  padding: 18px 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(20, 53, 74, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: var(--shadow);
+}
+
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.hero-metric-card {
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(20, 53, 74, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(236, 245, 247, 0.94) 100%);
+  box-shadow: var(--shadow);
+}
+
+.hero-metric-card strong {
+  display: block;
+  font-size: 1.6rem;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.hero-metric-card span {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.profile-selector-copy span {
+  display: inline-flex;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(100, 199, 178, 0.16);
+  color: var(--ink);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.profile-selector-copy p {
+  margin: 0;
+  color: var(--muted);
+}
+
 .hero-copy h1,
 .topbar h1 {
   margin: 0;
@@ -216,7 +286,10 @@ textarea {
 
 .hero-showcase {
   border-radius: var(--radius-xl);
-  padding: 24px;
+  padding: 26px;
+  background:
+    radial-gradient(circle at top right, rgba(100, 199, 178, 0.22), transparent 26%),
+    rgba(255, 255, 255, 0.9);
 }
 
 .hero-illustration-card {
@@ -256,7 +329,13 @@ textarea {
 .showcase-grid div {
   padding: 18px;
   border-radius: var(--radius-md);
-  background: var(--paper);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(247, 251, 252, 1) 100%);
+  border: 1px solid rgba(20, 53, 74, 0.05);
+}
+
+.showcase-grid div strong {
+  display: block;
+  margin-bottom: 8px;
 }
 
 .role-section {
@@ -295,6 +374,12 @@ textarea {
 .role-card {
   border-radius: var(--radius-lg);
   padding: 24px;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.role-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 70px rgba(20, 53, 74, 0.14);
 }
 
 .role-card a {
@@ -313,6 +398,10 @@ textarea {
   padding: 20px;
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.6);
+}
+
+.institutional-panel {
+  margin-bottom: 40px;
 }
 
 .app-shell {
@@ -374,6 +463,12 @@ textarea {
   font-weight: 700;
 }
 
+.primary-button,
+.ghost-button,
+.role-switch-link {
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
 .role-switch-link.active {
   background: var(--ink);
   color: var(--paper);
@@ -382,6 +477,10 @@ textarea {
 .role-continue-link {
   color: var(--ink);
   font-weight: 700;
+}
+
+.role-switcher-wrap .role-switcher {
+  width: 100%;
 }
 
 .nav-list {
@@ -463,6 +562,13 @@ textarea {
   font-size: 0.88rem;
   font-weight: 700;
   margin-bottom: 10px;
+}
+
+.primary-button:hover,
+.ghost-button:hover,
+.role-switch-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(20, 53, 74, 0.12);
 }
 
 .metric-card {
@@ -604,7 +710,7 @@ textarea {
 
 .wave-bars {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   gap: 8px;
   min-height: 64px;
 }
@@ -700,6 +806,10 @@ textarea {
   .report-grid,
   .institutional-grid,
   .flow-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-metrics {
     grid-template-columns: 1fr;
   }
 

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ReactNode } from "react";
-import { DemoBanner } from "./DemoBanner";
 import { RoleSwitcher } from "./RoleSwitcher";
 import { demoConfig } from "../lib/demo";
 
@@ -53,7 +52,7 @@ export function AppShell({
           <span className="brand-mark">A</span>
           <div>
             <strong>AulaAdapt IA</strong>
-            <p>{demoConfig.schoolName} · experiencia demo pública</p>
+            <p>{demoConfig.schoolName}</p>
           </div>
         </Link>
         <RoleSwitcher />
@@ -70,7 +69,6 @@ export function AppShell({
         </div>
       </aside>
       <main className="content-area">
-        <DemoBanner />
         <header className="topbar">
           <div>
             <p className="eyebrow">{role === "teacher" ? "Panel docente" : role === "student" ? "Panel estudiante" : "Panel administrativo"}</p>
@@ -78,7 +76,7 @@ export function AppShell({
             <p className="topbar-copy">{subtitle}</p>
           </div>
           <div className="topbar-actions">
-            <span className="status-pill">Demo pública · {demoConfig.appMode}</span>
+            <span className="status-pill">Acceso por perfil</span>
             <Link className="ghost-button" href="/configuracion">
               Preferencias
             </Link>
