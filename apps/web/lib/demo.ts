@@ -1,6 +1,11 @@
 import type { DemoAppConfig, UserRole } from "@aulaadapt/domain";
 import { adaptationOptions, outputOptions } from "@aulaadapt/design-system";
 import { deliveries, groups, materials, sessions, subjects, usageSnapshot, users } from "@aulaadapt/mocks";
+import {
+  sourceAccessibilityContext,
+  sourceStudentRegistry,
+  sourceTeacherDirectory
+} from "./schoolDataset";
 
 const appMode = process.env.NEXT_PUBLIC_APP_MODE === "demo" ? "demo" : "demo";
 
@@ -33,9 +38,9 @@ export const demoRoleLabels: Record<UserRole, string> = {
 
 export const demoLanding = {
   kicker: "Plataforma institucional para educación media superior",
-  title: "AulaAdapt IA convierte la explicación de clase en materiales postclase accesibles, claros y listos para compartir.",
+  title: "AulaAdapt IA convierte cada clase en materiales postclase claros, accesibles y listos para compartirse.",
   description:
-    "Una plataforma pensada para la Preparatoria de la Universidad Autónoma de Guadalajara que ayuda a docentes, estudiantes y coordinación académica a organizar mejor el repaso postclase con materiales claros, adaptados y listos para entregar.",
+    "Diseñada para la Preparatoria de la Universidad Autónoma de Guadalajara, con flujos claros para docentes, estudiantes y coordinación académica.",
   primaryCta: {
     href: "/docente/nueva-clase",
     label: "Explorar panel docente"
@@ -61,19 +66,19 @@ export const demoLanding = {
   highlights: [
     {
       title: "Resumen accesible",
-      copy: "Contenido postclase en lenguaje claro, con estructura entendible y listo para repasar."
+      copy: "Contenido breve, claro y ordenado para repasar."
     },
     {
       title: "Revisión docente",
-      copy: "La IA sugiere borradores editables. El docente revisa antes de aprobar y entregar."
+      copy: "La IA propone borradores editables y el docente decide."
     },
     {
       title: "Adaptaciones neutrales",
-      copy: "Apoyos como formato visual, repaso breve y estructura paso a paso."
+      copy: "Apoyos como formato visual, repaso breve y pasos claros."
     },
     {
       title: "Escalable para escuelas",
-      copy: "Pensada para crecer por grupos, materias, docentes, alumnos y futuras integraciones institucionales."
+      copy: "Lista para crecer por grupos, materias y futuras integraciones."
     }
   ],
   valuePillars: [
@@ -120,6 +125,10 @@ export const demoAccess = {
     }
   ]
 };
+
+const groupedStudents = Array.from(new Set(sourceStudentRegistry.map((student) => student.group)));
+const interviewedTeachersCount = sourceTeacherDirectory.length;
+const registeredStudentsCount = sourceStudentRegistry.length;
 
 export const demoOutputs = outputOptions;
 export const demoAdaptations = adaptationOptions;
@@ -207,7 +216,7 @@ export const demoTeacher = {
 
 export const demoStudent = {
   user: demoUsers.student,
-  feedFilters: ["Biología", "22 mar 2026", "Mariana Gómez"],
+  feedFilters: ["Biología", "22 mar 2026", "Docente D06"],
   helperCards: [
     {
       title: "Menos fricción",
@@ -227,29 +236,23 @@ export const demoStudent = {
 
 export const demoAdmin = {
   user: demoUsers.admin,
-  studentRegistry: [
-    {
-      id: "A-24018",
-      name: "Valeria Peña",
-      group: "5A",
-      support: "Lenguaje simplificado",
-      tutor: "Mariana Gómez"
-    },
-    {
-      id: "A-24022",
-      name: "Diego Núñez",
-      group: "4B",
-      support: "Estructura paso a paso",
-      tutor: "Mariana Gómez"
-    },
-    {
-      id: "A-24031",
-      name: "Andrea Muñoz",
-      group: "5A",
-      support: "Formato visual",
-      tutor: "Mariana Gómez"
-    }
-  ],
+  studentRegistry: sourceStudentRegistry.map((student) => ({
+    id: student.id,
+    name: `Estudiante ${student.id}`,
+    semester: `${student.semester}° semestre`,
+    group: student.group,
+    age: student.age,
+    sex: student.sex,
+    support: student.preferredMaterial,
+    barrier: student.barrier,
+    note: student.comment
+  })),
+  teacherDirectory: sourceTeacherDirectory.map((teacher) => ({
+    ...teacher,
+    displayName: `${teacher.roleLabel} ${teacher.id}`,
+    institution: "Preparatoria de la Universidad Autónoma de Guadalajara"
+  })),
+  accessibilityContext: sourceAccessibilityContext,
   teacherIntakeFields: [
     "Nombre completo",
     "Correo institucional",
@@ -271,19 +274,19 @@ export const demoAdmin = {
   ],
   reportCards: [
     {
-      title: "Generación semanal",
-      value: String(usageSnapshot.generatedThisWeek),
-      copy: "Materiales emitidos por docentes esta semana."
+      title: "Alumnos registrados",
+      value: String(registeredStudentsCount),
+      copy: "Registros válidos integrados desde la base aplicada del proyecto."
     },
     {
-      title: "Entrega promedio",
-      value: `${usageSnapshot.averageDeliveryMinutes} min`,
-      copy: "Tiempo entre clase y publicación del recurso."
+      title: "Personal entrevistado",
+      value: String(interviewedTeachersCount),
+      copy: "Docentes y personal escolar considerados para el diseño funcional."
     },
     {
-      title: "Roles protegidos",
-      value: "Vistas separadas",
-      copy: "Administración, docente y estudiante con recorridos diferenciados."
+      title: "Grupos detectados",
+      value: String(groupedStudents.length),
+      copy: "Organizados automáticamente a partir de la base escolar disponible."
     }
   ]
 };

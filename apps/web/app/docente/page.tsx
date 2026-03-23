@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AppShell } from "../../components/AppShell";
-import { MetricCard, SectionCard, Tag } from "../../components/Ui";
+import { AppIcon, MetricCard, SectionCard, Tag } from "../../components/Ui";
 import { deliveryQueue, generatedMaterials, recentSessions, teacher, teacherGroups, teacherSubjects } from "../../lib/data";
 import { demoTeacher } from "../../lib/demo";
 
@@ -12,19 +12,77 @@ export default function TeacherDashboardPage() {
       subtitle="Genera materiales postclase en pocos pasos, revísalos y entrégalos con una experiencia clara para tu grupo."
     >
       <section className="hero-banner">
-        <div>
+        <div className="hero-banner-copy">
           <span className="hero-kicker">Recorrido docente</span>
           <h2>Nueva clase en menos de 5 minutos</h2>
           <p>{demoTeacher.focusCards[0].copy}</p>
+          <div className="hero-actions">
+            <Link className="primary-button" href="/docente/nueva-clase">
+              <AppIcon name="spark" size={16} />
+              Nueva clase
+            </Link>
+            <Link className="ghost-button" href="/docente/materiales">
+              <AppIcon name="book" size={16} />
+              Revisar materiales
+            </Link>
+          </div>
         </div>
-        <div className="hero-actions">
-          <Link className="primary-button" href="/docente/nueva-clase">
-            Nueva clase
-          </Link>
-          <Link className="ghost-button" href="/docente/materiales">
-            Revisar materiales
-          </Link>
+        <div className="hero-banner-panel">
+          <div className="hero-panel-header">
+            <span className="status-pill">
+              <AppIcon name="microphone" size={16} />
+              Flujo del día
+            </span>
+            <strong>Captura, genera y entrega</strong>
+          </div>
+          <div className="hero-mini-flow">
+            {demoTeacher.recorderSteps.map((step) => (
+              <article key={step} className="mini-flow-card">
+                <span className="mini-flow-index">{step.slice(0, 1)}</span>
+                <p>{step}</p>
+              </article>
+            ))}
+          </div>
         </div>
+      </section>
+
+      <section className="utility-grid">
+        <Link className="utility-card" href="/docente/nueva-clase">
+          <span className="icon-badge">
+            <AppIcon name="microphone" />
+          </span>
+          <div>
+            <strong>Grabar clase</strong>
+            <p>Captura explicación, audio o archivos base.</p>
+          </div>
+        </Link>
+        <Link className="utility-card" href="/docente/materiales">
+          <span className="icon-badge">
+            <AppIcon name="book" />
+          </span>
+          <div>
+            <strong>Revisar borradores</strong>
+            <p>Edita y aprueba antes de publicar.</p>
+          </div>
+        </Link>
+        <Link className="utility-card" href="/docente/notificaciones">
+          <span className="icon-badge">
+            <AppIcon name="bell" />
+          </span>
+          <div>
+            <strong>Ver alertas</strong>
+            <p>Consulta pendientes y entregas del día.</p>
+          </div>
+        </Link>
+        <Link className="utility-card" href="/docente/plantillas">
+          <span className="icon-badge">
+            <AppIcon name="template" />
+          </span>
+          <div>
+            <strong>Usar plantillas</strong>
+            <p>Reutiliza formatos para ahorrar tiempo.</p>
+          </div>
+        </Link>
       </section>
 
       <div className="metric-grid">

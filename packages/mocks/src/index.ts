@@ -11,7 +11,7 @@ import type {
 export const users: User[] = [
   {
     id: "teacher-1",
-    name: "Mariana Gómez",
+    name: "Docente D06",
     role: "teacher",
     school: "Preparatoria de la Universidad Autónoma de Guadalajara",
     preferences: {
@@ -23,7 +23,7 @@ export const users: User[] = [
   },
   {
     id: "student-1",
-    name: "Leonardo Ruiz",
+    name: "Estudiante E001",
     role: "student",
     school: "Preparatoria de la Universidad Autónoma de Guadalajara",
     preferences: {

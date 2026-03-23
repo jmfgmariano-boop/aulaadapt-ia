@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { RoleSwitcher } from "../../components/RoleSwitcher";
 import { SectionCard, Tag } from "../../components/Ui";
 import { demoAccess, demoConfig, demoRoutes } from "../../lib/demo";
@@ -8,7 +9,14 @@ export default function AccessPage() {
     <main className="landing-page">
       <section className="landing-topbar">
         <Link className="brand brand-inline" href="/">
-          <span className="brand-mark">A</span>
+          <Image
+            className="brand-logo"
+            src="/prepauag-logo.svg"
+            alt="Logo de la Preparatoria de la Universidad Autónoma de Guadalajara"
+            width={220}
+            height={64}
+            priority
+          />
           <div>
             <strong>AulaAdapt IA</strong>
             <p>{demoConfig.schoolName}</p>

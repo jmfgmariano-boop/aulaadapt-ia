@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FlowSteps, Tag } from "../components/Ui";
+import { AppIcon, FlowSteps, Tag } from "../components/Ui";
 import { RoleSwitcher } from "../components/RoleSwitcher";
 import { demoConfig, demoLanding, demoRoleLabels, demoRoutes } from "../lib/demo";
 
@@ -9,7 +9,14 @@ export default function HomePage() {
     <main className="landing-page">
       <section className="landing-topbar">
         <Link className="brand brand-inline" href="/">
-          <span className="brand-mark">A</span>
+          <Image
+            className="brand-logo"
+            src="/prepauag-logo.svg"
+            alt="Logo de la Preparatoria de la Universidad Autónoma de Guadalajara"
+            width={220}
+            height={64}
+            priority
+          />
           <div>
             <strong>AulaAdapt IA</strong>
             <p>{demoConfig.schoolName}</p>
@@ -56,10 +63,24 @@ export default function HomePage() {
           </section>
         </div>
         <div className="hero-showcase">
-          <div className="showcase-card">
-            <span>Propuesta institucional</span>
-            <strong className="showcase-title">La IA apoya. El docente decide.</strong>
-            <p>Diseñada para reforzar la comprensión postclase, mejorar la accesibilidad educativa y mantener al docente en el centro de cada decisión.</p>
+          <div className="showcase-card showcase-card-feature">
+            <span>Operación escolar</span>
+            <strong className="showcase-title">Del aula al repaso en un flujo claro.</strong>
+            <p>Captura la clase, genera materiales y entrega apoyos postclase sin perder control docente.</p>
+            <div className="showcase-flow">
+              <div className="showcase-flow-item">
+                <AppIcon name="microphone" size={18} />
+                <span>Captura</span>
+              </div>
+              <div className="showcase-flow-item">
+                <AppIcon name="spark" size={18} />
+                <span>IA</span>
+              </div>
+              <div className="showcase-flow-item">
+                <AppIcon name="book" size={18} />
+                <span>Entrega</span>
+              </div>
+            </div>
           </div>
           <div className="hero-illustration-card">
             <Image
@@ -88,13 +109,22 @@ export default function HomePage() {
         <div className="role-grid">
           {Object.entries(demoRoutes).map(([role, href]) => (
             <article key={role} className="role-card">
-              <h3>{demoRoleLabels[role as keyof typeof demoRoleLabels]}</h3>
+              <div className="role-card-head">
+                <span className="icon-badge">
+                  <AppIcon
+                    name={
+                      role === "teacher" ? "teacher" : role === "student" ? "student" : "admin"
+                    }
+                  />
+                </span>
+                <h3>{demoRoleLabels[role as keyof typeof demoRoleLabels]}</h3>
+              </div>
               <p>
                 {role === "teacher"
-                  ? "Genera, revisa y programa materiales postclase con apoyos pedagógicos claros."
+                  ? "Genera, revisa y programa materiales postclase."
                   : role === "student"
-                    ? "Encuentra resúmenes, pasos, glosario y tarea sin fricción visual."
-                    : "Observa reportes agregados, grupos, docentes y alumnos desde una vista institucional."}
+                    ? "Encuentra resúmenes, pasos, glosario y tarea con una navegación simple."
+                    : "Gestiona alumnos, docentes, grupos y reportes desde una vista institucional."}
               </p>
               <Link href={href}>Entrar al recorrido</Link>
             </article>
@@ -122,20 +152,35 @@ export default function HomePage() {
       <section className="institutional-panel">
         <div className="section-title">
           <span>Presentación institucional</span>
-          <h2>Diseñada para presentarse como una plataforma lista para pilotaje escolar.</h2>
+          <h2>Diseñada para operar como una plataforma escolar profesional, clara y escalable.</h2>
         </div>
         <div className="institutional-grid">
           <article className="role-card">
-            <h3>Operación escolar clara</h3>
+            <div className="role-card-head">
+              <span className="icon-badge">
+                <AppIcon name="layers" />
+              </span>
+              <h3>Operación escolar clara</h3>
+            </div>
             <p>Integra captura docente, revisión, entrega y seguimiento con una experiencia comprensible para toda la institución.</p>
           </article>
           <article className="role-card">
-            <h3>Imagen institucional sólida</h3>
-            <p>La experiencia ya cuenta con identidad visual, jerarquía clara y estructura para presentarse como un producto escolar listo para evolucionar.</p>
+            <div className="role-card-head">
+              <span className="icon-badge">
+                <AppIcon name="shield" />
+              </span>
+              <h3>Imagen institucional sólida</h3>
+            </div>
+            <p>La interfaz integra identidad institucional, jerarquía clara, accesibilidad visual y una navegación lista para crecer con la escuela.</p>
           </article>
           <article className="role-card">
-            <h3>Siguiente iteración</h3>
-            <p>La base queda preparada para avanzar a backend real, grabación funcional de audio e integraciones de IA.</p>
+            <div className="role-card-head">
+              <span className="icon-badge">
+                <AppIcon name="report" />
+              </span>
+              <h3>Escalabilidad real</h3>
+            </div>
+            <p>La base funcional ya contempla operación por grupos, materias, perfiles, materiales y futuras integraciones académicas.</p>
           </article>
         </div>
       </section>
