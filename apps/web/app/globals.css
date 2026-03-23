@@ -763,6 +763,10 @@ body[data-theme="dark"] .audio-preview-card {
   flex: 0 0 auto;
 }
 
+.brand-logo-home {
+  height: 60px;
+}
+
 .brand-mark {
   width: 48px;
   height: 48px;
@@ -1662,6 +1666,10 @@ button:disabled {
 
   .brand-logo {
     height: 38px;
+  }
+
+  .brand-logo-home {
+    height: 48px;
   }
 
   .hero-copy h1,

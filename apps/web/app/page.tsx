@@ -12,11 +12,11 @@ export default function HomePage() {
       <section className="landing-topbar">
         <Link className="brand brand-inline" href="/">
           <Image
-            className="brand-logo"
-            src="/prepauag-logo.svg"
+            className="brand-logo brand-logo-home"
+            src="/logo-inicio-uag.svg"
             alt="Logo de la Preparatoria de la Universidad Autónoma de Guadalajara"
-            width={220}
-            height={64}
+            width={260}
+            height={90}
             priority
           />
           <div>
