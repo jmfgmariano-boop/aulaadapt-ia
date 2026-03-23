@@ -8,6 +8,9 @@ import { demoStudent } from "../../lib/demo";
 
 const REVIEWED_KEY = "aulaadapt-reviewed-materials";
 const SAVED_KEY = "aulaadapt-saved-materials";
+const DOWNLOADS_KEY = "aulaadapt-recent-downloads";
+
+type DownloadItem = (typeof demoStudent.recentDownloads)[number];
 
 type StudentPageClientProps = {
   material: GeneratedMaterial;
@@ -20,9 +23,55 @@ export function StudentPageClient({
 }: StudentPageClientProps) {
   const [isReviewed, setIsReviewed] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [recentDownloads, setRecentDownloads] = useState<DownloadItem[]>(
+    demoStudent.recentDownloads
+  );
   const [statusMessage, setStatusMessage] = useState(
     "Tu material está listo para repasar y guardar en tu biblioteca personal."
   );
+  const [downloadMessage, setDownloadMessage] = useState(
+    "Puedes abrir o descargar otra vez tus materiales guardados para repasar sin conexión."
+  );
+
+  function normalizeDownloads(candidate: unknown): DownloadItem[] {
+    if (!Array.isArray(candidate)) {
+      return demoStudent.recentDownloads;
+    }
+
+    return candidate
+      .map((item, index) => {
+        if (typeof item === "string") {
+          const sanitizedName =
+            item
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-+|-+$/g, "") || `material-${index + 1}`;
+
+          return {
+            id: `legacy-${index + 1}`,
+            title: item.replace(/\.[a-z0-9]+$/i, ""),
+            description: "Material migrado desde una descarga previa del navegador.",
+            downloadName: `${sanitizedName}.txt`
+          };
+        }
+
+        if (
+          item &&
+          typeof item === "object" &&
+          "id" in item &&
+          "title" in item &&
+          "description" in item &&
+          "downloadName" in item
+        ) {
+          return item as DownloadItem;
+        }
+
+        return null;
+      })
+      .filter(Boolean) as DownloadItem[];
+  }
 
   useEffect(() => {
     const reviewedMaterials = JSON.parse(
@@ -34,7 +83,81 @@ export function StudentPageClient({
 
     setIsReviewed(reviewedMaterials.includes(material.id));
     setIsSaved(savedMaterials.includes(material.id));
+
+    const storedDownloads = window.localStorage.getItem(DOWNLOADS_KEY);
+
+    if (storedDownloads) {
+      try {
+        setRecentDownloads(normalizeDownloads(JSON.parse(storedDownloads)));
+      } catch {
+        window.localStorage.removeItem(DOWNLOADS_KEY);
+      }
+    } else {
+      window.localStorage.setItem(
+        DOWNLOADS_KEY,
+        JSON.stringify(demoStudent.recentDownloads)
+      );
+    }
   }, [material.id]);
+
+  function updateDownloads(nextDownloads: DownloadItem[]) {
+    setRecentDownloads(nextDownloads);
+    window.localStorage.setItem(DOWNLOADS_KEY, JSON.stringify(nextDownloads));
+  }
+
+  function buildDownloadContent(item: DownloadItem) {
+    return [
+      item.title,
+      "",
+      `Resumen: ${material.summary}`,
+      "",
+      "Pasos para repasar:",
+      ...material.steps.map((step, index) => `${index + 1}. ${step}`),
+      "",
+      "Conceptos clave:",
+      ...material.concepts.map((concept) => `- ${concept}`),
+      "",
+      "Glosario:",
+      ...material.glossary.map((entry) => `- ${entry.term}: ${entry.definition}`),
+      "",
+      `Tarea: ${material.homeworkReminder}`
+    ].join("\n");
+  }
+
+  function triggerFileDownload(item: DownloadItem) {
+    const blob = new Blob([buildDownloadContent(item)], {
+      type: "text/plain;charset=utf-8"
+    });
+    const downloadUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = downloadUrl;
+    anchor.download = item.downloadName;
+    anchor.click();
+    window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1200);
+  }
+
+  function updateDownloadOrder(item: DownloadItem) {
+    const nextDownloads = [item, ...recentDownloads.filter((entry) => entry.id !== item.id)];
+    updateDownloads(nextDownloads);
+    return nextDownloads;
+  }
+
+  function handleDownload(item: DownloadItem) {
+    triggerFileDownload(item);
+    updateDownloadOrder(item);
+    setDownloadMessage(`Se descargó nuevamente "${item.title}" en formato de estudio.`);
+  }
+
+  function handleOpen(item: DownloadItem) {
+    const blob = new Blob([buildDownloadContent(item)], {
+      type: "text/plain;charset=utf-8"
+    });
+    const previewUrl = URL.createObjectURL(blob);
+    window.open(previewUrl, "_blank", "noopener,noreferrer");
+    window.setTimeout(() => URL.revokeObjectURL(previewUrl), 2000);
+    updateDownloadOrder(item);
+    setDownloadMessage(`Se abrió una vista de lectura para "${item.title}".`);
+  }
 
   function handleReview() {
     const reviewedMaterials = JSON.parse(
@@ -62,6 +185,23 @@ export function StudentPageClient({
 
     setIsSaved(true);
     setStatusMessage("Material guardado correctamente. Ya aparece en tu biblioteca de estudio.");
+
+    const generatedDownload: DownloadItem = {
+      id: material.id,
+      title: material.title,
+      description: "Material guardado desde tu sesión actual de estudio.",
+      downloadName: `${material.title
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "material-aulaadapt"}.txt`
+    };
+
+    updateDownloads([
+      generatedDownload,
+      ...recentDownloads.filter((item) => item.id !== material.id)
+    ]);
   }
 
   return (
@@ -174,13 +314,32 @@ export function StudentPageClient({
           description="Materiales guardados para repaso sin conexión"
         >
           <div className="stack-list">
-            {demoStudent.recentDownloads.map((item) => (
-              <article key={item} className="list-card compact">
-                <strong>{item}</strong>
-                <p>Disponible en tu biblioteca personal.</p>
+            {recentDownloads.map((item) => (
+              <article key={item.id} className="list-card compact download-card">
+                <div>
+                  <strong>{item.title}</strong>
+                  <p>{item.description}</p>
+                </div>
+                <div className="cta-row">
+                  <button
+                    className="ghost-button"
+                    type="button"
+                    onClick={() => handleOpen(item)}
+                  >
+                    Abrir
+                  </button>
+                  <button
+                    className="primary-button"
+                    type="button"
+                    onClick={() => handleDownload(item)}
+                  >
+                    Descargar otra vez
+                  </button>
+                </div>
               </article>
             ))}
           </div>
+          <p className="action-feedback">{downloadMessage}</p>
         </SectionCard>
         <SectionCard
           title="Privacidad y apoyos"

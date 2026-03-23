@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AppearanceHydrator } from "../components/AppearanceHydrator";
 import { demoConfig } from "../lib/demo";
 
 export const metadata: Metadata = {
@@ -38,7 +39,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body data-app-mode={demoConfig.appMode}>{children}</body>
+      <body data-app-mode={demoConfig.appMode}>
+        <AppearanceHydrator />
+        {children}
+      </body>
     </html>
   );
 }

@@ -195,16 +195,52 @@ export const demoTeacher = {
   ],
   templates: [
     {
+      id: "resumen-accesible",
       title: "Resumen accesible + tarea",
-      copy: "Ideal para clases expositivas con cierre y recordatorio breve."
+      copy: "Ideal para clases expositivas con cierre y recordatorio breve.",
+      recommendedOutputs: [
+        "Resumen accesible",
+        "Pasos de la actividad",
+        "Recordatorio de tarea"
+      ],
+      recommendedAdaptations: [
+        "repaso_breve",
+        "lenguaje_simplificado",
+        "contenido_segmentado"
+      ],
+      focus: "Cierre rápido de clase con repaso y tarea clara."
     },
     {
+      id: "glosario-secuencial",
       title: "Glosario + pasos secuenciales",
-      copy: "Pensada para actividades con instrucciones segmentadas."
+      copy: "Pensada para actividades con instrucciones segmentadas.",
+      recommendedOutputs: [
+        "Glosario sencillo",
+        "Pasos de la actividad",
+        "Conceptos clave"
+      ],
+      recommendedAdaptations: [
+        "estructura_paso_a_paso",
+        "contenido_segmentado",
+        "comprension_general"
+      ],
+      focus: "Actividades guiadas con lectura paso a paso."
     },
     {
+      id: "repaso-visual",
       title: "Repaso visual reforzado",
-      copy: "Incluye esquema breve, conceptos clave y lenguaje simplificado."
+      copy: "Incluye esquema breve, conceptos clave y lenguaje simplificado.",
+      recommendedOutputs: [
+        "Versión simplificada",
+        "Esquema breve",
+        "Conceptos clave"
+      ],
+      recommendedAdaptations: [
+        "formato_visual",
+        "lenguaje_simplificado",
+        "repaso_breve"
+      ],
+      focus: "Repaso de alto impacto con estructura visual breve."
     }
   ],
   historySummary: [
@@ -228,9 +264,24 @@ export const demoStudent = {
     }
   ],
   recentDownloads: [
-    "Resumen de fotosíntesis.pdf",
-    "Glosario de biología.png",
-    "Pasos de actividad - comunicación.docx"
+    {
+      id: "summary-fotosintesis",
+      title: "Resumen de fotosíntesis",
+      description: "Archivo de repaso breve para consulta sin conexión.",
+      downloadName: "resumen-fotosintesis.txt"
+    },
+    {
+      id: "glossary-biologia",
+      title: "Glosario de biología",
+      description: "Conceptos clave organizados para lectura rápida.",
+      downloadName: "glosario-biologia.txt"
+    },
+    {
+      id: "steps-comunicacion",
+      title: "Pasos de actividad de comunicación",
+      description: "Secuencia resumida para revisar antes de entregar.",
+      downloadName: "pasos-actividad-comunicacion.txt"
+    }
   ]
 };
 

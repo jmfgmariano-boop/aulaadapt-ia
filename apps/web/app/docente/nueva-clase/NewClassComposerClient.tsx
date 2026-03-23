@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { FlowSteps, InfoList, SectionCard } from "../../../components/Ui";
 import { adaptations, outputs, teacherGroups, teacherSubjects } from "../../../lib/data";
 import { demoTeacher } from "../../../lib/demo";
+import { SELECTED_TEMPLATE_STORAGE_KEY } from "../../../lib/user-preferences";
 
 type DraftState = {
   subjectId: string;
@@ -73,14 +74,41 @@ export function NewClassComposerClient() {
   useEffect(() => {
     const storedDraft = window.localStorage.getItem(DRAFT_STORAGE_KEY);
     const storedGenerated = window.localStorage.getItem(GENERATED_STORAGE_KEY);
+    const selectedTemplateId = window.localStorage.getItem(SELECTED_TEMPLATE_STORAGE_KEY);
+    let nextDraft = initialDraft;
 
     if (storedDraft) {
       try {
-        setDraft(JSON.parse(storedDraft) as DraftState);
+        nextDraft = JSON.parse(storedDraft) as DraftState;
       } catch {
         window.localStorage.removeItem(DRAFT_STORAGE_KEY);
       }
     }
+
+    if (selectedTemplateId) {
+      const selectedTemplate = demoTeacher.templates.find(
+        (template) => template.id === selectedTemplateId
+      );
+
+      if (selectedTemplate) {
+        nextDraft = {
+          ...nextDraft,
+          selectedOutputs: [...selectedTemplate.recommendedOutputs],
+          selectedAdaptations: [...selectedTemplate.recommendedAdaptations],
+          observations: nextDraft.observations.includes(selectedTemplate.title)
+            ? nextDraft.observations
+            : `${nextDraft.observations}\n\nPlantilla aplicada: ${selectedTemplate.title}. ${selectedTemplate.focus}`
+        };
+
+        setStatusMessage(
+          `La plantilla "${selectedTemplate.title}" se aplicó al borrador actual.`
+        );
+      }
+
+      window.localStorage.removeItem(SELECTED_TEMPLATE_STORAGE_KEY);
+    }
+
+    setDraft(nextDraft);
 
     if (storedGenerated) {
       try {

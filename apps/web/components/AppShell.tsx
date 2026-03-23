@@ -2,11 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { RoleSwitcher } from "./RoleSwitcher";
 import { AppIcon } from "./Ui";
-import { demoConfig } from "../lib/demo";
+import { demoConfig, demoRoleLabels, demoUsers } from "../lib/demo";
+import {
+  PROFILE_EVENT,
+  getInitials,
+  readProfileState
+} from "../lib/user-preferences";
 
 type NavItem = {
   href: string;
@@ -77,8 +82,59 @@ export function AppShell({
   children: ReactNode;
 }) {
   const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [profile, setProfile] = useState(() =>
+    readProfileState(
+      role === "teacher"
+        ? demoUsers.teacher.name
+        : role === "student"
+          ? demoUsers.student.name
+          : demoUsers.admin.name,
+      demoRoleLabels[role],
+      role === "teacher"
+        ? "5A · Biología"
+        : role === "student"
+          ? "5A"
+          : "Coordinación académica"
+    )
+  );
   const primaryItems = navByRole[role].slice(0, 5);
   const secondaryItems = navByRole[role].slice(5);
+  const mobilePrimaryItems = navByRole[role].slice(0, 4);
+  const mobileSecondaryItems = navByRole[role].slice(4);
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const syncProfile = () => {
+      setProfile(
+        readProfileState(
+          role === "teacher"
+            ? demoUsers.teacher.name
+            : role === "student"
+              ? demoUsers.student.name
+              : demoUsers.admin.name,
+          demoRoleLabels[role],
+          role === "teacher"
+            ? "5A · Biología"
+            : role === "student"
+              ? "5A"
+              : "Coordinación académica"
+        )
+      );
+    };
+
+    syncProfile();
+    window.addEventListener(PROFILE_EVENT, syncProfile);
+    window.addEventListener("storage", syncProfile);
+
+    return () => {
+      window.removeEventListener(PROFILE_EVENT, syncProfile);
+      window.removeEventListener("storage", syncProfile);
+    };
+  }, [role]);
 
   return (
     <div className="app-shell">
@@ -173,6 +229,20 @@ export function AppShell({
               <AppIcon name={role === "teacher" ? "teacher" : role === "student" ? "student" : "admin"} size={16} />
               Acceso por perfil
             </span>
+            <Link className="profile-chip" href="/perfil">
+              {profile.photoDataUrl ? (
+                <img
+                  className="profile-chip-image"
+                  src={profile.photoDataUrl}
+                  alt="Fotografía del perfil"
+                />
+              ) : (
+                <span className="profile-chip-avatar">
+                  {getInitials(profile.displayName)}
+                </span>
+              )}
+              <span>{profile.displayName}</span>
+            </Link>
             <Link className="ghost-button" href="/configuracion">
               <AppIcon name="settings" size={16} />
               Preferencias
@@ -184,7 +254,7 @@ export function AppShell({
       </main>
 
       <nav className="mobile-nav">
-        {primaryItems.map((item) => {
+        {mobilePrimaryItems.map((item) => {
           const active = isActivePath(pathname, item.href);
 
           return (
@@ -198,7 +268,51 @@ export function AppShell({
             </Link>
           );
         })}
+        {mobileSecondaryItems.length ? (
+          <button
+            className={`mobile-nav-link mobile-nav-button ${isMobileMenuOpen ? "active" : ""}`}
+            type="button"
+            onClick={() => setIsMobileMenuOpen((current) => !current)}
+          >
+            <AppIcon name="layers" size={18} />
+            <span>Más</span>
+          </button>
+        ) : null}
       </nav>
+
+      {mobileSecondaryItems.length ? (
+        <>
+          <button
+            className={`mobile-sheet-backdrop ${isMobileMenuOpen ? "visible" : ""}`}
+            type="button"
+            aria-label="Cerrar menú móvil"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          <div className={`mobile-sheet ${isMobileMenuOpen ? "visible" : ""}`}>
+            <div className="mobile-sheet-panel">
+              <strong>Más opciones</strong>
+              <div className="stack-list compact-stack">
+                {mobileSecondaryItems.map((item) => {
+                  const active = isActivePath(pathname, item.href);
+
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`nav-link ${active ? "active" : ""}`}
+                    >
+                      <span className="nav-link-icon">
+                        <AppIcon name={item.icon} />
+                      </span>
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }

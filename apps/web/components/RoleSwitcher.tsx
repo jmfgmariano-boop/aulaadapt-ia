@@ -27,14 +27,20 @@ export function RoleSwitcher() {
     }
   }, [pathname]);
 
+  const currentRole =
+    pathname.startsWith("/docente")
+      ? "teacher"
+      : pathname.startsWith("/estudiante")
+        ? "student"
+        : pathname.startsWith("/admin")
+          ? "admin"
+          : preferredRole;
+
   return (
     <div className="role-switcher-wrap">
       <div className="role-switcher">
         {Object.entries(demoRoutes).map(([role, href]) => {
-          const isActive =
-            (role === "teacher" && pathname.startsWith("/docente")) ||
-            (role === "student" && pathname.startsWith("/estudiante")) ||
-            (role === "admin" && pathname.startsWith("/admin"));
+          const isActive = role === currentRole;
 
           return (
             <Link
