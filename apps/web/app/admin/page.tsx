@@ -1,9 +1,9 @@
 import { AppShell } from "../../components/AppShell";
 import { MetricCard, SectionCard, Tag } from "../../components/Ui";
-import { teacherGroups, teacherSubjects, users } from "../../lib/data";
-import { demoAdmin, demoUsage } from "../../lib/demo";
+import { teacherGroups, teacherSubjects } from "../../lib/data";
+import { demoAdmin, demoUsage, demoUsers } from "../../lib/demo";
 
-const teachers = users.filter((user) => user.role === "teacher");
+const teachers = [demoUsers.teacher];
 
 export default function AdminPage() {
   return (
