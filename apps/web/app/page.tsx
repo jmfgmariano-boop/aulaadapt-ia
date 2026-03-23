@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { AppIcon, FlowSteps, Tag } from "../components/Ui";
 import { RoleSwitcher } from "../components/RoleSwitcher";
-import { demoConfig, demoLanding, demoRoleLabels, demoRoutes } from "../lib/demo";
+import { demoActiveRoles, demoConfig, demoLanding, demoRoleLabels, demoRoutes } from "../lib/demo";
 
 export default function HomePage() {
   return (
@@ -63,16 +63,16 @@ export default function HomePage() {
               </span>
               <div>
                 <strong>Material base para todo el grupo</strong>
-                <p>Resumen, pasos, conceptos y glosario en un solo cierre postclase.</p>
+                <p>Resumen, pasos, conceptos y glosario listos para enviarse por medios oficiales.</p>
               </div>
             </article>
             <article className="hero-proof">
               <span className="icon-badge">
-                <AppIcon name="shield" />
+                <AppIcon name="send" />
               </span>
               <div>
-                <strong>Apoyos pedagógicos protegidos</strong>
-                <p>La personalización se traduce en apoyos concretos sin exponer etiquetas sensibles.</p>
+                <strong>Entrega institucional al alumnado</strong>
+                <p>Correo, exportación y plataformas escolares dentro del mismo flujo docente.</p>
               </div>
             </article>
           </div>
@@ -87,7 +87,7 @@ export default function HomePage() {
           <section className="profile-selector-card">
             <div className="profile-selector-copy">
               <span>Elegir perfil</span>
-              <p>Selecciona el recorrido que deseas explorar dentro de la plataforma según tu perfil.</p>
+              <p>Selecciona el recorrido docente o administrativo que deseas explorar dentro de la plataforma.</p>
             </div>
             <RoleSwitcher />
           </section>
@@ -146,29 +146,25 @@ export default function HomePage() {
       <section className="role-section">
         <div className="section-title">
           <span>Accesos por rol</span>
-          <h2>Una sola plataforma, experiencias distintas según quién la usa.</h2>
+          <h2>Dos recorridos institucionales para operar la plataforma y entregar materiales al alumnado.</h2>
         </div>
         <div className="role-grid">
-          {Object.entries(demoRoutes).map(([role, href]) => (
+          {demoActiveRoles.map((role) => (
             <article key={role} className="role-card">
               <div className="role-card-head">
                 <span className="icon-badge">
                   <AppIcon
-                    name={
-                      role === "teacher" ? "teacher" : role === "student" ? "student" : "admin"
-                    }
+                    name={role === "teacher" ? "teacher" : "admin"}
                   />
                 </span>
                 <h3>{demoRoleLabels[role as keyof typeof demoRoleLabels]}</h3>
               </div>
               <p>
                 {role === "teacher"
-                  ? "Genera, revisa y programa materiales postclase."
-                  : role === "student"
-                    ? "Encuentra resúmenes, pasos, glosario y tarea con una navegación simple."
-                    : "Gestiona alumnos, docentes, grupos y reportes desde una vista institucional."}
+                  ? "Captura clases, genera materiales postclase y decide cómo se entregan."
+                  : "Gestiona base escolar, perfiles pedagógicos, permisos y reportes institucionales."}
               </p>
-              <Link href={href}>Entrar al recorrido</Link>
+              <Link href={demoRoutes[role]}>Entrar al recorrido</Link>
             </article>
           ))}
         </div>

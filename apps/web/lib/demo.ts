@@ -32,6 +32,13 @@ export const demoRoutes: Record<UserRole, string> = {
   admin: "/admin"
 };
 
+export const demoActiveRoles = ["teacher", "admin"] as const;
+
+export const demoActiveRoutes = {
+  teacher: demoRoutes.teacher,
+  admin: demoRoutes.admin
+};
+
 export const demoRoleLabels: Record<UserRole, string> = {
   teacher: "Docente",
   student: "Estudiante",
@@ -40,16 +47,17 @@ export const demoRoleLabels: Record<UserRole, string> = {
 
 export const demoLanding = {
   kicker: "IA postclase para educación media superior",
-  title: "Materiales claros, accesibles y listos para entregar después de cada clase.",
+  title:
+    "Plataforma de apoyo docente e institucional para entregar materiales postclase por medios oficiales.",
   description:
-    "Docentes capturan la sesión, la IA organiza borradores editables y la institución entrega apoyos pedagógicos con trazabilidad y control docente.",
+    "AulaAdapt IA transforma la explicación de clase en materiales postclase accesibles, resumidos y personalizados, listos para enviarse al alumnado por correo institucional, plataformas escolares o exportación controlada.",
   primaryCta: {
     href: "/docente/nueva-clase",
     label: "Explorar panel docente"
   },
   secondaryCta: {
-    href: "/estudiante",
-    label: "Explorar vista estudiante"
+    href: "/admin",
+    label: "Explorar panel administrativo"
   },
   metrics: [
     {
@@ -75,8 +83,8 @@ export const demoLanding = {
       copy: "Cada borrador se edita antes de enviarse."
     },
     {
-      title: "Adaptaciones neutrales",
-      copy: "Apoyos visibles como estructura, claridad y formato."
+      title: "Entrega institucional",
+      copy: "Correo, PDF, Word y rutas de LMS en un mismo flujo."
     },
     {
       title: "Escalable para escuelas",
@@ -101,7 +109,7 @@ export const demoLanding = {
     "Explicación docente",
     "Procesamiento con IA",
     "Revisión docente",
-    "Entrega postclase"
+    "Entrega institucional al alumnado"
   ],
   modes: [
     {
@@ -127,17 +135,12 @@ export const demoLanding = {
 export const demoAccess = {
   title: "Acceso institucional",
   description:
-    "Ingresa a la plataforma con tus credenciales escolares para acceder a los flujos de docente, estudiante o coordinación académica.",
+    "Ingresa a la plataforma con tus credenciales escolares para acceder a los flujos de docente o coordinación académica.",
   roles: [
     {
       role: "teacher" as const,
       title: "Docente",
       copy: "Crea sesiones, revisa borradores generados por IA y entrega materiales postclase con control editorial."
-    },
-    {
-      role: "student" as const,
-      title: "Estudiante",
-      copy: "Consulta materiales recientes, tareas, glosarios y apoyos personalizados con una experiencia clara y privada."
     },
     {
       role: "admin" as const,
@@ -196,6 +199,28 @@ export const demoTeacher = {
     {
       title: "Captura multimodal",
       copy: "Integra texto, audio grabado, archivos y puntos clave en un solo flujo de trabajo."
+    }
+  ],
+  deliveryChannels: [
+    "Correo institucional",
+    "Exportación PDF",
+    "Exportación Word",
+    "Copiar para Classroom",
+    "Copiar para Teams",
+    "LMS institucional"
+  ],
+  deliveryQueueSummary: [
+    {
+      title: "Materiales listos para enviar",
+      copy: "3 materiales aprobados esperan canal de salida institucional."
+    },
+    {
+      title: "Entregas programadas",
+      copy: "2 publicaciones quedarán listas hoy por correo y plataforma."
+    },
+    {
+      title: "Historial reciente",
+      copy: "7 entregas confirmadas esta semana con trazabilidad docente."
     }
   ],
   recorderSteps: [
@@ -825,7 +850,7 @@ export const demoAdmin = {
     },
     {
       title: "Correo institucional y exportación",
-      status: "Listo para activarse",
+      status: "Operativo",
       copy: "Salida por correo, PDF y Word para compartir materiales postclase."
     }
   ],
@@ -874,7 +899,7 @@ export const demoHelp = {
     },
     {
       question: "¿Cómo se entregan los materiales?",
-      answer: "Pueden publicarse por plataforma interna, correo institucional, por grupo o para estudiantes específicos."
+      answer: "Pueden enviarse por correo institucional, exportarse a PDF o Word, copiarse para Classroom o Teams y programarse por grupo o para destinatarios específicos."
     }
   ],
   onboardingByRole: {
@@ -883,11 +908,6 @@ export const demoHelp = {
       "Carga texto, audio o puntos clave de la explicación.",
       "Genera el borrador, compáralo y edítalo antes de aprobar.",
       "Define destinatarios, adapta y programa el envío postclase."
-    ],
-    student: [
-      "Ubica materiales nuevos, favoritos e historial por materia.",
-      "Consulta resumen, pasos, glosario y tarea en vista resumida o detallada.",
-      "Guarda, descarga o marca materiales para repaso posterior."
     ],
     admin: [
       "Importa base escolar, revisa validaciones y actualiza registros.",
@@ -902,11 +922,7 @@ export const demoHelp = {
     },
     {
       title: "Flujo docente",
-      copy: "Captura, IA, revisión, comparativa y envío por destinatarios."
-    },
-    {
-      title: "Experiencia estudiante",
-      copy: "Materiales claros, privados, guardados y descargables."
+      copy: "Captura, IA, revisión, comparativa y entrega institucional por destinatarios."
     },
     {
       title: "Gobernanza institucional",
@@ -916,8 +932,8 @@ export const demoHelp = {
   wireflow: [
     "Institución importa base escolar -> organiza alumnos, grupos y materias",
     "Docente crea clase -> IA genera borrador -> docente revisa y aprueba",
-    "Sistema determina destinatarios -> entrega materiales base y adaptados",
-    "Estudiante consulta, guarda y descarga -> analítica agrega uso institucional"
+    "Sistema determina destinatarios -> entrega materiales base y adaptados por canales institucionales",
+    "Coordinación audita, reporta y mantiene trazabilidad institucional"
   ],
   architectureLayers: [
     {

@@ -38,15 +38,11 @@ export default function HelpPage() {
       </section>
 
       <section className="dashboard-grid">
-        <SectionCard title="Recorridos por rol" description="Guías iniciales para docente, estudiante y coordinación">
+        <SectionCard title="Recorridos por rol" description="Guías iniciales para docente y coordinación">
           <div className="stack-list">
             <article className="list-card">
               <strong>Docente</strong>
               <InfoList items={demoHelp.onboardingByRole.teacher} />
-            </article>
-            <article className="list-card">
-              <strong>Estudiante</strong>
-              <InfoList items={demoHelp.onboardingByRole.student} />
             </article>
             <article className="list-card">
               <strong>Coordinación académica</strong>
@@ -55,7 +51,7 @@ export default function HelpPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Preguntas frecuentes" description="Respuestas rápidas para docentes, estudiantes e institución">
+        <SectionCard title="Preguntas frecuentes" description="Respuestas rápidas para docentes e institución">
           <div className="stack-list">
             {demoHelp.faqs.map((item) => (
               <article key={item.question} className="list-card">

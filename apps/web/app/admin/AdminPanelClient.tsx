@@ -1251,7 +1251,7 @@ export function AdminPanelClient({
                   <strong>{permission.module}</strong>
                   <p>Administración: {permission.admin}</p>
                   <p>Docente: {permission.teacher}</p>
-                  <p>Estudiante: {permission.student}</p>
+                  <p>Alumnado destinatario: {permission.student}</p>
                 </article>
               ))}
               <article className="list-card compact">

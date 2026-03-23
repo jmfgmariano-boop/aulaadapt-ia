@@ -218,7 +218,7 @@ export function AppShell({
 
         <div className="ethics-card">
           <span>Uso responsable</span>
-          <p>La IA organiza el contenido. El docente revisa, aprueba y decide la entrega.</p>
+          <p>La IA organiza el contenido. El docente revisa, aprueba y define la entrega institucional al alumnado.</p>
         </div>
       </aside>
 
@@ -229,7 +229,7 @@ export function AppShell({
               {role === "teacher"
                 ? "Panel docente"
                 : role === "student"
-                  ? "Panel estudiante"
+                  ? "Módulo oculto"
                   : "Panel administrativo"}
             </p>
             <h1>{title}</h1>
@@ -238,7 +238,7 @@ export function AppShell({
           <div className="topbar-actions topbar-actions-compact">
             <span className="status-pill">
               <AppIcon name={role === "teacher" ? "teacher" : role === "student" ? "student" : "admin"} size={16} />
-              Acceso por perfil
+              Acceso institucional
             </span>
             <Link className="profile-chip" href="/perfil">
               {profile.photoDataUrl ? (

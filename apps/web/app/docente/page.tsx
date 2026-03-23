@@ -165,6 +165,12 @@ export default function TeacherDashboardPage() {
         <div className="dashboard-aside-stack">
           <SectionCard title="Estado del día" description="Pendientes, entregas y alertas" accent="mint">
             <div className="stack-list compact-stack">
+              {demoTeacher.deliveryQueueSummary.map((item) => (
+                <article key={item.title} className="list-card compact">
+                  <strong>{item.title}</strong>
+                  <p>{item.copy}</p>
+                </article>
+              ))}
               {deliveryQueue.slice(0, 2).map((delivery) => (
                 <article key={delivery.id} className="list-card compact">
                   <strong>{delivery.channel === "platform" ? "Entrega por plataforma" : "Entrega por correo"}</strong>
@@ -201,6 +207,45 @@ export default function TeacherDashboardPage() {
             </div>
           </SectionCard>
         </div>
+      </div>
+
+      <div className="dashboard-grid">
+        <SectionCard
+          title="Entrega institucional"
+          description="Canales activos para compartir materiales con el alumnado"
+          accent="sky"
+        >
+          <div className="inline-tags">
+            {demoTeacher.deliveryChannels.map((channel) => (
+              <Tag key={channel}>{channel}</Tag>
+            ))}
+          </div>
+          <div className="stack-list compact-stack">
+            <article className="list-card compact">
+              <strong>Materiales listos para enviar</strong>
+              <p>Los borradores aprobados pueden salir por correo institucional o exportación controlada.</p>
+            </article>
+            <article className="list-card compact">
+              <strong>Historial de entregas</strong>
+              <p>La plataforma mantiene registro de canal, horario y destinatarios antes de cada publicación.</p>
+            </article>
+          </div>
+        </SectionCard>
+
+        <SectionCard
+          title="Acciones rápidas de envío"
+          description="Accede al punto exacto donde se aprueba, exporta o programa cada material"
+          accent="mint"
+        >
+          <div className="cta-row">
+            <Link className="primary-button" href="/docente/materiales">
+              Abrir revisión y entrega
+            </Link>
+            <Link className="ghost-button" href="/integraciones">
+              Ver integraciones
+            </Link>
+          </div>
+        </SectionCard>
       </div>
 
       <div className="dashboard-grid" id="recursos">

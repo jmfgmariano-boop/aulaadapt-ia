@@ -4,7 +4,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { GeneratedMaterial, Group } from "@aulaadapt/domain";
 import { AppShell } from "../../../components/AppShell";
 import { AppIcon, InfoList, SectionCard, Tag } from "../../../components/Ui";
-import { demoTeacher } from "../../../lib/demo";
+import { demoConfig, demoTeacher } from "../../../lib/demo";
+import {
+  buildMaterialHtml,
+  buildMaterialText,
+  copyTextToClipboard,
+  openMailClient,
+  sanitizeMaterialFilename,
+  triggerDownload
+} from "../../../lib/material-delivery";
 
 type MaterialsReviewClientProps = {
   material: GeneratedMaterial;
@@ -22,6 +30,7 @@ export function MaterialsReviewClient({
   const [groupId, setGroupId] = useState(teacherGroups[0]?.id ?? "");
   const [channel, setChannel] = useState("platform");
   const [scheduledFor, setScheduledFor] = useState("2026-03-22T16:30");
+  const [institutionalEmail, setInstitutionalEmail] = useState("");
   const [recipientMode, setRecipientMode] = useState<"group" | "selected">("group");
   const [recipientFilter, setRecipientFilter] = useState("");
   const [showSupportOnly, setShowSupportOnly] = useState(false);
@@ -37,10 +46,24 @@ export function MaterialsReviewClient({
   const recipientGroup =
     demoTeacher.recipientGroups.find((group) => group.id === groupId) ||
     demoTeacher.recipientGroups[0];
+  const reviewedMaterial: GeneratedMaterial = {
+    ...material,
+    summary,
+    simplifiedVersion,
+    homeworkReminder
+  };
 
   useEffect(() => {
     setSelectedRecipients(recipientGroup?.students.map((student) => student.id) ?? []);
   }, [recipientGroup?.id]);
+
+  useEffect(() => {
+    if (!recipientGroup?.group) {
+      return;
+    }
+
+    setInstitutionalEmail(`grupo.${recipientGroup.group.toLowerCase()}@prepauag.edu.mx`);
+  }, [recipientGroup?.group]);
 
   const filteredRecipients = useMemo(() => {
     const normalizedFilter = recipientFilter.trim().toLowerCase();
@@ -126,7 +149,7 @@ export function MaterialsReviewClient({
       }
 
       setIsApproved(true);
-      setStatusMessage("Material aprobado correctamente. Ya puedes publicarlo para el grupo seleccionado.");
+      setStatusMessage("Material aprobado correctamente. Ya puedes enviarlo por medios institucionales para el grupo seleccionado.");
       return true;
     } catch (error) {
       setStatusMessage(
@@ -198,11 +221,138 @@ export function MaterialsReviewClient({
     }
   }
 
+  async function handleSaveDraft() {
+    try {
+      setIsSaving(true);
+      await syncDraft();
+      setStatusMessage("Borrador guardado correctamente. Puedes seguir revisando antes del envío institucional.");
+    } catch (error) {
+      setStatusMessage(
+        error instanceof Error
+          ? error.message
+          : "No fue posible guardar el borrador."
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  function handleExportWord() {
+    triggerDownload(
+      `${sanitizeMaterialFilename(reviewedMaterial.title)}.doc`,
+      "application/msword",
+      buildMaterialHtml(reviewedMaterial, demoTeacher.user.name, demoConfig.schoolName)
+    );
+    setStatusMessage(`Se exportó "${reviewedMaterial.title}" en formato Word.`);
+  }
+
+  function handleExportPdf() {
+    const printWindow = window.open("", "_blank", "noopener,noreferrer,width=960,height=720");
+
+    if (!printWindow) {
+      setStatusMessage("Tu navegador bloqueó la ventana de impresión. Permite ventanas emergentes e inténtalo de nuevo.");
+      return;
+    }
+
+    printWindow.document.write(
+      buildMaterialHtml(reviewedMaterial, demoTeacher.user.name, demoConfig.schoolName)
+    );
+    printWindow.document.close();
+    printWindow.focus();
+    window.setTimeout(() => {
+      printWindow.print();
+    }, 300);
+    setStatusMessage(`Se abrió la vista para guardar "${reviewedMaterial.title}" como PDF.`);
+  }
+
+  async function handleCopyClassroom() {
+    try {
+      await copyTextToClipboard(
+        `Classroom · ${buildMaterialText(
+          reviewedMaterial,
+          demoTeacher.user.name,
+          demoConfig.schoolName
+        )}`
+      );
+      setStatusMessage(`El contenido de "${reviewedMaterial.title}" se copió para Classroom.`);
+    } catch {
+      setStatusMessage("No fue posible copiar el contenido para Classroom en este navegador.");
+    }
+  }
+
+  async function handleCopyTeams() {
+    try {
+      await copyTextToClipboard(
+        `Teams · ${buildMaterialText(
+          reviewedMaterial,
+          demoTeacher.user.name,
+          demoConfig.schoolName
+        )}`
+      );
+      setStatusMessage(`El contenido de "${reviewedMaterial.title}" se copió para Teams.`);
+    } catch {
+      setStatusMessage("No fue posible copiar el contenido para Teams en este navegador.");
+    }
+  }
+
+  async function handleSendEmail() {
+    try {
+      if (!institutionalEmail.trim() || !institutionalEmail.includes("@")) {
+        setStatusMessage("Escribe un correo institucional válido antes de abrir el envío.");
+        return;
+      }
+
+      if (recipientMode === "selected" && selectedRecipients.length === 0) {
+        setStatusMessage(
+          "Selecciona al menos un destinatario antes de abrir el envío por correo institucional."
+        );
+        return;
+      }
+
+      if (!isApproved) {
+        const approved = await handleApprove();
+        if (!approved) {
+          return;
+        }
+      }
+
+      const response = await fetch("/api/deliveries", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          materialId: material.id,
+          recipients: recipientMode === "group" ? [groupId] : selectedRecipients,
+          channel: "email",
+          scheduledFor
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("No fue posible registrar la entrega por correo institucional.");
+      }
+
+      openMailClient(
+        institutionalEmail,
+        `${reviewedMaterial.title} | ${demoConfig.schoolName}`,
+        buildMaterialText(reviewedMaterial, demoTeacher.user.name, demoConfig.schoolName)
+      );
+      setStatusMessage(`Se abrió el correo institucional con "${reviewedMaterial.title}" listo para envío.`);
+    } catch (error) {
+      setStatusMessage(
+        error instanceof Error
+          ? error.message
+          : "No fue posible abrir el envío por correo institucional."
+      );
+    }
+  }
+
   return (
     <AppShell
       role="teacher"
       title="Revisión de materiales generados"
-      subtitle="Edita, aprueba y programa la entrega del contenido antes de publicarlo a tus grupos."
+      subtitle="Edita, aprueba y prepara la entrega institucional del contenido antes de enviarlo al alumnado."
     >
       <div className="review-layout">
         <SectionCard
@@ -247,11 +397,11 @@ export function MaterialsReviewClient({
         <div className="stack-area">
           <SectionCard
             title="Vista previa final"
-            description="Así lo verá el estudiante"
+            description="Así quedará el material final antes del envío"
             accent="sky"
           >
             <div className="preview-card">
-              <span className="status-pill">Vista estudiante</span>
+              <span className="status-pill">Material final</span>
               <strong>Resumen</strong>
               <p>{summary}</p>
               <strong>Pasos</strong>
@@ -271,8 +421,8 @@ export function MaterialsReviewClient({
           </SectionCard>
 
           <SectionCard
-            title="Entrega postclase"
-            description="Asignación y programación"
+            title="Entrega al alumnado"
+            description="Canales oficiales, destinatarios y programación"
             accent="mint"
           >
             <form className="form-grid">
@@ -301,6 +451,15 @@ export function MaterialsReviewClient({
                   onChange={(event) => setScheduledFor(event.target.value)}
                 />
               </label>
+              <label className="full-span">
+                Correo institucional
+                <input
+                  type="email"
+                  value={institutionalEmail}
+                  onChange={(event) => setInstitutionalEmail(event.target.value)}
+                  placeholder="grupo.5a@prepauag.edu.mx"
+                />
+              </label>
             </form>
             <div className="stack-list">
               <article className="list-card compact">
@@ -325,6 +484,21 @@ export function MaterialsReviewClient({
                   >
                     Selección individual
                   </button>
+                </div>
+              </article>
+
+              <article className="list-card compact">
+                <strong>Canales de envío institucional</strong>
+                <p>
+                  El material aprobado puede salir por correo institucional, exportación o copia rápida hacia plataformas escolares.
+                </p>
+                <div className="inline-tags">
+                  <Tag>Correo institucional</Tag>
+                  <Tag>PDF</Tag>
+                  <Tag>Word</Tag>
+                  <Tag>Classroom</Tag>
+                  <Tag>Teams</Tag>
+                  <Tag>LMS institucional</Tag>
                 </div>
               </article>
 
@@ -432,18 +606,36 @@ export function MaterialsReviewClient({
               <button
                 className="ghost-button"
                 type="button"
+                onClick={handleSaveDraft}
+                disabled={isSaving}
+              >
+                {isSaving ? "Guardando..." : "Guardar borrador"}
+              </button>
+              <button
+                className="ghost-button"
+                type="button"
                 onClick={handleApprove}
                 disabled={isSaving}
               >
                 {isApproved ? "Aprobado" : isSaving ? "Aprobando..." : "Aprobar"}
               </button>
-              <button
-                className="primary-button"
-                type="button"
-                onClick={handlePublish}
-                disabled={isPublishing}
-              >
-                {isPublishing ? "Publicando..." : "Publicar material"}
+              <button className="ghost-button" type="button" onClick={handleExportPdf}>
+                Exportar PDF
+              </button>
+              <button className="ghost-button" type="button" onClick={handleExportWord}>
+                Exportar Word
+              </button>
+              <button className="ghost-button" type="button" onClick={handleCopyClassroom}>
+                Copiar a Classroom
+              </button>
+              <button className="ghost-button" type="button" onClick={handleCopyTeams}>
+                Copiar a Teams
+              </button>
+              <button className="ghost-button" type="button" onClick={handlePublish} disabled={isPublishing}>
+                {isPublishing ? "Programando..." : "Programar entrega"}
+              </button>
+              <button className="primary-button" type="button" onClick={handleSendEmail}>
+                Aprobar y enviar por correo
               </button>
             </div>
             <p className="action-feedback">{statusMessage}</p>

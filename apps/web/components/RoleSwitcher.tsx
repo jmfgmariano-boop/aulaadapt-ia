@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { demoRoleLabels, demoRoutes } from "../lib/demo";
+import { demoActiveRoles, demoRoleLabels, demoRoutes } from "../lib/demo";
 
 const STORAGE_KEY = "aulaadapt-demo-role";
 
@@ -13,14 +13,12 @@ export function RoleSwitcher() {
 
   useEffect(() => {
     const savedRole = window.localStorage.getItem(STORAGE_KEY);
-    setPreferredRole(savedRole);
+    const normalizedRole = savedRole === "admin" ? "admin" : "teacher";
+    setPreferredRole(normalizedRole);
 
     if (pathname.startsWith("/docente")) {
       window.localStorage.setItem(STORAGE_KEY, "teacher");
       setPreferredRole("teacher");
-    } else if (pathname.startsWith("/estudiante")) {
-      window.localStorage.setItem(STORAGE_KEY, "student");
-      setPreferredRole("student");
     } else if (pathname.startsWith("/admin")) {
       window.localStorage.setItem(STORAGE_KEY, "admin");
       setPreferredRole("admin");
@@ -30,16 +28,15 @@ export function RoleSwitcher() {
   const currentRole =
     pathname.startsWith("/docente")
       ? "teacher"
-      : pathname.startsWith("/estudiante")
-        ? "student"
-        : pathname.startsWith("/admin")
+      : pathname.startsWith("/admin")
           ? "admin"
           : preferredRole;
 
   return (
     <div className="role-switcher-wrap">
       <div className="role-switcher">
-        {Object.entries(demoRoutes).map(([role, href]) => {
+        {demoActiveRoles.map((role) => {
+          const href = demoRoutes[role];
           const isActive = role === currentRole;
 
           return (

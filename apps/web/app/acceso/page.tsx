@@ -63,8 +63,8 @@ export default function AccessPage() {
             <Link className="primary-button" href={demoRoutes.teacher}>
               Entrar al panel docente
             </Link>
-            <Link className="ghost-button" href="/perfil">
-              Ver perfil
+            <Link className="ghost-button" href={demoRoutes.admin}>
+              Entrar a administración
             </Link>
           </div>
         </SectionCard>
@@ -73,7 +73,7 @@ export default function AccessPage() {
       <section className="role-section">
         <div className="section-title">
           <span>Recorridos disponibles</span>
-          <h2>Cada perfil entra con una experiencia clara, privada y enfocada en su tarea principal.</h2>
+          <h2>Cada recorrido está enfocado en operar, revisar y entregar materiales por medios institucionales.</h2>
         </div>
         <div className="role-grid">
           {demoAccess.roles.map((item) => (

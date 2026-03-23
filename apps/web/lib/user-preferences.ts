@@ -110,7 +110,7 @@ export function readPreferredRole(): UserRole {
 
   const storedRole = window.localStorage.getItem(PREFERRED_ROLE_STORAGE_KEY);
 
-  if (storedRole === "student" || storedRole === "admin") {
+  if (storedRole === "admin") {
     return storedRole;
   }
 

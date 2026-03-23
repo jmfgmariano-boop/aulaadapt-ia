@@ -18,6 +18,10 @@ type DraftState = {
   observations: string;
   selectedOutputs: string[];
   selectedAdaptations: string[];
+  deliveryChannel: "email" | "platform";
+  deliverySchedule: string;
+  recipientMode: "group" | "selected";
+  deliveryRoutes: string[];
 };
 
 type GenerationResponse = {
@@ -47,7 +51,16 @@ const initialDraft: DraftState = {
   selectedOutputs: [...outputs],
   selectedAdaptations: adaptations
     .filter((adaptation) => adaptation.id !== "comprension_general")
-    .map((adaptation) => adaptation.id)
+    .map((adaptation) => adaptation.id),
+  deliveryChannel: "email",
+  deliverySchedule: "2026-03-22T16:30",
+  recipientMode: "group",
+  deliveryRoutes: [
+    "Correo institucional",
+    "Exportación PDF",
+    "Exportación Word",
+    "Copiar para Classroom"
+  ]
 };
 
 export function NewClassComposerClient() {
@@ -157,6 +170,18 @@ export function NewClassComposerClient() {
       return {
         ...current,
         [key]: exists ? current[key].filter((item) => item !== value) : [...current[key], value]
+      };
+    });
+  }
+
+  function toggleDeliveryRoute(value: string) {
+    setDraft((current) => {
+      const exists = current.deliveryRoutes.includes(value);
+      return {
+        ...current,
+        deliveryRoutes: exists
+          ? current.deliveryRoutes.filter((item) => item !== value)
+          : [...current.deliveryRoutes, value]
       };
     });
   }
@@ -333,7 +358,7 @@ export function NewClassComposerClient() {
     Boolean(draft.subjectId && draft.groupId && draft.date),
     Boolean(draft.topic.trim() && draft.explanation.trim()),
     Boolean(draft.selectedOutputs.length && draft.selectedAdaptations.length),
-    Boolean(selectedRecipientGroup)
+    Boolean(selectedRecipientGroup && draft.deliveryRoutes.length)
   ];
   const progressPercent = Math.round(
     (progressSteps.filter(Boolean).length / progressSteps.length) * 100
@@ -541,6 +566,95 @@ export function NewClassComposerClient() {
           </div>
         </SectionCard>
 
+        <SectionCard
+          title="Entrega al alumnado"
+          description="Define canales institucionales y alcance antes de aprobar el material"
+          accent="sky"
+        >
+          <div className="form-grid">
+            <label>
+              Canal principal
+              <select
+                value={draft.deliveryChannel}
+                onChange={(event) =>
+                  updateDraftField("deliveryChannel", event.target.value as "email" | "platform")
+                }
+              >
+                <option value="email">Correo institucional</option>
+                <option value="platform">Plataforma interna / LMS</option>
+              </select>
+            </label>
+            <label>
+              Programar envío
+              <input
+                type="datetime-local"
+                value={draft.deliverySchedule}
+                onChange={(event) => updateDraftField("deliverySchedule", event.target.value)}
+              />
+            </label>
+            <label className="full-span">
+              <button
+                className="choice-card switch-card"
+                type="button"
+                onClick={() =>
+                  updateDraftField(
+                    "recipientMode",
+                    draft.recipientMode === "group" ? "selected" : "group"
+                  )
+                }
+              >
+                <div>
+                  <strong>
+                    {draft.recipientMode === "group"
+                      ? "Enviar a todo el grupo"
+                      : "Enviar solo a estudiantes seleccionados"}
+                  </strong>
+                  <p>
+                    El material base se prepara para todos y las versiones adaptadas se reservan para quienes corresponda.
+                  </p>
+                </div>
+                <span className={`toggle-chip ${draft.recipientMode === "selected" ? "active" : ""}`}>
+                  {draft.recipientMode === "group" ? "Grupo completo" : "Selección individual"}
+                </span>
+              </button>
+            </label>
+          </div>
+          <div className="preference-list">
+            {demoTeacher.deliveryChannels.map((route) => (
+              <article key={route} className="choice-card">
+                <div>
+                  <strong>{route}</strong>
+                  <p>Activa esta salida para que quede lista dentro del flujo de revisión y envío.</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={draft.deliveryRoutes.includes(route)}
+                  onChange={() => toggleDeliveryRoute(route)}
+                />
+              </article>
+            ))}
+          </div>
+          <article className="list-card compact">
+            <strong>Resumen de entrega</strong>
+            <p>
+              {selectedRecipientGroup?.group} · {selectedRecipientGroup?.total} destinatarios potenciales ·{" "}
+              {selectedRecipientGroup?.supportCount} con apoyos adicionales activos.
+            </p>
+            <div className="inline-tags">
+              {draft.deliveryRoutes.map((route) => (
+                <Tag key={route}>{route}</Tag>
+              ))}
+            </div>
+          </article>
+          <InfoList
+            items={[
+              "La entrega final ocurre después de la revisión y aprobación docente.",
+              "Correo institucional, PDF y Word quedan listos como salidas oficiales.",
+              "Classroom, Teams y LMS se preparan como rutas de distribución institucional."
+            ]}
+          />
+        </SectionCard>
+
         <SectionCard title="Antes de generar" description="Validaciones pedagógicas y éticas">
           <div className="inline-tags">
             {demoTeacher.contextualPrompts.map((prompt) => (
@@ -555,18 +669,22 @@ export function NewClassComposerClient() {
               "La entrega puede ser inmediata o programada."
             ]}
           />
-          <article className="list-card compact">
-            <strong>Destinatarios del material</strong>
-            <p>
-              {selectedRecipientGroup?.group} · {selectedRecipientGroup?.subject} ·{" "}
-              {selectedRecipientGroup?.total} estudiantes ·{" "}
-              {selectedRecipientGroup?.supportCount} con apoyos adicionales.
-            </p>
-            <div className="inline-tags">
-              <Tag>Material base para todo el grupo</Tag>
-              <Tag>Adaptaciones solo para quienes corresponda</Tag>
-            </div>
-          </article>
+            <article className="list-card compact">
+              <strong>Destinatarios del material</strong>
+              <p>
+                {selectedRecipientGroup?.group} · {selectedRecipientGroup?.subject} ·{" "}
+                {selectedRecipientGroup?.total} estudiantes ·{" "}
+                {selectedRecipientGroup?.supportCount} con apoyos adicionales.
+              </p>
+              <div className="inline-tags">
+                <Tag>
+                  {draft.recipientMode === "group"
+                    ? "Material base para todo el grupo"
+                    : "Entrega individual para destinatarios seleccionados"}
+                </Tag>
+                <Tag>Adaptaciones solo para quienes corresponda</Tag>
+              </div>
+            </article>
           <article className="list-card compact">
             <strong>Apoyos recomendados para este grupo</strong>
             <p>
@@ -589,6 +707,9 @@ export function NewClassComposerClient() {
             <button className="ghost-button" type="button" onClick={saveDraft}>
               Guardar borrador
             </button>
+            <a className="ghost-button" href="/docente/materiales">
+              Ir a revisión y entrega
+            </a>
           </div>
           {statusMessage ? <p className="helper-copy status-message">{statusMessage}</p> : null}
           {resultNote ? <p className="helper-copy status-message">{resultNote}</p> : null}

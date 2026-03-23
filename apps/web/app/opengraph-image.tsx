@@ -61,7 +61,7 @@ export default function OpenGraphImage() {
               Materiales postclase accesibles para preparatoria.
             </div>
             <div style={{ fontSize: 28, opacity: 0.88 }}>
-              Explicación docente, IA, revisión humana y entrega clara para estudiantes.
+              Explicación docente, IA, revisión humana y entrega institucional al alumnado.
             </div>
           </div>
         </div>
