@@ -22,10 +22,13 @@ git push -u origin main
 
 ## 3. Confirmar configuracion
 
+- Node.js Version: `20.x`
 - Framework: `Next.js`
-- Install Command: `corepack enable && pnpm install`
-- Build Command: `pnpm --filter web build`
-- Dev Command: `pnpm --filter web dev`
+- Deja `Install Command`, `Build Command` y `Dev Command` sin override si Vercel detecta bien el proyecto.
+- Solo si necesitas override manual:
+  - Install Command: `corepack enable && pnpm install`
+  - Build Command: `pnpm --filter web build`
+  - Dev Command: `pnpm --filter web dev`
 
 ## 4. Variables de entorno
 

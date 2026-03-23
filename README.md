@@ -46,8 +46,9 @@ Monorepo base para el MVP escolar de `AulaAdapt IA`, una plataforma web y movil 
 - Publica primero este repo en GitHub.
 - Importa el repositorio en Vercel.
 - Selecciona `apps/web` como `Root Directory`.
-- Verifica en el dashboard:
-  - Framework: `Next.js`
+- Fija `Node.js Version` a `20.x` en Vercel.
+- De preferencia, deja `Install Command`, `Build Command` y `Dev Command` sin override para que Vercel detecte Next.js y use `packageManager`.
+- Si necesitas forzarlos manualmente, usa:
   - Install Command: `corepack enable && pnpm install`
   - Build Command: `pnpm --filter web build`
   - Dev Command: `pnpm --filter web dev`
