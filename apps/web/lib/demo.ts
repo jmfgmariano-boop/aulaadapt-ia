@@ -8,7 +8,8 @@ export const demoConfig: DemoAppConfig = {
   appMode,
   showDemoBanner: true,
   defaultRole: "teacher",
-  schoolName: process.env.NEXT_PUBLIC_SCHOOL_NAME || "Preparatoria Horizonte",
+  schoolName:
+    process.env.NEXT_PUBLIC_SCHOOL_NAME || "Preparatoria de la Universidad Autónoma de Guadalajara",
   supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "demo@aulaadaptia.edu"
 };
 
@@ -27,14 +28,14 @@ export const demoRoutes: Record<UserRole, string> = {
 export const demoRoleLabels: Record<UserRole, string> = {
   teacher: "Docente",
   student: "Estudiante",
-  admin: "Administracion"
+  admin: "Administración"
 };
 
 export const demoLanding = {
-  kicker: "Demo publica para escuelas de educacion media superior",
-  title: "AulaAdapt IA convierte la explicacion de clase en materiales postclase accesibles, claros y listos para compartir.",
+  kicker: "Demo pública para escuelas de educación media superior",
+  title: "AulaAdapt IA convierte la explicación de clase en materiales postclase accesibles, claros y listos para compartir.",
   description:
-    "Sitio web demostrativo con experiencia docente, estudiante y administrativa. La navegacion es publica, los datos son simulados y el flujo muestra como una escuela podria operar el producto en un piloto real.",
+    "Sitio web demostrativo con experiencia docente, estudiante y administrativa. La navegación es pública, los datos son simulados y el flujo muestra cómo una escuela podría operar el producto en un piloto real.",
   primaryCta: {
     href: "/docente/nueva-clase",
     label: "Explorar flujo docente"
@@ -49,7 +50,7 @@ export const demoLanding = {
       copy: "Contenido postclase en lenguaje claro, con estructura entendible y listo para repasar."
     },
     {
-      title: "Revision docente",
+      title: "Revisión docente",
       copy: "La IA sugiere borradores editables. El docente revisa antes de aprobar y entregar."
     },
     {
@@ -64,21 +65,21 @@ export const demoLanding = {
   valuePillars: [
     {
       title: "Privacidad",
-      copy: "La demostracion comunica limites claros, roles separados y reportes agregados."
+      copy: "La demostración comunica límites claros, roles separados y reportes agregados."
     },
     {
       title: "Uso responsable",
-      copy: "La plataforma no sustituye al docente ni realiza diagnosticos clinicos."
+      copy: "La plataforma no sustituye al docente ni realiza diagnósticos clínicos."
     },
     {
       title: "Consentimiento institucional",
-      copy: "Preparada para presentarse como piloto escolar con mensajes operativos y eticos."
+      copy: "Preparada para presentarse como piloto escolar con mensajes operativos y éticos."
     }
   ],
   howItWorks: [
-    "Explicacion docente",
+    "Explicación docente",
     "Procesamiento con IA",
-    "Revision docente",
+    "Revisión docente",
     "Entrega postclase"
   ]
 };
@@ -102,6 +103,7 @@ export const demoTeacher = {
     },
     {
       label: "Tasa de aprobacion",
+      label: "Tasa de aprobación",
       value: `${usageSnapshot.approvedRate}%`,
       helper: "Borradores revisados antes de entregarse"
     },
@@ -113,53 +115,88 @@ export const demoTeacher = {
     {
       label: "Entrega promedio",
       value: `${usageSnapshot.averageDeliveryMinutes} min`,
-      helper: "Entre cierre de clase y publicacion"
+      helper: "Entre cierre de clase y publicación"
     }
   ],
   focusCards: [
     {
       title: "Nueva clase en pocos pasos",
-      copy: "Captura explicacion, agrega tarea y selecciona apoyos pedagogicos neutrales antes de generar."
+      copy: "Captura explicación, agrega tarea y selecciona apoyos pedagógicos neutrales antes de generar."
     },
     {
-      title: "Modo demostracion",
-      copy: "Los datos son simulados y permiten recorrer el flujo completo sin autenticacion."
+      title: "Modo demostración",
+      copy: "Los datos son simulados y permiten recorrer el flujo completo sin autenticación."
     }
+  ],
+  recorderSteps: [
+    "Iniciar grabación",
+    "Pausar o reanudar",
+    "Detener y adjuntar",
+    "Generar transcripción"
   ]
 };
 
 export const demoStudent = {
   user: demoUsers.student,
-  feedFilters: ["Biologia", "22 mar 2026", "Mariana Gomez"],
+  feedFilters: ["Biología", "22 mar 2026", "Mariana Gómez"],
   helperCards: [
     {
-      title: "Menos friccion",
+      title: "Menos fricción",
       copy: "La vista prioriza resumen, pasos, conceptos y tarea antes que elementos secundarios."
     },
     {
       title: "Lectura sencilla",
-      copy: "Contenido segmentado, etiquetas neutrales y ruido visual minimo."
+      copy: "Contenido segmentado, etiquetas neutrales y ruido visual mínimo."
     }
   ]
 };
 
 export const demoAdmin = {
   user: demoUsers.admin,
+  studentRegistry: [
+    {
+      id: "A-24018",
+      name: "Valeria Peña",
+      group: "5A",
+      support: "Lenguaje simplificado",
+      tutor: "Mariana Gómez"
+    },
+    {
+      id: "A-24022",
+      name: "Diego Núñez",
+      group: "4B",
+      support: "Estructura paso a paso",
+      tutor: "Mariana Gómez"
+    },
+    {
+      id: "A-24031",
+      name: "Andrea Muñoz",
+      group: "5A",
+      support: "Formato visual",
+      tutor: "Mariana Gómez"
+    }
+  ],
+  teacherIntakeFields: [
+    "Nombre completo",
+    "Correo institucional",
+    "Materia principal",
+    "Grupos asignados"
+  ],
   reportCards: [
     {
-      title: "Generacion semanal",
+      title: "Generación semanal",
       value: String(usageSnapshot.generatedThisWeek),
       copy: "Materiales emitidos por docentes esta semana."
     },
     {
       title: "Entrega promedio",
       value: `${usageSnapshot.averageDeliveryMinutes} min`,
-      copy: "Tiempo entre clase y publicacion del recurso."
+      copy: "Tiempo entre clase y publicación del recurso."
     },
     {
       title: "Roles protegidos",
       value: "Vistas separadas",
-      copy: "Administracion, docente y estudiante con recorridos diferenciados."
+      copy: "Administración, docente y estudiante con recorridos diferenciados."
     }
   ]
 };

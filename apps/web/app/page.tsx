@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { DemoBanner } from "../components/DemoBanner";
 import { FlowSteps, Tag } from "../components/Ui";
 import { RoleSwitcher } from "../components/RoleSwitcher";
@@ -12,7 +13,7 @@ export default function HomePage() {
           <span className="brand-mark">A</span>
           <div>
             <strong>AulaAdapt IA</strong>
-            <p>Demo publica para compartir por internet</p>
+            <p>Demo pública para compartir por internet</p>
           </div>
         </Link>
         <div className="landing-topbar-actions">
@@ -43,8 +44,16 @@ export default function HomePage() {
         <div className="hero-showcase">
           <div className="showcase-card">
             <span>Promesa del producto</span>
-            <strong>La IA apoya. El docente decide.</strong>
-            <p>Sin diagnosticos, con datos simulados y con control editorial antes del envio en esta demo publica.</p>
+            <strong className="showcase-title">La IA apoya. El docente decide.</strong>
+            <p>Sin diagnósticos, con datos simulados y con control editorial antes del envío en esta demo pública.</p>
+          </div>
+          <div className="hero-illustration-card">
+            <Image
+              src="/hero-illustration.svg"
+              alt="Ilustración del flujo docente con grabación de audio y materiales accesibles"
+              width={720}
+              height={540}
+            />
           </div>
           <div className="showcase-grid">
             {demoLanding.highlights.map((highlight) => (
@@ -60,7 +69,7 @@ export default function HomePage() {
       <section className="role-section">
         <div className="section-title">
           <span>Accesos por rol</span>
-          <h2>Una sola plataforma, experiencias distintas segun quien la usa.</h2>
+          <h2>Una sola plataforma, experiencias distintas según quien la usa.</h2>
         </div>
         <div className="role-grid">
           {Object.entries(demoRoutes).map(([role, href]) => (
@@ -68,10 +77,10 @@ export default function HomePage() {
               <h3>{demoRoleLabels[role as keyof typeof demoRoleLabels]}</h3>
               <p>
                 {role === "teacher"
-                  ? "Genera, revisa y programa materiales postclase con apoyos pedagogicos claros."
+                  ? "Genera, revisa y programa materiales postclase con apoyos pedagógicos claros."
                   : role === "student"
-                    ? "Encuentra resumenes, pasos, glosario y tarea sin friccion visual."
-                    : "Observa reportes agregados, grupos y materias desde una vista institucional."}
+                    ? "Encuentra resúmenes, pasos, glosario y tarea sin fricción visual."
+                    : "Observa reportes agregados, grupos, docentes y alumnos desde una vista institucional."}
               </p>
               <Link href={href}>Entrar al recorrido</Link>
             </article>
@@ -81,8 +90,8 @@ export default function HomePage() {
 
       <section className="how-it-works-section" id="como-funciona">
         <div className="section-title">
-          <span>Como funciona</span>
-          <h2>Un flujo simple para convertir una clase en apoyo postclase entendible y util.</h2>
+          <span>Cómo funciona</span>
+          <h2>Un flujo simple para convertir una clase en apoyo postclase entendible y útil.</h2>
         </div>
         <FlowSteps items={demoLanding.howItWorks} />
       </section>
@@ -98,8 +107,8 @@ export default function HomePage() {
 
       <section className="institutional-panel">
         <div className="section-title">
-          <span>Presentacion institucional</span>
-          <h2>Lista para compartirse como demo web publica en Vercel.</h2>
+          <span>Presentación institucional</span>
+          <h2>Lista para compartirse como demo web pública en Vercel.</h2>
         </div>
         <div className="institutional-grid">
           <article className="role-card">
@@ -108,11 +117,11 @@ export default function HomePage() {
           </article>
           <article className="role-card">
             <h3>Publicable</h3>
-            <p>Metadatos, Open Graph, favicon y configuracion de modo demo listos para compartirse por URL.</p>
+            <p>Metadatos, Open Graph, favicon y configuración de modo demo listos para compartirse por URL.</p>
           </article>
           <article className="role-card">
-            <h3>Siguiente iteracion</h3>
-            <p>La base queda preparada para pasar despues a backend real y, en una fase posterior, IA real.</p>
+            <h3>Siguiente iteración</h3>
+            <p>La base queda preparada para pasar después a backend real y, en una fase posterior, IA real.</p>
           </article>
         </div>
       </section>

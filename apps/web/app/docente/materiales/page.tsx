@@ -9,11 +9,11 @@ export default function MaterialsReviewPage() {
   return (
     <AppShell
       role="teacher"
-      title="Revision de materiales generados"
+      title="Revisión de materiales generados"
       subtitle="Edita, aprueba y programa la entrega del contenido antes de publicarlo a tus grupos."
     >
       <div className="review-layout">
-        <SectionCard title={material.title} description="Borrador generado por IA, listo para revision">
+        <SectionCard title={material.title} description="Borrador generado por IA, listo para revisión">
           <div className="review-nav">
             <Tag>Resumen</Tag>
             <Tag>Pasos</Tag>
@@ -29,7 +29,7 @@ export default function MaterialsReviewPage() {
               <textarea defaultValue={material.summary} />
             </label>
             <label>
-              Version simplificada
+              Versión simplificada
               <textarea defaultValue={material.simplifiedVersion} />
             </label>
             <label>
@@ -40,7 +40,7 @@ export default function MaterialsReviewPage() {
         </SectionCard>
 
         <div className="stack-area">
-          <SectionCard title="Vista previa final" description="Asi lo vera el estudiante" accent="sky">
+          <SectionCard title="Vista previa final" description="Así lo verá el estudiante" accent="sky">
             <div className="preview-card">
               <span className="demo-chip">Vista estudiante simulada</span>
               <strong>Resumen</strong>
@@ -59,7 +59,7 @@ export default function MaterialsReviewPage() {
             </div>
           </SectionCard>
 
-          <SectionCard title="Entrega postclase" description="Asignacion y programacion" accent="mint">
+          <SectionCard title="Entrega postclase" description="Asignación y programación" accent="mint">
             <form className="form-grid">
               <label>
                 Grupo
@@ -84,7 +84,7 @@ export default function MaterialsReviewPage() {
               </label>
             </form>
             <p className="helper-copy">
-              En esta demo publica, el envio no persiste cambios. Se muestra el flujo final que luego podra conectarse a backend real.
+              En esta demo pública, el envío no persiste cambios. Se muestra el flujo final que luego podrá conectarse a backend real.
             </p>
             <div className="cta-row">
               <button className="ghost-button" type="button">

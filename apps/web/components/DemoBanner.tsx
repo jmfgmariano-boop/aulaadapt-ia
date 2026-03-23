@@ -9,13 +9,13 @@ export function DemoBanner() {
   return (
     <div className="demo-banner">
       <div>
-        <strong>Modo demostracion publico</strong>
+        <strong>Modo demostración pública</strong>
         <p>
-          Datos simulados, navegacion libre por rol y experiencia optimizada para mostrar la propuesta del producto en internet.
+          Datos simulados, navegación libre por rol y experiencia optimizada para mostrar la propuesta del producto en internet.
         </p>
       </div>
       <Link className="ghost-button demo-banner-link" href="/#como-funciona">
-        Como funciona
+        Cómo funciona
       </Link>
     </div>
   );

@@ -9,14 +9,14 @@ export default function AdminPage() {
   return (
     <AppShell
       role="admin"
-      title="Coordinacion academica"
+      title="Coordinación académica"
       subtitle="Gestiona el uso institucional de AulaAdapt IA con reportes agregados, roles protegidos y visibilidad operativa."
     >
       <div className="metric-grid">
         <MetricCard label="Docentes activos" value={String(teachers.length)} helper="Con actividad reciente en la plataforma" />
         <MetricCard label="Grupos gestionados" value={String(teacherGroups.length)} helper="Configurados para entrega postclase" />
         <MetricCard label="Materias registradas" value={String(teacherSubjects.length)} helper="Listas para generar materiales" />
-        <MetricCard label="Aprobacion promedio" value={`${demoUsage.approvedRate}%`} helper="Sin acceder a datos individuales sensibles" />
+        <MetricCard label="Aprobación promedio" value={`${demoUsage.approvedRate}%`} helper="Sin acceder a datos individuales sensibles" />
       </div>
 
       <div className="dashboard-grid">
@@ -34,7 +34,7 @@ export default function AdminPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Grupos y materias" description="Configuracion academica disponible">
+        <SectionCard title="Grupos y materias" description="Configuración académica disponible">
           <div className="stack-list">
             <div id="grupos" />
             {teacherGroups.map((group) => (
@@ -56,7 +56,51 @@ export default function AdminPage() {
         </SectionCard>
       </div>
 
-      <SectionCard title="Reportes de uso" description="Analitica agregada sin invadir datos sensibles" accent="mint">
+      <div className="dashboard-grid">
+        <SectionCard title="Base de datos de alumnos" description="Consulta y registra información escolar clave" accent="mint">
+          <div className="stack-list" id="alumnos">
+            {demoAdmin.studentRegistry.map((student) => (
+              <article key={student.id} className="list-card">
+                <div>
+                  <strong>{student.name}</strong>
+                  <p>
+                    Matrícula: {student.id} · Grupo: {student.group}
+                  </p>
+                </div>
+                <div className="inline-tags">
+                  <Tag>{student.support}</Tag>
+                  <Tag>{student.tutor}</Tag>
+                </div>
+              </article>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard title="Alta rápida de docentes" description="Formulario demostrativo para registrar información docente">
+          <form className="form-grid">
+            {demoAdmin.teacherIntakeFields.map((field) => (
+              <label key={field}>
+                {field}
+                <input type="text" placeholder={`Captura ${field.toLowerCase()}`} />
+              </label>
+            ))}
+            <label className="full-span">
+              Observaciones
+              <textarea defaultValue="Docente con experiencia en materiales accesibles y seguimiento postclase." />
+            </label>
+          </form>
+          <div className="cta-row">
+            <button className="primary-button" type="button">
+              Guardar registro docente
+            </button>
+            <button className="ghost-button" type="button">
+              Importar base
+            </button>
+          </div>
+        </SectionCard>
+      </div>
+
+      <SectionCard title="Reportes de uso" description="Analítica agregada sin invadir datos sensibles" accent="mint">
         <div className="report-grid" id="reportes">
           {demoAdmin.reportCards.map((card) => (
             <article key={card.title} className="report-card">

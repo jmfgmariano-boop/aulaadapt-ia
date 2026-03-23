@@ -1,16 +1,17 @@
 import { AppShell } from "../../../components/AppShell";
-import { InfoList, SectionCard, Tag } from "../../../components/Ui";
+import { FlowSteps, InfoList, SectionCard, Tag } from "../../../components/Ui";
 import { adaptations, outputs, teacherGroups, teacherSubjects } from "../../../lib/data";
+import { demoTeacher } from "../../../lib/demo";
 
 export default function NewClassPage() {
   return (
     <AppShell
       role="teacher"
       title="Crear nueva clase"
-      subtitle="Captura el contenido de la sesion, selecciona salidas y define adaptaciones neutrales antes de generar materiales."
+      subtitle="Captura el contenido de la sesión, selecciona salidas y define adaptaciones neutrales antes de generar materiales."
     >
       <div className="composer-grid">
-        <SectionCard title="Datos de la sesion" description="Contexto academico de la clase">
+        <SectionCard title="Datos de la sesión" description="Contexto académico de la clase">
           <form className="form-grid">
             <label>
               Materia
@@ -38,27 +39,56 @@ export default function NewClassPage() {
             </label>
             <label>
               Tema
-              <input type="text" defaultValue="Fotosintesis y flujo de energia" />
+              <input type="text" defaultValue="Fotosíntesis y flujo de energía" />
             </label>
             <label className="full-span">
-              Explicacion o texto base
-              <textarea defaultValue="Hoy explicamos como las plantas transforman la luz en energia quimica, revisamos entradas y salidas del proceso y conectamos el tema con los ecosistemas." />
+              Explicación o texto base
+              <textarea defaultValue="Hoy explicamos cómo las plantas transforman la luz en energía química, revisamos entradas y salidas del proceso y conectamos el tema con los ecosistemas." />
             </label>
             <label>
-              Audio
+              Subir audio
               <input type="file" />
             </label>
             <label>
               Material base
               <input type="file" />
             </label>
+            <div className="full-span recorder-panel">
+              <div className="recorder-header">
+                <div>
+                  <strong>Grabar audio desde la app</strong>
+                  <p>Inicia una grabación rápida para capturar la explicación de clase sin salir del flujo docente.</p>
+                </div>
+                <span className="recording-pill">Micrófono listo</span>
+              </div>
+              <div className="wave-bars" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+              </div>
+              <FlowSteps items={demoTeacher.recorderSteps} />
+              <div className="cta-row">
+                <button className="primary-button" type="button">
+                  Iniciar grabación
+                </button>
+                <button className="ghost-button" type="button">
+                  Pausar
+                </button>
+                <button className="ghost-button" type="button">
+                  Detener y adjuntar
+                </button>
+              </div>
+            </div>
             <label className="full-span">
               Puntos clave
-              <textarea defaultValue={"- Funcion de la clorofila\n- Produccion de glucosa\n- Importancia del oxigeno"} />
+              <textarea defaultValue={"- Función de la clorofila\n- Producción de glucosa\n- Importancia del oxígeno"} />
             </label>
             <label className="full-span">
               Tarea o actividad
-              <textarea defaultValue="Crear un esquema simple de entradas y salidas de la fotosintesis." />
+              <textarea defaultValue="Crear un esquema simple de entradas y salidas de la fotosíntesis." />
             </label>
           </form>
         </SectionCard>
@@ -72,7 +102,7 @@ export default function NewClassPage() {
             </div>
           </SectionCard>
 
-          <SectionCard title="Adaptaciones" description="Apoyos pedagogicos neutrales, sin diagnosticos" accent="mint">
+          <SectionCard title="Adaptaciones" description="Apoyos pedagógicos neutrales, sin diagnósticos" accent="mint">
             <div className="preference-list">
               {adaptations.map((adaptation) => (
                 <article key={adaptation.id} className="choice-card">
@@ -86,11 +116,11 @@ export default function NewClassPage() {
             </div>
           </SectionCard>
 
-          <SectionCard title="Antes de generar" description="Validaciones pedagogicas y eticas">
+          <SectionCard title="Antes de generar" description="Validaciones pedagógicas y éticas">
             <InfoList
               items={[
-                "La IA producira un borrador editable, no una version definitiva.",
-                "No se solicitan diagnosticos ni clasificaciones clinicas.",
+                "La IA producirá un borrador editable, no una versión definitiva.",
+                "No se solicitan diagnósticos ni clasificaciones clínicas.",
                 "El material puede asignarse por grupo o de forma individual.",
                 "La entrega puede ser inmediata o programada."
               ]}

@@ -52,7 +52,7 @@ export default function OpenGraphImage() {
               A
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ fontSize: 24, opacity: 0.9 }}>Demo publica para presentacion institucional</div>
+              <div style={{ fontSize: 24, opacity: 0.9 }}>Demo pública para presentación institucional</div>
               <div style={{ fontSize: 44, fontWeight: 800 }}>AulaAdapt IA</div>
             </div>
           </div>
@@ -61,7 +61,7 @@ export default function OpenGraphImage() {
               Materiales postclase accesibles para preparatoria.
             </div>
             <div style={{ fontSize: 28, opacity: 0.88 }}>
-              Explicacion docente, IA, revision humana y entrega clara para estudiantes.
+              Explicación docente, IA, revisión humana y entrega clara para estudiantes.
             </div>
           </div>
         </div>

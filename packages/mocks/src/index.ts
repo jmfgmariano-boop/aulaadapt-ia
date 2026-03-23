@@ -11,9 +11,9 @@ import type {
 export const users: User[] = [
   {
     id: "teacher-1",
-    name: "Mariana Gomez",
+    name: "Mariana Gómez",
     role: "teacher",
-    school: "Preparatoria Horizonte",
+    school: "Preparatoria de la Universidad Autónoma de Guadalajara",
     preferences: {
       language: "es",
       fontScale: "normal",
@@ -25,7 +25,7 @@ export const users: User[] = [
     id: "student-1",
     name: "Leonardo Ruiz",
     role: "student",
-    school: "Preparatoria Horizonte",
+    school: "Preparatoria de la Universidad Autónoma de Guadalajara",
     preferences: {
       language: "es",
       fontScale: "large",
@@ -35,9 +35,9 @@ export const users: User[] = [
   },
   {
     id: "admin-1",
-    name: "Coordinacion Academica",
+    name: "Coordinación Académica",
     role: "admin",
-    school: "Preparatoria Horizonte",
+    school: "Preparatoria de la Universidad Autónoma de Guadalajara",
     preferences: {
       language: "es",
       fontScale: "normal",
@@ -69,13 +69,13 @@ export const groups: Group[] = [
 export const subjects: Subject[] = [
   {
     id: "subject-bio",
-    name: "Biologia",
+    name: "Biología",
     area: "Ciencias naturales",
     teacherId: "teacher-1"
   },
   {
     id: "subject-com",
-    name: "Comunicacion",
+    name: "Comunicación",
     area: "Lenguaje",
     teacherId: "teacher-1"
   }
@@ -85,16 +85,16 @@ export const materials: GeneratedMaterial[] = [
   {
     id: "material-1",
     sessionId: "session-1",
-    title: "Fotosintesis: resumen postclase",
+    title: "Fotosíntesis: resumen postclase",
     summary:
-      "La fotosintesis es el proceso mediante el cual las plantas usan luz, agua y dioxido de carbono para producir glucosa y oxigeno. Hoy revisamos las etapas principales y por que este proceso es esencial para los ecosistemas.",
+      "La fotosíntesis es el proceso mediante el cual las plantas usan luz, agua y dióxido de carbono para producir glucosa y oxígeno. Hoy revisamos las etapas principales y por qué este proceso es esencial para los ecosistemas.",
     steps: [
       "Lee primero el resumen general para recordar la idea central.",
-      "Repasa las etapas: absorcion de luz, transformacion de energia y produccion de glucosa.",
+      "Repasa las etapas: absorción de luz, transformación de energía y producción de glucosa.",
       "Observa el esquema para identificar entradas y salidas del proceso.",
       "Revisa la tarea y prepara un ejemplo de la vida diaria."
     ],
-    concepts: ["Fotosintesis", "Clorofila", "Glucosa", "Dioxido de carbono", "Oxigeno"],
+    concepts: ["Fotosíntesis", "Clorofila", "Glucosa", "Dióxido de carbono", "Oxígeno"],
     glossary: [
       {
         term: "Clorofila",
@@ -102,7 +102,7 @@ export const materials: GeneratedMaterial[] = [
       },
       {
         term: "Glucosa",
-        definition: "Azucar que la planta produce como fuente de energia."
+        definition: "Azúcar que la planta produce como fuente de energía."
       },
       {
         term: "Ecosistema",
@@ -110,14 +110,14 @@ export const materials: GeneratedMaterial[] = [
       }
     ],
     simplifiedVersion:
-      "Las plantas usan la luz del sol para fabricar su alimento. Para hacerlo, toman agua y aire. Como resultado producen energia para vivir y liberan oxigeno.",
+      "Las plantas usan la luz del sol para fabricar su alimento. Para hacerlo, toman agua y aire. Como resultado producen energía para vivir y liberan oxígeno.",
     visualOutline: [
       "Luz solar -> hoja",
       "Agua + CO2 -> proceso en la planta",
-      "Resultado -> glucosa + oxigeno"
+      "Resultado -> glucosa + oxígeno"
     ],
     homeworkReminder:
-      "Entrega manana un esquema simple con las entradas y salidas de la fotosintesis.",
+      "Entrega mañana un esquema simple con las entradas y salidas de la fotosíntesis.",
     selectedAdaptations: [
       "comprension_general",
       "lenguaje_simplificado",
@@ -130,7 +130,7 @@ export const sessions: ClassSession[] = [
   {
     id: "session-1",
     date: "2026-03-22",
-    topic: "Fotosintesis y flujo de energia",
+    topic: "Fotosíntesis y flujo de energía",
     groupId: "group-5a",
     subjectId: "subject-bio",
     teacherId: "teacher-1",
@@ -140,9 +140,9 @@ export const sessions: ClassSession[] = [
       {
         id: "input-1",
         type: "text",
-        label: "Explicacion docente",
+        label: "Explicación docente",
         content:
-          "Explicamos como las plantas convierten la luz en energia quimica y cual es la importancia de la glucosa en el proceso."
+          "Explicamos cómo las plantas convierten la luz en energía química y cuál es la importancia de la glucosa en el proceso."
       },
       {
         id: "input-2",

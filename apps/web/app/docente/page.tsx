@@ -9,7 +9,7 @@ export default function TeacherDashboardPage() {
     <AppShell
       role="teacher"
       title={`Hola, ${teacher.name}`}
-      subtitle="Genera materiales postclase en pocos pasos, revisalos y entregalos con una experiencia clara para tu grupo."
+      subtitle="Genera materiales postclase en pocos pasos, revísalos y entrégalos con una experiencia clara para tu grupo."
     >
       <section className="hero-banner">
         <div>
@@ -34,7 +34,7 @@ export default function TeacherDashboardPage() {
       </div>
 
       <div className="dashboard-grid">
-        <SectionCard title="Historial reciente" description="Sesiones y materiales mas recientes">
+        <SectionCard title="Historial reciente" description="Sesiones y materiales más recientes">
           <div id="historial" />
           <div className="stack-list">
             {recentSessions.map((session) => (
@@ -53,7 +53,7 @@ export default function TeacherDashboardPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Materias activas" description="Organiza tu carga academica" accent="sky">
+        <SectionCard title="Materias activas" description="Organiza tu carga académica" accent="sky">
           <div className="stack-list">
             {teacherSubjects.map((subject) => (
               <article key={subject.id} className="list-card compact">
@@ -70,7 +70,7 @@ export default function TeacherDashboardPage() {
       </div>
 
       <div className="dashboard-grid">
-        <SectionCard title="Materiales generados" description="Ultimos borradores y versiones finales">
+        <SectionCard title="Materiales generados" description="Últimos borradores y versiones finales">
           <div className="stack-list">
             {generatedMaterials.map((material) => (
               <article key={material.id} className="material-card">
@@ -88,7 +88,7 @@ export default function TeacherDashboardPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Entregas programadas" description="Cola de distribucion postclase" accent="mint">
+        <SectionCard title="Entregas programadas" description="Cola de distribución postclase" accent="mint">
           <div id="grupos" />
           <div className="stack-list">
             {deliveryQueue.map((delivery) => (

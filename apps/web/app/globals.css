@@ -219,6 +219,27 @@ textarea {
   padding: 24px;
 }
 
+.hero-illustration-card {
+  margin: 18px 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(20, 53, 74, 0.08);
+  background: linear-gradient(180deg, rgba(233, 248, 251, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+}
+
+.hero-illustration-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.showcase-title {
+  display: block;
+  margin: 8px 0 10px;
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+
 .showcase-card {
   border-radius: var(--radius-lg);
   padding: 22px;
@@ -552,6 +573,60 @@ textarea {
   display: grid;
   gap: 8px;
   font-weight: 700;
+}
+
+.recorder-panel {
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(217, 241, 246, 0.38) 0%, rgba(255, 255, 255, 0.92) 100%);
+  border: 1px solid rgba(20, 53, 74, 0.08);
+}
+
+.recorder-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+}
+
+.recording-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(20, 53, 74, 0.08);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.wave-bars {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+  min-height: 64px;
+}
+
+.wave-bars span {
+  display: block;
+  width: 10px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--mint-deep) 0%, var(--ink) 100%);
+  animation: pulse-bars 1.4s ease-in-out infinite;
+}
+
+.wave-bars span:nth-child(1) { height: 20px; animation-delay: 0s; }
+.wave-bars span:nth-child(2) { height: 42px; animation-delay: 0.1s; }
+.wave-bars span:nth-child(3) { height: 30px; animation-delay: 0.2s; }
+.wave-bars span:nth-child(4) { height: 54px; animation-delay: 0.3s; }
+.wave-bars span:nth-child(5) { height: 34px; animation-delay: 0.4s; }
+.wave-bars span:nth-child(6) { height: 24px; animation-delay: 0.5s; }
+
+@keyframes pulse-bars {
+  0%, 100% { transform: scaleY(0.8); opacity: 0.75; }
+  50% { transform: scaleY(1.08); opacity: 1; }
 }
 
 .full-span {

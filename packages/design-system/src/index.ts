@@ -26,8 +26,8 @@ export const theme = {
 export const adaptationOptions = [
   {
     id: "comprension_general",
-    label: "Comprension general",
-    description: "Version estandar clara para todo el grupo."
+    label: "Comprensión general",
+    description: "Versión estándar clara para todo el grupo."
   },
   {
     id: "repaso_breve",
@@ -47,12 +47,12 @@ export const adaptationOptions = [
   {
     id: "lenguaje_simplificado",
     label: "Lenguaje simplificado",
-    description: "Frases directas y vocabulario mas claro."
+    description: "Frases directas y vocabulario más claro."
   },
   {
     id: "contenido_segmentado",
     label: "Contenido segmentado",
-    description: "Contenido dividido en fragmentos faciles de seguir."
+    description: "Contenido dividido en fragmentos fáciles de seguir."
   }
 ] as const;
 
@@ -61,7 +61,7 @@ export const outputOptions = [
   "Pasos de la actividad",
   "Conceptos clave",
   "Glosario sencillo",
-  "Version simplificada",
+  "Versión simplificada",
   "Esquema breve",
   "Recordatorio de tarea"
 ] as const;
