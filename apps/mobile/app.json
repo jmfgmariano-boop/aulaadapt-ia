@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "AulaAdapt IA",
+    "slug": "aulaadapt-ia",
+    "scheme": "aulaadapt",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
