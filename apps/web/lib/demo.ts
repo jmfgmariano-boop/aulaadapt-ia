@@ -2,8 +2,10 @@ import type { DemoAppConfig, UserRole } from "@aulaadapt/domain";
 import { adaptationOptions, outputOptions } from "@aulaadapt/design-system";
 import { deliveries, groups, materials, sessions, subjects, usageSnapshot, users } from "@aulaadapt/mocks";
 import {
+  sourceStudentDisplayNames,
   sourceAccessibilityContext,
   sourceStudentRegistry,
+  sourceTeacherDisplayNames,
   sourceTeacherDirectory
 } from "./schoolDataset";
 
@@ -38,9 +40,9 @@ export const demoRoleLabels: Record<UserRole, string> = {
 
 export const demoLanding = {
   kicker: "Plataforma institucional para educación media superior",
-  title: "AulaAdapt IA convierte cada clase en materiales postclase claros, accesibles y listos para compartirse.",
+  title: "AulaAdapt IA transforma la explicación docente en materiales postclase claros, accesibles y listos para entregarse.",
   description:
-    "Diseñada para la Preparatoria de la Universidad Autónoma de Guadalajara, con flujos claros para docentes, estudiantes y coordinación académica.",
+    "Diseñada para la Preparatoria de la Universidad Autónoma de Guadalajara con flujos claros para docentes, estudiantes y coordinación académica.",
   primaryCta: {
     href: "/docente/nueva-clase",
     label: "Explorar panel docente"
@@ -66,19 +68,19 @@ export const demoLanding = {
   highlights: [
     {
       title: "Resumen accesible",
-      copy: "Contenido breve, claro y ordenado para repasar."
+      copy: "Repaso breve, claro y ordenado."
     },
     {
       title: "Revisión docente",
-      copy: "La IA propone borradores editables y el docente decide."
+      copy: "La IA propone; el docente revisa y decide."
     },
     {
       title: "Adaptaciones neutrales",
-      copy: "Apoyos como formato visual, repaso breve y pasos claros."
+      copy: "Apoyos pedagógicos claros, visuales y secuenciales."
     },
     {
       title: "Escalable para escuelas",
-      copy: "Lista para crecer por grupos, materias y futuras integraciones."
+      copy: "Lista para crecer por grupos, materias e integraciones."
     }
   ],
   valuePillars: [
@@ -103,8 +105,8 @@ export const demoLanding = {
   ],
   modes: [
     {
-      title: "Experiencia demostrativa",
-      copy: "Recorridos funcionales con datos simulados para presentar el producto sin comprometer datos reales."
+      title: "Recorrido guiado",
+      copy: "Presenta el producto con recorridos completos y datos controlados para mostrar su operación."
     },
     {
       title: "Operación institucional",
@@ -112,9 +114,9 @@ export const demoLanding = {
     }
   ],
   example: {
-    topic: "Historia · Revolución Mexicana",
+    topic: "Biología · Fotosíntesis y flujo de energía",
     input:
-      "Clase con explicación de causas, etapas y consecuencias, más línea del tiempo como actividad.",
+      "Clase con explicación de entradas, salidas y función de la clorofila, más un esquema del proceso como actividad.",
     baseOutput:
       "Resumen accesible, pasos de actividad, conceptos clave y glosario para todo el grupo.",
     adaptedOutput:
@@ -148,6 +150,10 @@ export const demoAccess = {
 const groupedStudents = Array.from(new Set(sourceStudentRegistry.map((student) => student.group)));
 const interviewedTeachersCount = sourceTeacherDirectory.length;
 const registeredStudentsCount = sourceStudentRegistry.length;
+const studentName = (id: string) =>
+  sourceStudentDisplayNames[id as keyof typeof sourceStudentDisplayNames] ?? id;
+const teacherName = (id: string) =>
+  sourceTeacherDisplayNames[id as keyof typeof sourceTeacherDisplayNames] ?? id;
 
 export const demoOutputs = outputOptions;
 export const demoAdaptations = adaptationOptions;
@@ -307,8 +313,8 @@ export const demoTeacher = {
   ],
   modePanels: [
     {
-      title: "Modo demostración",
-      copy: "Recorridos guiados, datos simulados y módulos visibles para explicar el producto."
+      title: "Recorrido guiado",
+      copy: "Presentación funcional de la plataforma con escenarios listos para mostrar su valor."
     },
     {
       title: "Modo institucional",
@@ -334,8 +340,8 @@ export const demoTeacher = {
     }
   ],
   contextualPrompts: [
-    "Ejemplo: 'Clase de Historia sobre Revolución Mexicana con énfasis en causas y consecuencias'.",
-    "Ejemplo de tarea: 'Elabora una línea del tiempo con tres momentos clave'.",
+    "Ejemplo: 'Clase de Biología sobre fotosíntesis con énfasis en entradas, salidas y función de la clorofila'.",
+    "Ejemplo de tarea: 'Elabora un esquema simple con las entradas y salidas del proceso'.",
     "Sugerencia: agrega una observación breve sobre ritmo del grupo o conceptos que conviene reforzar."
   ],
   recipientGroups: [
@@ -357,12 +363,12 @@ export const demoTeacher = {
         "Evitar saturación visual en el material final."
       ],
       students: [
-        { id: "E001", name: "Estudiante E001", support: "Lenguaje simplificado", active: true },
-        { id: "E004", name: "Estudiante E004", support: "Apoyo visual", active: true },
-        { id: "E007", name: "Estudiante E007", support: "Repaso breve", active: true },
-        { id: "E010", name: "Estudiante E010", support: "Sin apoyo adicional", active: true },
-        { id: "E014", name: "Estudiante E014", support: "Guía secuencial", active: true },
-        { id: "E018", name: "Estudiante E018", support: "Sin apoyo adicional", active: true }
+        { id: "E001", name: studentName("E001"), support: "Lenguaje simplificado", active: true },
+        { id: "E004", name: studentName("E004"), support: "Apoyo visual", active: true },
+        { id: "E007", name: studentName("E007"), support: "Repaso breve", active: true },
+        { id: "E010", name: studentName("E010"), support: "Sin apoyo adicional", active: true },
+        { id: "E014", name: studentName("E014"), support: "Guía secuencial", active: true },
+        { id: "E018", name: studentName("E018"), support: "Sin apoyo adicional", active: true }
       ]
     },
     {
@@ -383,27 +389,27 @@ export const demoTeacher = {
         "Destacar palabras clave con ejemplos breves."
       ],
       students: [
-        { id: "E021", name: "Estudiante E021", support: "Glosario ampliado", active: true },
-        { id: "E025", name: "Estudiante E025", support: "Estructura paso a paso", active: true },
-        { id: "E027", name: "Estudiante E027", support: "Sin apoyo adicional", active: true },
-        { id: "E029", name: "Estudiante E029", support: "Baja saturación visual", active: true }
+        { id: "E021", name: studentName("E021"), support: "Glosario ampliado", active: true },
+        { id: "E025", name: studentName("E025"), support: "Estructura paso a paso", active: true },
+        { id: "E027", name: studentName("E027"), support: "Sin apoyo adicional", active: true },
+        { id: "E029", name: studentName("E029"), support: "Baja saturación visual", active: true }
       ]
     }
   ],
   comparisonCase: {
     original: [
-      "Clase de Historia sobre Revolución Mexicana con causas políticas, sociales y económicas.",
-      "Audio de explicación docente con énfasis en actores principales.",
-      "Actividad: elaborar línea del tiempo y comparar etapas."
+      "Clase de Biología sobre fotosíntesis con entradas, salidas y función de la clorofila.",
+      "Audio de explicación docente con énfasis en producción de glucosa y liberación de oxígeno.",
+      "Actividad: elaborar un esquema simple del proceso y explicar cada etapa."
     ],
     aiDraft: [
-      "Resumen accesible con causas y etapas principales.",
-      "Pasos de actividad organizados para trabajar la línea del tiempo.",
-      "Glosario con términos como porfiriato, maderismo y constitución."
+      "Resumen accesible con las etapas principales del proceso.",
+      "Pasos de actividad organizados para construir el esquema del tema.",
+      "Glosario con términos como clorofila, glucosa y dióxido de carbono."
     ],
     teacherEdits: [
       "Se simplificó el segundo párrafo para 5A.",
-      "Se agregó un ejemplo de línea del tiempo.",
+      "Se agregó un ejemplo de entradas y salidas del proceso.",
       "Se ajustó el recordatorio de tarea para entrega el miércoles."
     ],
     finalResult: [
@@ -416,7 +422,7 @@ export const demoTeacher = {
     {
       title: "Entrada docente",
       body:
-        "Clase de Historia sobre Revolución Mexicana: causas, personajes, etapas y consecuencias."
+        "Clase de Biología sobre fotosíntesis: etapas, entradas, salidas y función de la clorofila."
     },
     {
       title: "Salida base",
@@ -456,7 +462,7 @@ export const demoTeacher = {
 
 export const demoStudent = {
   user: demoUsers.student,
-  feedFilters: ["Biología", "22 mar 2026", "Docente D06"],
+  feedFilters: ["Biología", "22 mar 2026", teacherName("D06")],
   helperCards: [
     {
       title: "Menos fricción",
@@ -495,9 +501,9 @@ export const demoStudent = {
       status: "Nuevo"
     },
     {
-      subject: "Historia",
+      subject: "Biología",
       date: "19 mar 2026",
-      title: "Revolución Mexicana",
+      title: "Respiración celular",
       status: "Guardado"
     },
     {
@@ -509,11 +515,11 @@ export const demoStudent = {
   ],
   reminders: [
     "Tarea de Biología con entrega mañana a las 08:00.",
-    "Material nuevo en Historia con apoyo visual disponible.",
+    "Material nuevo de Biología con apoyo visual disponible.",
     "Glosario guardado en tu biblioteca personal."
   ],
   favorites: [
-    "Revolución Mexicana",
+    "Respiración celular",
     "Fotosíntesis",
     "Texto argumentativo"
   ]
@@ -523,7 +529,7 @@ export const demoAdmin = {
   user: demoUsers.admin,
   studentRegistry: sourceStudentRegistry.map((student) => ({
     id: student.id,
-    name: `Estudiante ${student.id}`,
+    name: studentName(student.id),
     semester: `${student.semester}° semestre`,
     group: student.group,
     age: student.age,
@@ -534,7 +540,7 @@ export const demoAdmin = {
   })),
   teacherDirectory: sourceTeacherDirectory.map((teacher) => ({
     ...teacher,
-    displayName: `${teacher.roleLabel} ${teacher.id}`,
+    displayName: teacherName(teacher.id),
     institution: "Preparatoria de la Universidad Autónoma de Guadalajara"
   })),
   accessibilityContext: sourceAccessibilityContext,
@@ -598,7 +604,7 @@ export const demoAdmin = {
   importPreviewRows: [
     {
       matricula: "E001",
-      nombre: "Estudiante E001",
+      nombre: studentName("E001"),
       grupo: "5A",
       estatus: "Activo",
       perfil: "Lenguaje simplificado",
@@ -609,7 +615,7 @@ export const demoAdmin = {
     },
     {
       matricula: "E004",
-      nombre: "Estudiante E004",
+      nombre: studentName("E004"),
       grupo: "5A",
       estatus: "Activo",
       perfil: "Apoyo visual",
@@ -620,7 +626,7 @@ export const demoAdmin = {
     },
     {
       matricula: "E021",
-      nombre: "Estudiante E021",
+      nombre: studentName("E021"),
       grupo: "4B",
       estatus: "Inactivo",
       perfil: "Glosario ampliado",
@@ -640,7 +646,7 @@ export const demoAdmin = {
   profileRegistry: [
     {
       studentId: "E001",
-      studentName: "Estudiante E001",
+      studentName: studentName("E001"),
       currentProfile: "Lenguaje simplificado",
       activeSupports: ["Lenguaje simplificado", "Repaso breve"],
       conditionRecord: "Condición previamente identificada: TDA/TDAH registrado por el área autorizada",
@@ -672,7 +678,7 @@ export const demoAdmin = {
     },
     {
       studentId: "E004",
-      studentName: "Estudiante E004",
+      studentName: studentName("E004"),
       currentProfile: "Apoyo visual",
       activeSupports: ["Apoyo visual", "Contenido segmentado"],
       conditionRecord: "Condición previamente identificada: procesamiento sensorial registrado",
@@ -703,7 +709,7 @@ export const demoAdmin = {
     },
     {
       studentId: "E021",
-      studentName: "Estudiante E021",
+      studentName: studentName("E021"),
       currentProfile: "Glosario ampliado",
       activeSupports: ["Glosario ampliado", "Lenguaje simplificado", "Repaso breve"],
       conditionRecord: "Condición previamente identificada: alteración del lenguaje registrada",
@@ -744,7 +750,7 @@ export const demoAdmin = {
     },
     {
       timestamp: "22 mar 2026 · 16:08",
-      actor: "Docente D06",
+      actor: teacherName("D06"),
       action: "Aprobación de material",
       module: "Materiales postclase",
       detail: "Se aprobó el material de Fotosíntesis para Biología 5A."
@@ -782,10 +788,10 @@ export const demoAdmin = {
   analytics: {
     filters: ["Fecha", "Grupo", "Materia", "Docente", "Tipo de salida", "Tipo de apoyo"],
     metrics: [
-      { label: "Materiales generados", value: "184", helper: "Último mes" },
-      { label: "Entregas realizadas", value: "162", helper: "Por plataforma y correo" },
-      { label: "Consultas de materiales", value: "1,248", helper: "Aperturas registradas" },
-      { label: "Descargas", value: "392", helper: "Biblioteca del estudiante" }
+        { label: "Materiales generados", value: "184", helper: "Último mes" },
+        { label: "Entregas realizadas", value: "162", helper: "Por plataforma y correo" },
+        { label: "Consultas de materiales", value: "1,248", helper: "Aperturas registradas" },
+        { label: "Descargas", value: "392", helper: "Biblioteca del estudiante" }
     ],
     usageBySubject: [
       { label: "Biología", value: 42 },
@@ -929,11 +935,11 @@ export const demoHelp = {
   ],
   examples: [
     {
-      topic: "Historia · Revolución Mexicana",
+      topic: "Biología · Fotosíntesis y flujo de energía",
       input:
-        "Explicación sobre causas, etapas y consecuencias de la Revolución Mexicana con una línea del tiempo como actividad.",
+        "Explicación sobre entradas, salidas y función de la clorofila, con un esquema breve del proceso como actividad.",
       baseOutput:
-        "Resumen de causas, pasos de actividad, conceptos clave y glosario para todo el grupo.",
+        "Resumen del proceso, pasos de actividad, conceptos clave y glosario para todo el grupo.",
       adaptedOutput:
         "Versión con lenguaje simplificado, pasos secuenciales, bloques cortos y apoyo visual."
     }

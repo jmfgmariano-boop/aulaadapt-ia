@@ -155,7 +155,8 @@ export function AdminPanelClient({
 }: AdminPanelClientProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [teachers, setTeachers] = useState(teacherDirectory);
-  const [students] = useState(studentRegistry);
+  const [students, setStudents] = useState(studentRegistry);
+  const [profiles, setProfiles] = useState(profileRegistry);
   const [selectedGroup, setSelectedGroup] = useState("all");
   const [searchStudent, setSearchStudent] = useState("");
   const [selectedFileName, setSelectedFileName] = useState("");
@@ -209,11 +210,11 @@ export function AdminPanelClient({
   }, [searchStudent, selectedGroup, students]);
 
   const selectedProfile =
-    profileRegistry.find((item) => item.studentId === selectedProfileId) ?? profileRegistry[0];
+    profiles.find((item) => item.studentId === selectedProfileId) ?? profiles[0];
   const selectedStudent =
     students.find((item) => item.id === selectedStudentId) ?? students[0];
   const selectedStudentProfile =
-    profileRegistry.find((item) => item.studentId === selectedStudentId) ?? null;
+    profiles.find((item) => item.studentId === selectedStudentId) ?? null;
   const profileDisabled = disabledProfiles.includes(selectedProfile.studentId);
 
   function updateField(field: keyof typeof form, value: string) {
@@ -267,7 +268,7 @@ export function AdminPanelClient({
       "5A",
       "Matutino",
       "\"Biología;Historia\"",
-      "Docente D06",
+      "Mariana Torres Villaseñor",
       "alumno@prepauag.edu.mx",
       "Activo",
       "Atención sostenida",
@@ -299,6 +300,16 @@ export function AdminPanelClient({
       return;
     }
 
+    const allowed = [".csv", ".xlsx", ".xls"];
+    const normalized = file.name.toLowerCase();
+
+    if (!allowed.some((extension) => normalized.endsWith(extension))) {
+      setImportStatus(
+        "Selecciona un archivo Excel o CSV válido antes de continuar con la validación."
+      );
+      return;
+    }
+
     setSelectedFileName(file.name);
     setImportStatus(
       `Archivo ${file.name} recibido. Revisa mapeo, validación y resumen antes de actualizar la base.`
@@ -306,12 +317,45 @@ export function AdminPanelClient({
   }
 
   function handleValidateImport() {
+    if (!selectedFileName) {
+      setImportStatus(
+        "Selecciona primero un archivo Excel o CSV para ejecutar la validación de la base escolar."
+      );
+      return;
+    }
+
     setImportStatus(
       `Validación completada: ${importSummary.validRows} filas válidas, ${importSummary.errorRows} con observaciones, ${importSummary.newStudents} altas nuevas y ${importSummary.updatedStudents} actualizaciones.`
     );
   }
 
   function handleImportBase() {
+    if (!selectedFileName) {
+      setImportStatus(
+        "Selecciona primero un archivo antes de actualizar la base escolar."
+      );
+      return;
+    }
+
+    setStudents((current) =>
+      current.map((student) => {
+        const imported = importPreviewRows.find((row) => row.matricula === student.id);
+
+        if (!imported) {
+          return student;
+        }
+
+        return {
+          ...student,
+          support: imported.perfil,
+          note:
+            imported.validacion === "Actualizar estatus"
+              ? `${student.note} · Registro listo para actualización de estatus.`
+              : `${student.note} · Base escolar actualizada correctamente.`
+        };
+      })
+    );
+
     document
       .getElementById("base-escolar")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -322,7 +366,7 @@ export function AdminPanelClient({
 
   function handleProfileSelection(studentId: string) {
     const nextProfile =
-      profileRegistry.find((item) => item.studentId === studentId) ?? profileRegistry[0];
+      profiles.find((item) => item.studentId === studentId) ?? profiles[0];
 
     setSelectedProfileId(studentId);
     setSelectedSupports(nextProfile?.activeSupports ?? []);
@@ -335,7 +379,7 @@ export function AdminPanelClient({
     setSelectedStudentId(studentId);
 
     const linkedProfile =
-      profileRegistry.find((item) => item.studentId === studentId) ?? null;
+      profiles.find((item) => item.studentId === studentId) ?? null;
 
     if (linkedProfile) {
       setSelectedProfileId(linkedProfile.studentId);
@@ -362,6 +406,21 @@ export function AdminPanelClient({
   }
 
   function handleSaveProfile() {
+    setProfiles((current) =>
+      current.map((profile) =>
+        profile.studentId === selectedProfile.studentId
+          ? {
+              ...profile,
+              activeSupports: selectedSupports,
+              updatedAt: "23 mar 2026",
+              history: [
+                "23 mar 2026 · Ajuste guardado desde coordinación académica",
+                ...profile.history
+              ]
+            }
+          : profile
+      )
+    );
     setProfileStatus(
       `Perfil pedagógico guardado para ${selectedProfile.studentName}. Última modificación registrada por coordinación académica.`
     );
@@ -426,7 +485,7 @@ export function AdminPanelClient({
         <MetricCard
           label="Alumnos registrados"
           value={String(studentRegistry.length)}
-          helper="Sin inventar datos personales no presentes en la base"
+          helper="Disponibles para operación institucional y consulta escolar"
         />
       </div>
 
@@ -631,7 +690,7 @@ export function AdminPanelClient({
                 type="text"
                 value={searchStudent}
                 onChange={(event) => setSearchStudent(event.target.value)}
-                placeholder="Ejemplo: E001 o Estudiante E001"
+                placeholder="Ejemplo: E001 o Andrea López Ramírez"
               />
             </label>
             <label>
@@ -835,7 +894,7 @@ export function AdminPanelClient({
           </div>
           <div className="dashboard-grid">
             <div className="stack-list">
-              {profileRegistry.map((profile) => (
+              {profiles.map((profile) => (
                 <article
                   key={profile.studentId}
                   className={`list-card compact ${selectedProfileId === profile.studentId ? "template-card-active" : ""}`}

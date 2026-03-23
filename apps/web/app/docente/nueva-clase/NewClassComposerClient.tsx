@@ -397,7 +397,7 @@ export function NewClassComposerClient() {
               type="text"
               value={draft.topic}
               onChange={(event) => updateDraftField("topic", event.target.value)}
-              placeholder="Ejemplo: Revolución Mexicana: causas y consecuencias"
+              placeholder="Ejemplo: Fotosíntesis: entradas, salidas y función de la clorofila"
             />
           </label>
           <label className="full-span">

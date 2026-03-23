@@ -308,7 +308,7 @@ export function StudentPageClient({
               <input
                 type="text"
                 value={searchTerm}
-                placeholder="Ejemplo: Revolución Mexicana o Biología"
+                placeholder="Ejemplo: Fotosíntesis o Texto argumentativo"
                 onChange={(event) => setSearchTerm(event.target.value)}
               />
             </label>
@@ -440,7 +440,7 @@ export function StudentPageClient({
               <Tag>Biología</Tag>
               <Tag>Comunicación</Tag>
               <Tag>22 mar 2026</Tag>
-              <Tag>Docente D06</Tag>
+              <Tag>Mariana Torres Villaseñor</Tag>
             </div>
           </SectionCard>
           <SectionCard title="Conceptos clave" description="Ideas centrales de la clase" accent="sky">

@@ -5,6 +5,8 @@ import { RoleSwitcher } from "../components/RoleSwitcher";
 import { demoConfig, demoLanding, demoRoleLabels, demoRoutes } from "../lib/demo";
 
 export default function HomePage() {
+  const highlightIcons = ["book", "teacher", "spark", "layers"] as const;
+
   return (
     <main className="landing-page">
       <section className="landing-topbar">
@@ -46,6 +48,26 @@ export default function HomePage() {
               {demoLanding.secondaryCta.label}
             </Link>
           </div>
+          <div className="hero-proof-list">
+            <article className="hero-proof">
+              <span className="icon-badge">
+                <AppIcon name="book" />
+              </span>
+              <div>
+                <strong>Material base para todo el grupo</strong>
+                <p>Resumen, pasos, conceptos y glosario en un solo cierre postclase.</p>
+              </div>
+            </article>
+            <article className="hero-proof">
+              <span className="icon-badge">
+                <AppIcon name="shield" />
+              </span>
+              <div>
+                <strong>Apoyos pedagógicos protegidos</strong>
+                <p>La personalización se traduce en apoyos concretos sin exponer etiquetas sensibles.</p>
+              </div>
+            </article>
+          </div>
           <div className="hero-metrics">
             {demoLanding.metrics.map((metric) => (
               <article key={metric.label} className="hero-metric-card">
@@ -82,6 +104,26 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+          <div className="showcase-stage">
+            <div className="showcase-stage-head">
+              <span>Ejemplo de salida</span>
+              <strong>{demoLanding.example.topic}</strong>
+            </div>
+            <div className="showcase-stage-grid">
+              <article className="showcase-stage-item">
+                <span>Entrada</span>
+                <p>{demoLanding.example.input}</p>
+              </article>
+              <article className="showcase-stage-item">
+                <span>Salida base</span>
+                <p>{demoLanding.example.baseOutput}</p>
+              </article>
+              <article className="showcase-stage-item">
+                <span>Salida adaptada</span>
+                <p>{demoLanding.example.adaptedOutput}</p>
+              </article>
+            </div>
+          </div>
           <div className="hero-illustration-card">
             <Image
               src="/hero-illustration.svg"
@@ -91,11 +133,16 @@ export default function HomePage() {
             />
           </div>
           <div className="showcase-grid">
-            {demoLanding.highlights.map((highlight) => (
-              <div key={highlight.title}>
-                <strong>{highlight.title}</strong>
+            {demoLanding.highlights.map((highlight, index) => (
+              <article key={highlight.title}>
+                <div className="role-card-head compact-head">
+                  <span className="icon-badge">
+                    <AppIcon name={highlightIcons[index] ?? "spark"} />
+                  </span>
+                  <strong>{highlight.title}</strong>
+                </div>
                 <p>{highlight.copy}</p>
-              </div>
+              </article>
             ))}
           </div>
         </div>

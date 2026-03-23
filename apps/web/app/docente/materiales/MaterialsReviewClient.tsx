@@ -90,7 +90,7 @@ export function MaterialsReviewClient({
   }
 
   async function syncDraft() {
-    await fetch(`/api/materials/${material.id}`, {
+    const response = await fetch(`/api/materials/${material.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
@@ -101,6 +101,10 @@ export function MaterialsReviewClient({
         homeworkReminder
       })
     });
+
+    if (!response.ok) {
+      throw new Error("No se pudo guardar la edición del borrador.");
+    }
   }
 
   function handleEdit() {
@@ -123,12 +127,14 @@ export function MaterialsReviewClient({
 
       setIsApproved(true);
       setStatusMessage("Material aprobado correctamente. Ya puedes publicarlo para el grupo seleccionado.");
+      return true;
     } catch (error) {
       setStatusMessage(
         error instanceof Error
           ? error.message
           : "Ocurrió un problema al aprobar el material."
       );
+      return false;
     } finally {
       setIsSaving(false);
     }
@@ -145,8 +151,19 @@ export function MaterialsReviewClient({
         return;
       }
 
+      if (recipientMode === "selected" && selectedRecipients.length === 0) {
+        setStatusMessage(
+          "Selecciona al menos un estudiante antes de publicar el material de forma individual."
+        );
+        return;
+      }
+
       if (!isApproved) {
-        await handleApprove();
+        const approved = await handleApprove();
+
+        if (!approved) {
+          return;
+        }
       }
 
       const response = await fetch("/api/deliveries", {

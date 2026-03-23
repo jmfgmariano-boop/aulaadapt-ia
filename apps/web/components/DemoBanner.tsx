@@ -9,9 +9,9 @@ export function DemoBanner() {
   return (
     <div className="demo-banner">
       <div>
-        <strong>Modo demostración pública</strong>
+        <strong>Vista institucional guiada</strong>
         <p>
-          Datos simulados, navegación libre por rol y experiencia optimizada para mostrar la propuesta del producto en internet.
+          Recorrido funcional de la plataforma con escenarios preparados para presentar su operación escolar con claridad.
         </p>
       </div>
       <Link className="ghost-button demo-banner-link" href="/#como-funciona">

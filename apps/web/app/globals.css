@@ -157,9 +157,9 @@ textarea {
 }
 
 .landing-page {
-  max-width: 1400px;
+  max-width: 1480px;
   margin: 0 auto;
-  padding: 32px 32px 48px;
+  padding: 28px 32px 56px;
 }
 
 .landing-topbar,
@@ -177,7 +177,8 @@ textarea {
 .landing-topbar {
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
+  padding: 14px 0;
 }
 
 .brand-inline {
@@ -222,14 +223,16 @@ textarea {
 
 .hero-panel {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 32px;
-  min-height: calc(100vh - 120px);
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 36px;
+  min-height: calc(100vh - 136px);
   align-items: center;
 }
 
 .hero-copy {
   position: relative;
+  display: grid;
+  gap: 16px;
 }
 
 .hero-copy::after {
@@ -260,7 +263,33 @@ textarea {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
-  margin-top: 22px;
+  margin-top: 8px;
+}
+
+.hero-proof-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.hero-proof {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px 18px;
+  border-radius: 24px;
+  border: 1px solid rgba(121, 36, 47, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.hero-proof strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.hero-proof p {
+  margin: 0;
 }
 
 .workspace-strip {
@@ -458,10 +487,61 @@ body[data-theme="dark"] .audio-preview-card {
 
 .hero-showcase {
   border-radius: var(--radius-xl);
-  padding: 26px;
+  padding: 28px;
+  display: grid;
+  gap: 18px;
   background:
     radial-gradient(circle at top right, rgba(241, 138, 0, 0.18), transparent 26%),
     rgba(255, 255, 255, 0.9);
+}
+
+.showcase-stage {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(121, 36, 47, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 241, 237, 0.98) 100%);
+}
+
+.showcase-stage-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.showcase-stage-head span {
+  display: inline-flex;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(121, 36, 47, 0.08);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.showcase-stage-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.showcase-stage-item {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(121, 36, 47, 0.06);
+}
+
+.showcase-stage-item span {
+  display: inline-flex;
+  margin-bottom: 8px;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.showcase-stage-item p {
+  margin: 0;
 }
 
 .hero-illustration-card {
@@ -521,16 +601,19 @@ body[data-theme="dark"] .audio-preview-card {
   margin-top: 16px;
 }
 
-.showcase-grid div {
+.showcase-grid article {
   padding: 18px;
   border-radius: var(--radius-md);
   background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(247, 251, 252, 1) 100%);
   border: 1px solid rgba(121, 36, 47, 0.05);
 }
 
-.showcase-grid div strong {
+.showcase-grid article strong {
   display: block;
-  margin-bottom: 8px;
+}
+
+.compact-head {
+  margin-bottom: 10px;
 }
 
 .role-section {
@@ -641,6 +724,18 @@ body[data-theme="dark"] .audio-preview-card {
   gap: 24px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(251, 245, 240, 0.96) 100%);
+  overflow: hidden;
+}
+
+.sidebar::after {
+  content: "";
+  position: absolute;
+  inset: auto -18% -18% auto;
+  width: 180px;
+  height: 180px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(241, 138, 0, 0.16) 0%, rgba(241, 138, 0, 0) 72%);
+  pointer-events: none;
 }
 
 .sidebar-block {
@@ -813,6 +908,8 @@ body[data-theme="dark"] .audio-preview-card {
   top: 16px;
   z-index: 10;
   backdrop-filter: blur(16px);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.86) 0%, rgba(250, 243, 238, 0.94) 100%);
 }
 
 .topbar-actions-compact {
@@ -1398,6 +1495,7 @@ button:disabled {
   color: var(--ink-soft);
   font-weight: 600;
   line-height: 1.6;
+  min-height: 24px;
 }
 
 .template-card,
@@ -1572,6 +1670,7 @@ button:disabled {
   }
 
   .showcase-grid,
+  .showcase-stage-grid,
   .glossary-list,
   .form-grid,
   .hero-mini-flow,
@@ -1597,6 +1696,10 @@ button:disabled {
 
   .hero-panel {
     min-height: auto;
+  }
+
+  .hero-proof {
+    grid-template-columns: 1fr;
   }
 
   .role-switcher {
