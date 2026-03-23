@@ -239,8 +239,8 @@ textarea {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: 36px;
-  min-height: calc(100vh - 136px);
-  align-items: center;
+  min-height: auto;
+  align-items: start;
 }
 
 .hero-copy {
@@ -287,7 +287,7 @@ textarea {
 
 .hero-metrics {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 14px;
   margin-top: 8px;
 }
@@ -680,15 +680,15 @@ body[data-theme="dark"] .audio-preview-card {
 }
 
 .role-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
 .metric-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 .institutional-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .role-card {
@@ -1040,12 +1040,14 @@ body[data-theme="dark"] .profile-chip {
 
 .dashboard-grid {
   grid-template-columns: 1.3fr 0.9fr;
+  align-items: start;
 }
 
 .dashboard-main-grid {
   display: grid;
   grid-template-columns: 1.3fr 0.85fr;
   gap: 18px;
+  align-items: start;
 }
 
 .dashboard-aside-stack,
@@ -1074,7 +1076,7 @@ body[data-theme="dark"] .profile-chip {
 
 .utility-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 14px;
 }
 
@@ -1283,7 +1285,7 @@ body[data-theme="dark"] .profile-chip {
 
 .mini-stat-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 14px;
   margin: 0 0 18px;
 }
@@ -1378,6 +1380,7 @@ body[data-theme="dark"] .sensitive-card {
   display: grid;
   grid-template-columns: 1.25fr 0.95fr;
   gap: 18px;
+  align-items: start;
 }
 
 .form-grid {
@@ -1638,6 +1641,13 @@ button:disabled {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: 18px;
+  align-items: start;
+}
+
+.dashboard-grid > :only-child,
+.dashboard-main-grid > :only-child,
+.integration-workspace > :only-child {
+  grid-column: 1 / -1;
 }
 
 .integration-preview-card {
@@ -1705,7 +1715,7 @@ button:disabled {
 }
 
 .report-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 .mobile-nav {
