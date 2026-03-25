@@ -48,7 +48,7 @@ export const demoRoleLabels: Record<UserRole, string> = {
 export const demoLanding = {
   kicker: "IA postclase para educación media superior",
   title:
-    "Plataforma de apoyo docente e institucional que transforma la explicación de clase en materiales postclase claros, accesibles, resumidos y personalizados, listos para enviarse al alumnado por medios oficiales.",
+    "Plataforma de inteligencia artificial para el apoyo docente en la adaptación inclusiva del aprendizaje.",
   description:
     "Diseñada para docentes y coordinación académica, con revisión humana, apoyos pedagógicos autorizados y entrega por canales institucionales.",
   primaryCta: {
