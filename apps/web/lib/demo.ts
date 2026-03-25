@@ -48,9 +48,9 @@ export const demoRoleLabels: Record<UserRole, string> = {
 export const demoLanding = {
   kicker: "IA postclase para educación media superior",
   title:
-    "Plataforma de apoyo docente e institucional para transformar clases en materiales postclase claros, accesibles y listos para enviarse por medios oficiales.",
+    "Plataforma de apoyo docente e institucional que transforma la explicación de clase en materiales postclase claros, accesibles, resumidos y personalizados, listos para enviarse al alumnado por medios oficiales.",
   description:
-    "AulaAdapt IA convierte la explicación de clase en materiales postclase claros, resumidos y personalizados para que el equipo docente y la institución los entreguen al alumnado por canales oficiales.",
+    "Diseñada para docentes y coordinación académica, con revisión humana, apoyos pedagógicos autorizados y entrega por canales institucionales.",
   primaryCta: {
     href: "/docente/nueva-clase",
     label: "Explorar panel docente"

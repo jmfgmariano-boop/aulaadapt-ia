@@ -79,15 +79,6 @@ export default function HomePage() {
           <p className="helper-copy">
             La IA organiza el contenido. El docente revisa, aprueba y define la entrega institucional al alumnado.
           </p>
-          <div className="hero-metrics">
-            {demoLanding.metrics.map((metric) => (
-              <article key={metric.label} className="hero-metric-card">
-                <strong>{metric.value}</strong>
-                <span>{metric.label}</span>
-              </article>
-            ))}
-          </div>
-          <p className="helper-copy">Indicadores del entorno actual cargado para esta demostración institucional.</p>
           <section className="profile-selector-card">
             <div className="profile-selector-copy">
               <span>Elegir perfil</span>
